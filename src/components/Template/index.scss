@@ -1,6 +1,6 @@
 .template {
     display: grid;
-    grid-template-columns: 15% 1fr;
+    grid-template-columns: 17% 1fr;
     grid-template-rows: 10% 1fr;
     grid-gap: 1em;
     grid-template-areas: 
@@ -9,5 +9,8 @@
 
     &__main {
         grid-area: main;
+        display: grid;
+        grid-template-columns: repeat(12, 1fr);
+        grid-template-rows: repeat(12, 1fr);
     }
 }
