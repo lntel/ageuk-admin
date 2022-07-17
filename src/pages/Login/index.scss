@@ -1,0 +1,55 @@
+.login-container {
+    display: grid;
+    place-items: center;
+    height: 100vh;
+    background: linear-gradient(rgba(255, 255, 255, 0.63), rgb(255, 255, 255)), url('https://images3.alphacoders.com/101/thumb-1920-1010294.jpg') no-repeat center center / cover;
+}
+
+.login {
+    display: grid;
+    place-items: center;
+    margin: 0 auto;
+    padding: 2em 0;
+    width: 15%;
+
+    input {
+        padding: 1.3em;
+        margin: 0 0 1.3em 0;
+    }
+
+    &__submit {
+        background: #23A2D1;
+        color: #fff;
+        font-weight: 500;
+        border: 0;
+        padding: 1em 0;
+        width: 100%;
+        border-radius: .4em;
+        cursor: pointer;
+        margin: 0 0 1.5em 0;
+        transition: all .3s ease-in-out;
+
+        &:hover {
+            background: darken(#23A2D1, 10%);
+        }
+    }
+
+    &__title {
+        font-size: 1.5em;
+        font-weight: 700;
+        margin: .3em 0 1.3em 0;
+    }
+    
+    &__reset {
+        text-decoration: none;
+        font-size: .9em;
+        color: #707070;
+        border: 0;
+        cursor: pointer;
+        transition: color .3s ease-in-out;
+
+        &:hover {
+            color: #23A2D1;
+        }
+    }
+}
