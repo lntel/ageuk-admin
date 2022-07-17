@@ -1,3 +1,4 @@
+import classNames from 'classnames';
 import React, { FC } from 'react'
 import './index.scss'
 
@@ -7,16 +8,18 @@ export interface TextboxProps {
     type?: TextboxType;
     placeholder?: string;
     required?: boolean;
+    className?: string;
 }
 
-const Textbox: FC<TextboxProps> = ({ type = 'text', placeholder, required = false }) => {
+const Textbox: FC<TextboxProps> = ({ type = 'text', placeholder, className, required = false }) => {
   return (
     <>
     <input 
     type={type} 
     placeholder={placeholder}
-    className="textbox" 
-    required={required} />
+    className={classNames("textbox", className)} 
+    required={required} 
+    />
     </>
   )
 }
