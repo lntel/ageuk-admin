@@ -1,0 +1,21 @@
+.modal {
+    position: absolute;
+    top: 7%;
+    width: 20%;
+    height: 50%;
+    background: #222;
+    border-radius: .4em;
+    padding: 1em;
+    opacity: 0;
+    transition: opacity .3s ease-in-out;
+
+    &__title {
+        font-size: 1.3em;
+        color: #f1f1f1;
+        font-weight: 400;
+    }
+
+    &--visible {
+        opacity: 1;
+    }
+}
