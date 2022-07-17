@@ -1,0 +1,13 @@
+.template {
+    display: grid;
+    grid-template-columns: 15% 1fr;
+    grid-template-rows: 10% 1fr;
+    grid-gap: 1em;
+    grid-template-areas: 
+        "nav topbar"
+        "nav main";
+
+    &__main {
+        grid-area: main;
+    }
+}
