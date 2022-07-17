@@ -1,0 +1,47 @@
+.navigation {
+    padding: 1.5em 0 0 0;
+    height: 100vh;
+    background: #222;
+    grid-area: nav;
+
+    &__logo {
+        width: 50%;
+        filter: grayscale(1) invert(1);
+        margin: 1em 0 1em 2em;
+    }
+
+    &__link {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        padding: 1em 0 1em 2.5em;
+        font-size: 1em;
+        cursor: pointer;
+        transition: all .3s ease-in-out;
+
+        svg {
+            font-size: 1.4em;
+            color: rgb(117, 117, 117);
+        }
+        
+        &__text {
+            text-indent: 1em;
+            color: #fff;
+            font-weight: 300;
+        }
+
+        &:hover > &__text {
+            color: #222;
+            font-weight: 700;
+        }
+        
+        &:hover > svg {
+            color: #222;
+        }
+
+        &:hover {
+            background: #23A2D1;
+            color: #222;                
+        }
+    }
+}
