@@ -10,7 +10,7 @@ const Navigation: FC = () => {
     <nav className="navigation">
         <img src={Logo} alt="Age UK logo" className="navigation__logo" />
         <div className="navigation__links">
-            <NavLink label="Overview" icon={<MdHome />} to="/" />
+            <NavLink label="Overview" icon={<MdHome />} to="/dashboard" />
             <NavLink label="Patients" icon={<MdPeopleAlt />} to="/patients" />
         </div>
     </nav>
