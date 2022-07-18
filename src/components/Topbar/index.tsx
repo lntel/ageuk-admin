@@ -24,9 +24,9 @@ export const Topbar = () => {
             </div>
             <Modal visible={notifyVisible} title="Notifications" />
             <div className="topbar__actions__profile">
-                <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8cGVyc29ufGVufDB8fDB8fA%3D%3D&w=1000&q=80" alt="" />
+                <img src="https://cdn-prod.medicalnewstoday.com/content/images/articles/147/147142/nursing-is-a-varied-and-respected-profession.jpg" alt="" />
                 <span className="topbar__actions__profile__name">
-                    Sarah Downs
+                    Sue Brazell
                 </span>
                 <MdOutlineArrowDropDown />
             </div>
