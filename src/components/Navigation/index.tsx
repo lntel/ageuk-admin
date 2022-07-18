@@ -3,7 +3,6 @@ import './index.scss'
 import { MdHome, MdPeopleAlt } from "react-icons/md";
 
 import Logo from '../../assets/images/age-uk-logo-no-strap.png'
-import { IconType } from 'react-icons';
 import { Link, To } from 'react-router-dom';
 
 const Navigation: FC = () => {
