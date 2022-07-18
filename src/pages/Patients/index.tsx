@@ -5,6 +5,7 @@ import { Table } from '../../components/Table'
 import Template from '../../components/Template'
 import { Patient } from '../../types'
 import Paginator from '../../components/Paginator'
+import { MdMoreVert } from 'react-icons/md'
 
 const Patients = () => {
 
@@ -316,6 +317,15 @@ const Patients = () => {
       accessorKey: 'addressLine',
       cell: info => info.getValue(),
       header: 'Address'
+    },
+    {
+      accessorKey: 'dob',
+      cell: info => new Date(info.getValue()).toLocaleDateString(),
+      header: 'DOB'
+    },
+    {
+      id: 'Actions',
+      cell: props => [<MdMoreVert key={props.cell.id} />],
     },
   ];
 
