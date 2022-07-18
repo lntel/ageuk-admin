@@ -8,6 +8,10 @@
     padding: 1em;
     opacity: 0;
     transition: opacity .3s ease-in-out;
+    z-index: 1;
+
+    // TODO implement actual DOM events to remove components before animation
+    pointer-events: none;
 
     &__title {
         font-size: 1.3em;
@@ -17,5 +21,6 @@
 
     &--visible {
         opacity: 1;
+        pointer-events: all;
     }
 }
