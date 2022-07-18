@@ -21,14 +21,14 @@
         transition: all .3s ease-in-out;
 
         svg {
-            font-size: 1.4em;
+            font-size: 1.7em;
             color: #757575;
         }
         
         &__text {
             text-indent: 1em;
-            color: #fff;
-            font-weight: 300;
+            color: rgb(204, 204, 204);
+            font-weight: 400;
         }
 
         &:hover > &__text {
