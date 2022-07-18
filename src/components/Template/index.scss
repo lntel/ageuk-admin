@@ -1,7 +1,8 @@
 .template {
     display: grid;
     grid-template-columns: 17% 1fr;
-    grid-template-rows: 10% 4% 1fr;
+    grid-template-rows: 10% 8% 1fr;
+    height: 100vh;
     grid-gap: 1em;
     grid-template-areas: 
         "nav topbar"
@@ -11,12 +12,17 @@
     &__header {
         grid-area: header;
         font-size: 1.8em;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-direction: row;
+        padding: 0 1em 0 0;
     }
 
     &__main {
         grid-area: main;
-        margin: 0 1em 1em 0;
         position: relative;
+        padding: 0 1em 0 0;
         
         &--grid {
             display: grid;
