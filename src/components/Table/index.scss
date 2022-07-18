@@ -1,0 +1,39 @@
+.table {
+    border-spacing: 0;
+    border-collapse: collapse;
+
+    &__header {
+        background: #f0f0f0;
+        
+        th {
+            padding: 1em;
+            border-right: 2px solid #e2e2e2;
+
+            &:last-of-type {
+                border: 0;
+            }
+        }
+    }
+
+    // https://stackoverflow.com/questions/15595932/why-isnt-padding-applied-to-table-elements
+
+    tbody {
+        background: #fff;
+        height: 100%;
+        font-weight: 600;
+
+        tr {
+            margin: 0 0 1em 0;
+        }
+
+        td {
+            padding: 1em 0 1em 1em;
+            text-align: center;
+        }
+    }
+
+    tr {
+        // background: blue;
+        padding: 1em 0 1em 1em;
+    }
+}
