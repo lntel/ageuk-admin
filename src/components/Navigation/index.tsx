@@ -4,14 +4,15 @@ import { MdHome, MdPeopleAlt } from "react-icons/md";
 
 import Logo from '../../assets/images/age-uk-logo-no-strap.png'
 import { IconType } from 'react-icons';
+import { Link, To } from 'react-router-dom';
 
 const Navigation: FC = () => {
   return (
     <nav className="navigation">
         <img src={Logo} alt="Age UK logo" className="navigation__logo" />
         <div className="navigation__links">
-            <NavLink label="Overview" icon={<MdHome />} />
-            <NavLink label="Patients" icon={<MdPeopleAlt />} />
+            <NavLink label="Overview" icon={<MdHome />} to="/" />
+            <NavLink label="Patients" icon={<MdPeopleAlt />} to="/patients" />
         </div>
     </nav>
   )
@@ -20,16 +21,17 @@ const Navigation: FC = () => {
 export interface NavLinkProps {
     label: string;
     icon: ReactElement<any, any>;
+    to: To;
 }
 
-export const NavLink: FC<NavLinkProps> = ({ label, icon }) => {
+export const NavLink: FC<NavLinkProps> = ({ label, icon, to }) => {
     return (
-        <div className="navigation__link">
+        <Link to={to} className="navigation__link">
             <>
             { icon }
             <p className="navigation__link__text">{ label }</p>
             </>
-        </div>
+        </Link>
     )
 }
 
