@@ -1,8 +1,31 @@
 .patient-component {
 
+    &__new {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        border: 0;
+        background: #23A2D1;
+        color: #fff;
+        padding: 1em 1.3em;
+        border-radius: .4em;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background .3s ease-in-out;
+
+        &:hover {
+            background: darken(#23A2D1, 5%);
+        }
+
+        svg {
+            font-size: 2em;
+            margin: 0 .3em 0 0;
+        }
+    }
+
     &__paginator {
         position: absolute;
-        bottom: 0;
+        bottom: 1em;
     }
 
     &__table {
