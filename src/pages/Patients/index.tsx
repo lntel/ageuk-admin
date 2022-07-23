@@ -5,26 +5,38 @@ import {
   getPaginationRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import React, { useEffect, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 import "./index.scss";
 import { Table } from "../../components/Table";
 import Template from "../../components/Template";
 import { Patient } from "../../types";
 import Paginator from "../../components/Paginator";
-import { MdAddCircle, MdMoreVert } from "react-icons/md";
+import { MdAddCircle, MdMoreVert, MdRemoveCircle } from "react-icons/md";
+import ReactModal from "react-modal";
+import Textbox from "../../components/Textbox";
 
-const PatientActions = () => {
+export interface PatientActionsProps {
+  onPatientCreate: () => void;
+}
 
+const PatientActions: FC<PatientActionsProps> = ({ onPatientCreate }) => {
   return (
-    <button className="patient-component__new">
+    <button
+      className="patient-component__new"
+      onClick={() => onPatientCreate()}
+    >
       <MdAddCircle />
       Add New Patient
     </button>
   );
-}
+};
 
 const Patients = () => {
   const [selectedPatient, setSelectedPatient] = useState<Patient>();
+  const [createVisible, setCreateVisible] = useState<boolean>(false);
+  const [nhsNumber, setNhsNumber] = useState<string>("");
+  const [diagnosis, setDiagnosis] = useState<string>("");
+  const [diagnoses, setDiagnoses] = useState<string[]>([]);
 
   useEffect(() => {
     console.log(selectedPatient);
@@ -52,6 +64,8 @@ const Patients = () => {
     },
   ]);
 
+  // TODO query if NHS number is used as a search term
+
   const columns: ColumnDef<Patient>[] = [
     {
       accessorKey: "id",
@@ -60,7 +74,7 @@ const Patients = () => {
     },
     {
       header: "Patient Name",
-      accessorFn: row => `${row.firstName} ${row.surname}`
+      accessorFn: (row) => `${row.firstName} ${row.surname}`,
     },
     {
       accessorKey: "diagnoses",
@@ -73,12 +87,12 @@ const Patients = () => {
       header: "Prognosis",
     },
     {
-      accessorKey: 'addressLine',
+      accessorKey: "addressLine",
       cell: (info) => info.getValue(),
       header: "Address Line",
     },
     {
-      accessorKey: 'postcode',
+      accessorKey: "postcode",
       cell: (info) => info.getValue(),
       header: "Postcode",
     },
@@ -106,13 +120,100 @@ const Patients = () => {
     getCoreRowModel: getCoreRowModel(),
   });
 
+  const handleDiagnosisAdd = () => {
+    // TODO add alert message
+    if(!diagnosis.length) return;
+
+    setDiagnoses([...diagnoses, diagnosis]);
+    setDiagnosis("");
+  };
+
   return (
     <Template
       header="Manage Patients"
       layout="none"
       className="patient-component"
-      headerChildren={<PatientActions />}
+      headerChildren={
+        <PatientActions
+          onPatientCreate={() => setCreateVisible(!createVisible)}
+        />
+      }
     >
+      <ReactModal
+        isOpen={createVisible}
+        className="patient-component__create"
+        overlayClassName="patient-component__create__overlay"
+      >
+        <h1 className="patient-component__create__title">
+          Create a new patient {nhsNumber ? `- ${nhsNumber}` : null}
+        </h1>
+        <div className="patient-component__create__general">
+          <Textbox
+            className="patient-component__create__input"
+            placeholder="NHS Number"
+            onChange={(e) => setNhsNumber(e.target.value)}
+          />
+          <Textbox
+            className="patient-component__create__input"
+            placeholder="Patient First Name"
+          />
+          <Textbox
+            className="patient-component__create__input"
+            placeholder="Patient Middle Name(s)"
+          />
+          <Textbox
+            className="patient-component__create__input"
+            placeholder="Patient Surname"
+          />
+          <Textbox
+            className="patient-component__create__input"
+            placeholder="Prognosis"
+          />
+          <Textbox
+            className="patient-component__create__input"
+            placeholder="Address Line"
+          />
+          <Textbox
+            className="patient-component__create__input"
+            placeholder="City"
+          />
+          <Textbox
+            className="patient-component__create__input"
+            placeholder="County"
+          />
+          <Textbox
+            className="patient-component__create__input"
+            placeholder="Postcode"
+          />
+        </div>
+        <div className="patient-component__create__diagnoses">
+          <Textbox
+            className="patient-component__create__input"
+            placeholder="Enter Diagnosis"
+            onChange={(e) => setDiagnosis(e.target.value)}
+            value={diagnosis}
+          />
+          <div className="patient-component__create__diagnoses__actions">
+            <button
+              className="patient-component__create__button patient-component__create__button--add"
+              onClick={() => handleDiagnosisAdd()}
+            >
+              <MdAddCircle />
+              Add
+            </button>
+            <button className="patient-component__create__button patient-component__create__button--remove">
+              <MdRemoveCircle />
+              Remove
+            </button>
+          </div>
+          <ul className="patient-component__create__diagnoses__list">
+            <span>Patient Diagnoses</span>
+            {diagnoses.length
+              ? diagnoses.map((diagnosis) => <li key={diagnosis}>{diagnosis}</li>)
+              : null}
+          </ul>
+        </div>
+      </ReactModal>
       <Table table={table} className="patient-component__table" maxRows={6} />
       <Paginator table={table} className="patient-component__paginator" />
     </Template>
