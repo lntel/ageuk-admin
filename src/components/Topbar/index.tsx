@@ -1,13 +1,23 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { MdNotificationsNone, MdOutlineArrowDropDown } from 'react-icons/md'
-import { Modal } from '../Modal'
 import Textbox from '../Textbox'
+import ReactModal from 'react-modal'
 
 import './index.scss'
+import { Modal } from '../Modal'
 
 export const Topbar = () => {
 
+    const [notifyCount, setNotifyCount] = useState<number>(12);
     const [notifyVisible, setNotifyVisible] = useState<boolean>(false);
+
+    useEffect(() => {
+
+        if(!notifyVisible && notifyCount) return;
+        
+        setNotifyCount(0);
+
+    }, [notifyVisible]);
 
   return (
     <div className="topbar">
@@ -18,9 +28,11 @@ export const Topbar = () => {
                 className="topbar__actions__notification"
                 onClick={() => setNotifyVisible(!notifyVisible)}
                 />
-                <span className="topbar__actions__notifications__count">
-                    12
-                </span>
+                { notifyCount ? (
+                    <span className="topbar__actions__notifications__count">
+                        { notifyCount }
+                    </span>
+                ) : null }
             </div>
             <Modal visible={notifyVisible} title="Notifications" />
             <div className="topbar__actions__profile">
