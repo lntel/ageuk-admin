@@ -1,18 +1,28 @@
+@import '../../global';
+
 .patient-component {
 
     &__create {
         display: grid;
-        grid-template-rows: 15% 1fr;
-        grid-template-columns: 20% 25% 1fr;
+        grid-template-rows: 15% 85%;
+        grid-template-columns: 20% 25% 20% 1fr;
         grid-column-gap: .5em;
         grid-template-areas: 
-            "title title"
-            "general diagnoses";
+            "title title title title"
+            "general diagnoses anatomy anatomy";
         width: 80%;
         height: 100%;
         background: #f8f8f8;
         border-radius: .4em;
         padding: 2em;
+
+        &__wounds {
+            background: #000;
+            grid-area: anatomy;
+
+            canvas {
+            }
+        }
 
         &__button {
             display: flex;
@@ -69,9 +79,14 @@
             &__list {
                 list-style: none;
                 padding: 1em;
-                background: #fff;
+                border: 1px solid #b8b8b8;
                 border-radius: .4em;
                 margin: 1em 0 0 0;
+                
+                li {
+                    font-size: .9em;
+                    cursor: pointer;
+                }
             
                 span {
                     text-transform: uppercase;

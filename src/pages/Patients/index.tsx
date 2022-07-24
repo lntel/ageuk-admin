@@ -5,7 +5,7 @@ import {
   getPaginationRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import React, { FC, useEffect, useState } from "react";
+import React, { FC, useEffect, useRef, useState } from "react";
 import "./index.scss";
 import { Table } from "../../components/Table";
 import Template from "../../components/Template";
@@ -14,6 +14,9 @@ import Paginator from "../../components/Paginator";
 import { MdAddCircle, MdMoreVert, MdRemoveCircle } from "react-icons/md";
 import ReactModal from "react-modal";
 import Textbox from "../../components/Textbox";
+import CanvasDraw from "react-canvas-draw";
+import AnatomyImage from "../../assets/images/anatomy.jpg";
+import WoundManager from "../../components/WoundManager";
 
 export interface PatientActionsProps {
   onPatientCreate: () => void;
@@ -37,6 +40,8 @@ const Patients = () => {
   const [nhsNumber, setNhsNumber] = useState<string>("");
   const [diagnosis, setDiagnosis] = useState<string>("");
   const [diagnoses, setDiagnoses] = useState<string[]>([]);
+
+  let drawRef: CanvasDraw | null;
 
   useEffect(() => {
     console.log(selectedPatient);
@@ -122,7 +127,7 @@ const Patients = () => {
 
   const handleDiagnosisAdd = () => {
     // TODO add alert message
-    if(!diagnosis.length) return;
+    if (!diagnosis.length) return;
 
     setDiagnoses([...diagnoses, diagnosis]);
     setDiagnosis("");
@@ -142,7 +147,7 @@ const Patients = () => {
       <ReactModal
         isOpen={createVisible}
         className="patient-component__create"
-        overlayClassName="patient-component__create__overlay"
+        overlayClassName="modal-overlay"
       >
         <h1 className="patient-component__create__title">
           Create a new patient {nhsNumber ? `- ${nhsNumber}` : null}
@@ -201,7 +206,7 @@ const Patients = () => {
               <MdAddCircle />
               Add
             </button>
-            <button className="patient-component__create__button patient-component__create__button--remove">
+            <button className="patient-component__create__button patient-component__create__button--remove" onClick={() => console.log(drawRef!.getSaveData())}>
               <MdRemoveCircle />
               Remove
             </button>
@@ -209,9 +214,14 @@ const Patients = () => {
           <ul className="patient-component__create__diagnoses__list">
             <span>Patient Diagnoses</span>
             {diagnoses.length
-              ? diagnoses.map((diagnosis) => <li key={diagnosis}>{diagnosis}</li>)
+              ? diagnoses.map((diagnosis) => (
+                  <li key={diagnosis}>{diagnosis}</li>
+                ))
               : null}
           </ul>
+        </div>
+        <div className="patient-component__create__wounds">
+          <WoundManager isOpen={false} />
         </div>
       </ReactModal>
       <Table table={table} className="patient-component__table" maxRows={6} />
