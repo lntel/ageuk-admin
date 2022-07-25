@@ -1,6 +1,6 @@
-import React, { FC, FunctionComponent, ReactElement } from 'react'
+import { FC, ReactElement } from 'react'
 import './index.scss'
-import { MdCalendarToday, MdHealthAndSafety, MdHome, MdMedicalServices, MdPeopleAlt, MdStoreMallDirectory } from "react-icons/md";
+import { MdCalendarToday, MdHome, MdMedicalServices, MdPeopleAlt, MdStoreMallDirectory } from "react-icons/md";
 
 import Logo from '../../assets/images/age-uk-logo-no-strap.png'
 import { Link, To } from 'react-router-dom';
