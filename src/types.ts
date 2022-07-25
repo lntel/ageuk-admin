@@ -23,4 +23,5 @@ export interface IGpSurgery {
     id: number;
     phoneNumber: string;
     surgeryName: string;
+    address: string;
 }
