@@ -1,0 +1,163 @@
+@import '../../global';
+
+// TODO rename all of these classes
+
+.patient-component {
+
+    &__create {
+        display: grid;
+        grid-template-rows: 15% 35% 1fr;
+        grid-template-columns: repeat(2, 15%) 23% 1fr;
+        grid-column-gap: .5em;
+        grid-template-areas: 
+            "title title title title"
+            "general general diagnoses anatomy"
+            "general general diagnoses anatomy";
+        width: 90%;
+        height: 100%;
+        background: #f8f8f8;
+        border-radius: .4em;
+        padding: 2em;
+
+        &__wounds {
+            background: #000;
+            grid-area: anatomy;
+        }
+
+        &__button {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            border: 0;
+            width: 100%;
+            border-radius: .4em;
+            color: #fff;
+            padding: 1em;
+            cursor: pointer;
+            transition: background .3s ease-in-out;
+
+            svg {
+                font-size: 1.5em;
+                margin: 0 .3em 0 0;
+            }
+            
+            &--add {
+                background: #23A2D1;
+                
+                &:hover {
+                    background: darken(#23A2D1, 10%);
+                }
+            }
+            
+            &--remove {
+                background: #ca5151;
+
+                &:hover {
+                    background: darken(#ca5151, 10%);
+                }
+            }
+
+        }
+
+        &__general {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            grid-template-rows: repeat(10, 1fr);
+            grid-gap: .5em;
+            grid-area: general;
+        }
+
+        &__title {
+            grid-area: title;
+        }
+
+        &__input {
+            padding: 1em;
+        }
+
+        &__diagnoses {
+            display: flex;
+            flex-direction: column;
+            grid-area: diagnoses;
+
+            &__list {
+                flex: 1;
+                list-style: none;
+                padding: 1em;
+                border: 1px solid #b8b8b8;
+                border-radius: .4em;
+                margin: .5em 0 0 0;
+                
+                li {
+                    font-size: .9em;
+                    cursor: pointer;
+                }
+            
+                span {
+                    text-transform: uppercase;
+                    font-size: .8em;
+                    font-weight: 600;
+                }
+            }
+
+            &__actions {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                grid-template-rows: 1fr;
+                grid-gap: 1em;
+                margin: .5em 0 0 0;
+            }
+        }
+
+        &__overlay {
+            display: grid;
+            place-items: center;
+            width: 100%;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            padding: 5%;
+            background: #0000008c;
+        }
+    }
+
+    &__new {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        border: 0;
+        background: #23A2D1;
+        color: #fff;
+        padding: 1em 1.3em;
+        border-radius: .4em;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background .3s ease-in-out;
+
+        &:hover {
+            background: darken(#23A2D1, 5%);
+        }
+
+        svg {
+            font-size: 2em;
+            margin: 0 .3em 0 0;
+        }
+    }
+
+    &__paginator {
+        position: absolute;
+        bottom: 1em;
+    }
+
+    &__table {
+        width: 100%;
+
+        svg {
+            font-size: 2em;
+            color: gray;
+            cursor: pointer;
+        }
+    }
+}
