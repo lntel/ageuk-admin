@@ -1,6 +1,6 @@
 import React, { FC, FunctionComponent, ReactElement } from 'react'
 import './index.scss'
-import { MdCalendarToday, MdHome, MdPeopleAlt } from "react-icons/md";
+import { MdCalendarToday, MdHealthAndSafety, MdHome, MdMedicalServices, MdPeopleAlt, MdStoreMallDirectory } from "react-icons/md";
 
 import Logo from '../../assets/images/age-uk-logo-no-strap.png'
 import { Link, To } from 'react-router-dom';
@@ -12,7 +12,9 @@ const Navigation: FC = () => {
         <div className="navigation__links">
             <NavLink label="Overview" icon={<MdHome />} to="/dashboard" />
             <NavLink label="Calendar" icon={<MdCalendarToday />} to="/calendar" />
+            <NavLink label="Staff" icon={<MdMedicalServices />} to="/staff" />
             <NavLink label="Patients" icon={<MdPeopleAlt />} to="/patients" />
+            <NavLink label="GP Surgeries" icon={<MdStoreMallDirectory />} to="/surgeries" />
         </div>
     </nav>
   )
