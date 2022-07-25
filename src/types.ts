@@ -18,3 +18,9 @@ export interface Patient {
     dob: Date;
     gpFullname: string;
 }
+
+export interface IGpSurgery {
+    id: number;
+    phoneNumber: string;
+    surgeryName: string;
+}
