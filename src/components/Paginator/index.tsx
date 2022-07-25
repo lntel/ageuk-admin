@@ -1,36 +1,49 @@
-import { Table } from '@tanstack/react-table';
-import classNames from 'classnames'
-import React, { FC, useEffect } from 'react'
-import './index.scss'
-
-import { MdChevronLeft, MdChevronRight } from 'react-icons/md';
+import classNames from "classnames";
+import React, { FC } from "react";
+import { MdChevronLeft, MdChevronRight } from "react-icons/md";
 
 export interface PaginatorProps {
-    table: Table<any>;
-    className?: string;
+  className?: string;
+  totalPages: number;
+  currentPage: number;
+  onBack?: () => void;
+  onForward?: () => void;
 }
 
-const Paginator: FC<PaginatorProps> = ({ table, className }) => {
-
+const Paginator: FC<PaginatorProps> = ({ className, currentPage, totalPages, onBack, onForward }) => {
   return (
     <div className={classNames("paginator-component", className)}>
-        <button className="paginator-component__button" disabled={!table.getCanPreviousPage()} onClick={() => table.previousPage()}>
-            <MdChevronLeft />
-            <p className="paginator-component__button__text">
-                Prev
-            </p>
-        </button>
+        <PaginatorButton type="back" disabled={currentPage == 1} onClick={() => onBack ? onBack() : null} />
         <p className="paginator-component__pages">
-            { table.getState().pagination.pageIndex + 1 } of { table.getPageCount() }
+            { currentPage } of { totalPages }
         </p>
-        <button className="paginator-component__button" disabled={!table.getCanNextPage()} onClick={() => table.nextPage()}>
-            <p className="paginator-component__button__text">
-                Next
-            </p>
-            <MdChevronRight />
-        </button>
+        <PaginatorButton type="forward" disabled={currentPage == totalPages} onClick={() => onForward ? onForward() : null} />
     </div>
-  )
+  );
+};
+
+export type PaginatorButtonType = "back" | "forward";
+export interface PaginatorButtonProps {
+  type: PaginatorButtonType;
+  disabled?: boolean;
+  onClick?: () => void;
 }
 
-export default Paginator
+export const PaginatorButton: FC<PaginatorButtonProps> = ({
+  type,
+  disabled,
+  onClick,
+}) => {
+  return (
+    <button
+      className="paginator-component__button"
+      disabled={disabled}
+      onClick={() => onClick ? onClick() : null}
+    >
+      {type == "back" ? <MdChevronLeft /> : <MdChevronRight />}
+      <p className="paginator-component__button__text">Prev</p>
+    </button>
+  );
+};
+
+export default Paginator;
