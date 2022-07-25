@@ -9,15 +9,9 @@ import React, { FC, useEffect, useRef, useState } from "react";
 import "./index.scss";
 import { Table } from "../../components/Table";
 import Template from "../../components/Template";
-import { IGpSurgery, Patient } from "../../types";
+import { Patient } from "../../types";
 import TablePaginator from "../../components/TablePaginator";
-import { MdAddCircle, MdMoreVert, MdRemoveCircle } from "react-icons/md";
-import ReactModal from "react-modal";
-import Textbox from "../../components/Textbox";
-import CanvasDraw from "react-canvas-draw";
-import AnatomyImage from "../../assets/images/anatomy.jpg";
-import WoundManager from "../../components/WoundManager";
-import Dropdown, { IDropdownOption } from "../../components/Dropdown";
+import { MdAddCircle, MdMoreVert } from "react-icons/md";
 import PatientsCreate from "../../components/PatientsCreate";
 
 export interface PatientActionsProps {
