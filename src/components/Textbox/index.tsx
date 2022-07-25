@@ -2,7 +2,7 @@ import classNames from 'classnames';
 import React, { ChangeEvent, FC, useState } from 'react'
 import './index.scss'
 
-type TextboxType = | 'text' | 'email' | 'password';
+type TextboxType = | 'text' | 'email' | 'password' | 'phone';
 
 export interface TextboxProps {
     type?: TextboxType;
