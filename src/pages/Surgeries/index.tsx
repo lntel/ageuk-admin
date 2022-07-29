@@ -14,6 +14,7 @@ import {
   import { MdAddCircle, MdMoreVert, MdRemoveCircle } from "react-icons/md";
   import PatientsCreate from "../../components/PatientsCreate";
   
+  // TODO Change create modal to surgeries
   export interface SurgeryActionProps {
     onPatientCreate: () => void;
   }
