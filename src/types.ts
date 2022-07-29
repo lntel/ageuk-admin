@@ -19,6 +19,13 @@ export interface Patient {
     gpFullname: string;
 }
 
+export interface IStaff {
+    firstName: string;
+    surname: string;
+    dob: Date;
+    addressLine: string;
+    postcode: string;
+}
 export interface IGpSurgery {
     id: number;
     phoneNumber: string;
