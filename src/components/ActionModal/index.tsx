@@ -1,4 +1,5 @@
 import React, { CSSProperties, FC, useEffect, useState } from 'react'
+import { MdModeEdit, MdPersonRemove } from 'react-icons/md';
 import './index.scss'
 
 export interface ActionModalCoords {
@@ -27,12 +28,22 @@ const ActionModal: FC<ActionModalProps> = () => {
     }, [])
     
     const handleClick = (e: MouseEvent) => {
-        const { clientX: x, clientY: y } = e;
+        const { clientX: x, clientY: y, target } = e;
 
         // TODO add check here to prevent every click event from triggering
 
+        const {
+            tagName,
+            parentElement
+        } = (target as HTMLElement);
+
+        console.log(parentElement)
+
+        // if(tagName != "svg" && tagName != "path" || !parentElement || parentElement.tagName != "TD")
+        //     return;
+
         setCoords({
-            x: x - 300,
+            x: x - 250,
             y
         });
     }
@@ -44,7 +55,14 @@ const ActionModal: FC<ActionModalProps> = () => {
 
   return (
     <div className="action-modal" style={actionModalStyle}>
-        Lorem ipsum dolor sit amet consectetur, adipisicing elit. Iusto possimus quibusdam facere officia nisi! Nulla et officia quis libero! Officia aliquid quaerat sequi ex ea quidem aut temporibus sit voluptatibus!
+        <div className="action-modal__action">
+            <MdModeEdit />
+            Edit Patient
+        </div>
+        <div className="action-modal__action">
+            <MdPersonRemove />
+            Delete Patient
+        </div>
     </div>
     )
 }
