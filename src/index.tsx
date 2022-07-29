@@ -6,7 +6,8 @@ import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import Patients from './pages/Patients';
 import Surgeries from './pages/Surgeries';
-import Calendar from './pages/Calendar';
+import Dates from './pages/Dates';
+import Staff from './pages/Staff';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -18,8 +19,9 @@ root.render(
         <Route path='/' element={<Login />} />
         <Route path='/dashboard' element={<Dashboard />} />
         <Route path='/patients' element={<Patients />} />
+        <Route path='/staff' element={<Staff />} />
         <Route path='/surgeries' element={<Surgeries />} />
-        <Route path='/calendar' element={<Calendar />} />
+        <Route path='/calendar' element={<Dates />} />
       </Routes>
     </BrowserRouter>
   </React.StrictMode>
