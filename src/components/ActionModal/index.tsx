@@ -1,16 +1,45 @@
-import React, { CSSProperties, FC } from 'react'
+import React, { CSSProperties, FC, useEffect, useState } from 'react'
 import './index.scss'
 
-export interface ActionModalProps {
+export interface ActionModalCoords {
     x: number;
     y: number;
 }
+export interface ActionModalProps {
+    
+}
 
-const ActionModal: FC<ActionModalProps> = ({ x, y }) => {
+const ActionModal: FC<ActionModalProps> = () => {
+
+    const [coords, setCoords] = useState<ActionModalCoords>({
+        x: 0,
+        y: 0
+    });
+
+    // ? A global click listener is required for the X/Y screen positions for the modal since using table would be complicated
+    useEffect(() => {
+      document.addEventListener('click', handleClick);
+    
+      return () => {
+          // Freeing up the listener after the component is removed
+        document.removeEventListener('click', handleClick);
+      }
+    }, [])
+    
+    const handleClick = (e: MouseEvent) => {
+        const { clientX: x, clientY: y } = e;
+
+        // TODO add check here to prevent every click event from triggering
+
+        setCoords({
+            x: x - 300,
+            y
+        });
+    }
 
     const actionModalStyle: CSSProperties = {
-        left: x,
-        top: y
+        left: coords.x,
+        top: coords.y
     }
 
   return (
