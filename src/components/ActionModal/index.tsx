@@ -1,3 +1,4 @@
+import classNames from 'classnames';
 import React, { CSSProperties, FC, useEffect, useState } from 'react'
 import { MdModeEdit, MdPersonRemove } from 'react-icons/md';
 import './index.scss'
@@ -7,10 +8,10 @@ export interface ActionModalCoords {
     y: number;
 }
 export interface ActionModalProps {
-    
+    visible: boolean;
 }
 
-const ActionModal: FC<ActionModalProps> = () => {
+const ActionModal: FC<ActionModalProps> = ({ visible }) => {
 
     const [coords, setCoords] = useState<ActionModalCoords>({
         x: 0,
@@ -37,8 +38,6 @@ const ActionModal: FC<ActionModalProps> = () => {
             parentElement
         } = (target as HTMLElement);
 
-        console.log(parentElement)
-
         // if(tagName != "svg" && tagName != "path" || !parentElement || parentElement.tagName != "TD")
         //     return;
 
@@ -54,7 +53,7 @@ const ActionModal: FC<ActionModalProps> = () => {
     }
 
   return (
-    <div className="action-modal" style={actionModalStyle}>
+    <div className={classNames("action-modal", visible ? "action-modal--visible" : null)} style={actionModalStyle}>
         <div className="action-modal__action">
             <MdModeEdit />
             Edit Patient
