@@ -4,7 +4,7 @@ import {
   getFilteredRowModel,
   getPaginationRowModel,
   useReactTable,
-  Table as TanTable,
+  Row,
   RowSelectionState,
 } from "@tanstack/react-table";
 import React, { FC, useEffect, useRef, useState } from "react";
@@ -34,13 +34,28 @@ const PatientActions: FC<PatientActionsProps> = ({ onPatientCreate }) => {
 };
 
 const Patients = () => {
-  const [rowSelection, setSelectedRow] = useState({});
+  const [rowSelection, setSelectedRow] = useState<RowSelectionState>({});
   const [createVisible, setCreateVisible] = useState<boolean>(false);
   const [nhsNumber, setNhsNumber] = useState<string>("");
 
   useEffect(() => {
+    
+    document.addEventListener('click', handleDeselection);
+
+    return () => {
+      document.removeEventListener('click', handleDeselection);
+    }
+
+  }, [])
+
+  useEffect(() => {
     console.log(rowSelection)
   }, [rowSelection])
+
+  const handleDeselection = (e: MouseEvent) => {
+    if((e.target as HTMLElement).parentElement?.tagName != "TD" && (e.target as HTMLElement).tagName != "svg" && (e.target as HTMLElement).tagName != "path")
+      setSelectedRow({});
+  }
 
   // * Weeks by default
   const [prognosis, setPrognosis] = useState<string>("weeks");
@@ -275,7 +290,7 @@ const Patients = () => {
       <PatientsCreate visible={createVisible} />
       <Table table={table} className="patient-component__table" maxRows={6} />
       <TablePaginator table={table} className="patient-component__paginator" />
-      <ActionModal />
+      <ActionModal visible={Boolean(Object.keys(rowSelection).length)} />
     </Template>
   );
 };
