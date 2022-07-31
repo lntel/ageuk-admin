@@ -1,0 +1,42 @@
+.action-modal {
+    position: fixed;
+    z-index: 1;
+    background: #222;
+    color: #fff;
+    border-radius: .4em;
+    width: 15%;
+    padding: .5em;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, .4);
+    display: none;
+
+    &--visible {
+        display: block;
+    }
+
+    &__action {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        background: #333;
+        color: #fff;
+        border-radius: .4em;
+        font-weight: 600;
+        padding: 1em;
+        cursor: pointer;
+        transition: background .3s ease-in-out;
+        margin: 0 0 .5em 0;
+
+        &:last-of-type {
+            margin: 0;
+        }
+
+        svg {
+            font-size: 1.3em;
+            margin: 0 .8em 0 0;
+        }
+
+        &:hover {
+            background: lighten(#333, 8%);
+        }
+    }
+}

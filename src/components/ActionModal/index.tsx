@@ -1,21 +1,67 @@
-import React, { CSSProperties, FC } from 'react'
+import classNames from 'classnames';
+import React, { CSSProperties, FC, useEffect, useState } from 'react'
+import { MdModeEdit, MdPersonRemove } from 'react-icons/md';
 import './index.scss'
 
-export interface ActionModalProps {
+export interface ActionModalCoords {
     x: number;
     y: number;
 }
+export interface ActionModalProps {
+    visible: boolean;
+}
 
-const ActionModal: FC<ActionModalProps> = ({ x, y }) => {
+const ActionModal: FC<ActionModalProps> = ({ visible }) => {
+
+    const [coords, setCoords] = useState<ActionModalCoords>({
+        x: 0,
+        y: 0
+    });
+
+    // ? A global click listener is required for the X/Y screen positions for the modal since using table would be complicated
+    useEffect(() => {
+      document.addEventListener('click', handleClick);
+    
+      return () => {
+          // Freeing up the listener after the component is removed
+        document.removeEventListener('click', handleClick);
+      }
+    }, [])
+    
+    const handleClick = (e: MouseEvent) => {
+        const { clientX: x, clientY: y, target } = e;
+
+        // TODO add check here to prevent every click event from triggering
+
+        const {
+            tagName,
+            parentElement
+        } = (target as HTMLElement);
+
+        // if(tagName != "svg" && tagName != "path" || !parentElement || parentElement.tagName != "TD")
+        //     return;
+
+        setCoords({
+            x: x - 250,
+            y
+        });
+    }
 
     const actionModalStyle: CSSProperties = {
-        left: x,
-        top: y
+        left: coords.x,
+        top: coords.y
     }
 
   return (
-    <div className="action-modal" style={actionModalStyle}>
-        Lorem ipsum dolor sit amet consectetur, adipisicing elit. Iusto possimus quibusdam facere officia nisi! Nulla et officia quis libero! Officia aliquid quaerat sequi ex ea quidem aut temporibus sit voluptatibus!
+    <div className={classNames("action-modal", visible ? "action-modal--visible" : null)} style={actionModalStyle}>
+        <div className="action-modal__action">
+            <MdModeEdit />
+            Edit Patient
+        </div>
+        <div className="action-modal__action">
+            <MdPersonRemove />
+            Delete Patient
+        </div>
     </div>
     )
 }
