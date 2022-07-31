@@ -1,6 +1,6 @@
 import { ColumnDef, RowSelectionState } from "@tanstack/react-table";
 import React, { FC, useEffect, useState } from "react";
-// import "./index.scss";
+import "./index.scss";
 import { Patient } from "../../types";
 import { MdAddCircle, MdModeEdit, MdPersonRemove } from "react-icons/md";
 import { TableData, TableDataAction } from "../../components/TableData";
