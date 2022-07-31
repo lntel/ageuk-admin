@@ -17,7 +17,7 @@ const SurgeryActions: FC<SurgeryActionsProps> = ({
       onClick={() => onSurgeryCreate()}
     >
       <MdAddCircle />
-      Add New Surgery
+      Add GP Surgery
     </button>
   );
 };
@@ -85,6 +85,11 @@ const Surgeries = () => {
       entityName="GP Surgeries"
       actions={actions}
       onRowSelected={(r) => setSelectedGp(r)}
+      actionComponent={
+        <SurgeryActions
+          onSurgeryCreate={() => setCreateVisible(!createVisible)}
+        />
+      }
     />
   );
 };

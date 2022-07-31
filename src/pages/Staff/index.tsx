@@ -1,20 +1,33 @@
 import {
   ColumnDef,
-  getCoreRowModel,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  useReactTable,
 } from "@tanstack/react-table";
-import React, { useState } from "react";
-import { MdModeEdit, MdMoreVert, MdPersonRemove } from "react-icons/md";
-import { Table } from "../../components/Table";
+import { FC, useState } from "react";
+import {
+  MdAddCircle,
+  MdModeEdit,
+  MdPersonRemove,
+} from "react-icons/md";
 import { TableData, TableDataAction } from "../../components/TableData";
-import TablePaginator from "../../components/TablePaginator";
-import Template from "../../components/Template";
 import { IStaff } from "../../types";
+
+export interface StaffActionsProps {
+  onPatientCreate: () => void;
+}
+
+const StaffActions: FC<StaffActionsProps> = ({
+  onPatientCreate: onStaffCreate,
+}) => {
+  return (
+    <button className="patient-component__new" onClick={() => onStaffCreate()}>
+      <MdAddCircle />
+      Add Staff Member
+    </button>
+  );
+};
 
 const Staff = () => {
   const [selectedStaff, setSelectedStaff] = useState<IStaff>();
+  const [createVisible, setCreateVisible] = useState<boolean>(false);
 
   const [staff, setStaff] = useState<IStaff[]>([
     {
@@ -57,13 +70,13 @@ const Staff = () => {
   const actions: TableDataAction[] = [
     {
       action: "Edit Staff",
-      icon: <MdModeEdit />
+      icon: <MdModeEdit />,
     },
     {
       action: "Delete Staff",
-      icon: <MdPersonRemove />
+      icon: <MdPersonRemove />,
     },
-  ]
+  ];
 
   return (
     <TableData
@@ -72,6 +85,11 @@ const Staff = () => {
       entityName="Staff"
       onRowSelected={(r) => setSelectedStaff(r)}
       actions={actions}
+      actionComponent={
+        <StaffActions
+          onPatientCreate={() => setCreateVisible(!createVisible)}
+        />
+      }
     />
   );
 };
