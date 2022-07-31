@@ -1,6 +1,7 @@
 import classNames from 'classnames';
 import React, { CSSProperties, FC, useEffect, useState } from 'react'
 import { MdModeEdit, MdPersonRemove } from 'react-icons/md';
+import { TableDataAction } from '../TableData';
 import './index.scss'
 
 export interface ActionModalCoords {
@@ -9,9 +10,10 @@ export interface ActionModalCoords {
 }
 export interface ActionModalProps {
     visible: boolean;
+    actions: TableDataAction[];
 }
 
-const ActionModal: FC<ActionModalProps> = ({ visible }) => {
+const ActionModal: FC<ActionModalProps> = ({ visible, actions }) => {
 
     const [coords, setCoords] = useState<ActionModalCoords>({
         x: 0,
@@ -54,14 +56,12 @@ const ActionModal: FC<ActionModalProps> = ({ visible }) => {
 
   return (
     <div className={classNames("action-modal", visible ? "action-modal--visible" : null)} style={actionModalStyle}>
-        <div className="action-modal__action">
-            <MdModeEdit />
-            Edit Patient
-        </div>
-        <div className="action-modal__action">
-            <MdPersonRemove />
-            Delete Patient
-        </div>
+        { actions.length ? actions.map(({ action, icon, onClicked }) =>
+            <div className="action-modal__action" onClick={() => onClicked ? onClicked() : null}>
+                { icon }
+                { action }
+            </div>
+        ) : null }
     </div>
     )
 }
