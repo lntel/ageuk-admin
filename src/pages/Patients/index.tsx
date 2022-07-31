@@ -1,22 +1,10 @@
-import {
-  ColumnDef,
-  getCoreRowModel,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  useReactTable,
-  Row,
-  RowSelectionState,
-} from "@tanstack/react-table";
-import React, { FC, useEffect, useRef, useState } from "react";
-import "./index.scss";
-import { Table } from "../../components/Table";
-import Template from "../../components/Template";
+import { ColumnDef, RowSelectionState } from "@tanstack/react-table";
+import React, { FC, useEffect, useState } from "react";
+// import "./index.scss";
 import { Patient } from "../../types";
-import TablePaginator from "../../components/TablePaginator";
 import { MdAddCircle, MdMoreVert } from "react-icons/md";
+import { TableData } from "../../components/TableData";
 import PatientsCreate from "../../components/PatientsCreate";
-import ActionModal from "../../components/ActionModal";
-
 export interface PatientActionsProps {
   onPatientCreate: () => void;
 }
@@ -39,23 +27,8 @@ const Patients = () => {
   const [nhsNumber, setNhsNumber] = useState<string>("");
 
   useEffect(() => {
-    
-    document.addEventListener('click', handleDeselection);
-
-    return () => {
-      document.removeEventListener('click', handleDeselection);
-    }
-
-  }, [])
-
-  useEffect(() => {
-    console.log(rowSelection)
-  }, [rowSelection])
-
-  const handleDeselection = (e: MouseEvent) => {
-    if((e.target as HTMLElement).parentElement?.tagName != "TD" && (e.target as HTMLElement).tagName != "svg" && (e.target as HTMLElement).tagName != "path")
-      setSelectedRow({});
-  }
+    console.log(rowSelection);
+  }, [rowSelection]);
 
   // * Weeks by default
   const [prognosis, setPrognosis] = useState<string>("weeks");
@@ -255,43 +228,25 @@ const Patients = () => {
     {
       id: "Actions",
       cell: ({ row, cell }) => [
-        <MdMoreVert
-          key={cell.id}
-          onClick={(e) => row.toggleSelected()}
-        />,
+        <MdMoreVert key={cell.id} onClick={(e) => row.toggleSelected()} />,
       ],
     },
   ];
 
-  const table = useReactTable({
-    data: patients,
-    columns,
-    state: {
-      rowSelection
-    },
-    onRowSelectionChange: setSelectedRow,
-    getFilteredRowModel: getFilteredRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    getCoreRowModel: getCoreRowModel(),
-    enableMultiRowSelection: false
-  });
-
   return (
-    <Template
-      header="Manage Patients"
-      layout="none"
-      className="patient-component"
-      headerChildren={
+    <TableData
+      actionComponent={
         <PatientActions
           onPatientCreate={() => setCreateVisible(!createVisible)}
         />
       }
-    >
-      <PatientsCreate visible={createVisible} />
-      <Table table={table} className="patient-component__table" maxRows={6} />
-      <TablePaginator table={table} className="patient-component__paginator" />
-      <ActionModal visible={Boolean(Object.keys(rowSelection).length)} />
-    </Template>
+      createComponent={<PatientsCreate visible={createVisible} />}
+      columns={columns}
+      data={patients}
+      entityName="Patients"
+      onRowSelected={(r) => setSelectedRow(r)}
+      className="patient-component"
+    />
   );
 };
 
