@@ -41,7 +41,7 @@ export const PaginatorButton: FC<PaginatorButtonProps> = ({
       onClick={() => onClick ? onClick() : null}
     >
       {type == "back" ? <MdChevronLeft /> : <MdChevronRight />}
-      <p className="paginator-component__button__text">Prev</p>
+      <p className="paginator-component__button__text">{type == "back" ? "Prev" : "Next"}</p>
     </button>
   );
 };
