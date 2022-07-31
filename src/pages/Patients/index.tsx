@@ -2,8 +2,8 @@ import { ColumnDef, RowSelectionState } from "@tanstack/react-table";
 import React, { FC, useEffect, useState } from "react";
 // import "./index.scss";
 import { Patient } from "../../types";
-import { MdAddCircle, MdMoreVert } from "react-icons/md";
-import { TableData } from "../../components/TableData";
+import { MdAddCircle, MdModeEdit, MdPersonRemove } from "react-icons/md";
+import { TableData, TableDataAction } from "../../components/TableData";
 import PatientsCreate from "../../components/PatientsCreate";
 export interface PatientActionsProps {
   onPatientCreate: () => void;
@@ -224,14 +224,29 @@ const Patients = () => {
       accessorKey: "dob",
       cell: (info) => new Date(info.getValue()).toLocaleDateString(),
       header: "DOB",
+    }
+  ];
+
+  const handleDelete = () => {
+
+  }
+
+  const handleEdit = () => {
+
+  }
+
+  const actions: TableDataAction[] = [
+    {
+      action: "Edit Patient",
+      icon: <MdModeEdit />,
+      onClicked: handleEdit
     },
     {
-      id: "Actions",
-      cell: ({ row, cell }) => [
-        <MdMoreVert key={cell.id} onClick={(e) => row.toggleSelected()} />,
-      ],
-    },
-  ];
+      action: "Delete Patient",
+      icon: <MdPersonRemove />,
+      onClicked: handleDelete
+    }
+  ]
 
   return (
     <TableData
@@ -243,6 +258,7 @@ const Patients = () => {
       createComponent={<PatientsCreate visible={createVisible} />}
       columns={columns}
       data={patients}
+      actions={actions}
       entityName="Patients"
       onRowSelected={(r) => setSelectedRow(r)}
       className="patient-component"
