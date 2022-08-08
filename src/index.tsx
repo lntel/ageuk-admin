@@ -8,12 +8,14 @@ import Patients from './pages/Patients';
 import Surgeries from './pages/Surgeries';
 import Dates from './pages/Dates';
 import Staff from './pages/Staff';
+import ReactTooltip from 'react-tooltip';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
 root.render(
-  <React.StrictMode>
+  <>
+    <ReactTooltip effect="solid" multiline={true} />
     <BrowserRouter>
       <Routes>
         <Route path='/' element={<Login />} />
@@ -24,5 +26,5 @@ root.render(
         <Route path='/calendar' element={<Dates />} />
       </Routes>
     </BrowserRouter>
-  </React.StrictMode>
+  </>
 );
