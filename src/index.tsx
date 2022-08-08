@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css'
+import 'react-toastify/dist/ReactToastify.css'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
@@ -8,12 +9,14 @@ import Patients from './pages/Patients';
 import Surgeries from './pages/Surgeries';
 import Dates from './pages/Dates';
 import Staff from './pages/Staff';
+import { ToastContainer } from 'react-toastify';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
 root.render(
   <React.StrictMode>
+    <ToastContainer />
     <BrowserRouter>
       <Routes>
         <Route path='/' element={<Login />} />
