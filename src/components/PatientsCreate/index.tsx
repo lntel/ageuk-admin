@@ -2,6 +2,7 @@ import React, { FC, useState } from "react";
 import CanvasDraw from "react-canvas-draw";
 import { MdAddCircle, MdRemoveCircle } from "react-icons/md";
 import ReactModal from "react-modal";
+import ReactTooltip from "react-tooltip";
 import Dropdown, { IDropdownOption } from "../Dropdown";
 import Textbox from "../Textbox";
 import WoundManager from "../WoundManager";
@@ -84,7 +85,8 @@ const PatientsCreate: FC<PatientsCreateProps> = ({ visible }) => {
           options={prognoses}
           placeholder="Select a prognosis"
           onSelect={(v) => setPrognosis(v)}
-        />
+          data-tip="Setting the prognosis to auto uses<br /> machine learning to determine the patients prognosis"
+          />
         <Textbox
           className="patient-component__create__input"
           placeholder="Address Line"
@@ -149,6 +151,7 @@ const PatientsCreate: FC<PatientsCreateProps> = ({ visible }) => {
       <div className="patient-component__create__wounds">
         <WoundManager isOpen={false} />
       </div>
+      <ReactTooltip effect="solid" multiline={true} />
     </ReactModal>
   );
 };
