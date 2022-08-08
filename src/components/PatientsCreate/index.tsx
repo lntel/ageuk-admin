@@ -1,6 +1,6 @@
 import React, { FC, useState } from "react";
 import CanvasDraw from "react-canvas-draw";
-import { MdAddCircle, MdRemoveCircle } from "react-icons/md";
+import { MdAddCircle, MdClose, MdRemoveCircle } from "react-icons/md";
 import ReactModal from "react-modal";
 import Dropdown, { IDropdownOption } from "../Dropdown";
 import Textbox from "../Textbox";
@@ -8,9 +8,10 @@ import WoundManager from "../WoundManager";
 
 export interface PatientsCreateProps {
   visible: boolean;
+  onClose: () => void;
 }
 
-const PatientsCreate: FC<PatientsCreateProps> = ({ visible }) => {
+const PatientsCreate: FC<PatientsCreateProps> = ({ visible, onClose }) => {
   let drawRef: CanvasDraw | null;
 
   // * Prognosis is weeks by default
@@ -59,9 +60,12 @@ const PatientsCreate: FC<PatientsCreateProps> = ({ visible }) => {
       className="patient-component__create"
       overlayClassName="modal-overlay"
     >
-      <h1 className="patient-component__create__title">
-        Create a new patient {nhsNumber ? `- ${nhsNumber}` : null}
-      </h1>
+      <div className="patient-component__header">
+        <h1 className="patient-component__create__title">
+          Create a new patient {nhsNumber ? `- ${nhsNumber}` : null}
+        </h1>
+        <MdClose className="patient-component__create__close" onClick={() => onClose()} />
+      </div>
       <div className="patient-component__create__general">
         <Textbox
           className="patient-component__create__input"

@@ -5,6 +5,7 @@ import { Patient } from "../../types";
 import { MdAddCircle, MdModeEdit, MdPersonRemove } from "react-icons/md";
 import { TableData, TableDataAction } from "../../components/TableData";
 import PatientsCreate from "../../components/PatientsCreate";
+
 export interface PatientActionsProps {
   onPatientCreate: () => void;
 }
@@ -188,6 +189,10 @@ const Patients = () => {
     },
   ]);
 
+  const handleModalClose = () => {
+    setCreateVisible(!createVisible);
+  }
+
   // TODO query if NHS number is used as a search term
 
   const columns: ColumnDef<Patient>[] = [
@@ -255,7 +260,7 @@ const Patients = () => {
           onPatientCreate={() => setCreateVisible(!createVisible)}
         />
       }
-      createComponent={<PatientsCreate visible={createVisible} />}
+      createComponent={<PatientsCreate visible={createVisible} onClose={() => handleModalClose()} />}
       columns={columns}
       data={patients}
       actions={actions}
