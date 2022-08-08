@@ -2,6 +2,13 @@
 
 .patient-component {
 
+    &__header {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        grid-column: 1 / 5;
+    }
+
     &__create {
         display: grid;
         grid-template-rows: 15% 35% 1fr;
@@ -16,6 +23,11 @@
         background: #f8f8f8;
         border-radius: .4em;
         padding: 2em;
+
+        &__close {
+            font-size: 2em;
+            cursor: pointer;
+        }
 
         &__wounds {
             background: #000;
