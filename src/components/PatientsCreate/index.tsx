@@ -2,6 +2,7 @@ import React, { FC, useState } from "react";
 import CanvasDraw from "react-canvas-draw";
 import { MdAddCircle, MdClose, MdRemoveCircle } from "react-icons/md";
 import ReactModal from "react-modal";
+import { toast } from "react-toastify";
 import Dropdown, { IDropdownOption } from "../Dropdown";
 import Textbox from "../Textbox";
 import WoundManager from "../WoundManager";
@@ -19,6 +20,7 @@ const PatientsCreate: FC<PatientsCreateProps> = ({ visible, onClose }) => {
   const [nhsNumber, setNhsNumber] = useState<string | null>(null);
   const [diagnoses, setDiagnoses] = useState<string[]>([]);
   const [diagnosis, setDiagnosis] = useState<string>("");
+  const [selectedDiagnosis, setSelectedDiagnosis] = useState<string>("");
 
   const [gpOptions, setGpOptions] = useState<IDropdownOption[]>([
     {
@@ -48,11 +50,27 @@ const PatientsCreate: FC<PatientsCreateProps> = ({ visible, onClose }) => {
 
   const handleDiagnosisAdd = () => {
     // TODO add alert message
-    if (!diagnosis.length) return;
+    if (!diagnosis.length) return toast.error("You must enter a diagnosis");
+
+    const exists = diagnoses.find(d => d == diagnosis);
+
+    if(exists) {
+      
+      setDiagnosis("");
+
+      return toast.error(`${diagnosis} is already within the diagnosis list`);
+    }
 
     setDiagnoses([...diagnoses, diagnosis]);
     setDiagnosis("");
   };
+
+  const handleDiagnosisRemove = () => {
+
+    if(!selectedDiagnosis)
+      return toast.error("You must select a diagnosis to remove");
+
+    };
 
   return (
     <ReactModal
@@ -64,7 +82,10 @@ const PatientsCreate: FC<PatientsCreateProps> = ({ visible, onClose }) => {
         <h1 className="patient-component__create__title">
           Create a new patient {nhsNumber ? `- ${nhsNumber}` : null}
         </h1>
-        <MdClose className="patient-component__create__close" onClick={() => onClose()} />
+        <MdClose
+          className="patient-component__create__close"
+          onClick={() => onClose()}
+        />
       </div>
       <div className="patient-component__create__general">
         <Textbox
@@ -137,7 +158,7 @@ const PatientsCreate: FC<PatientsCreateProps> = ({ visible, onClose }) => {
           </button>
           <button
             className="patient-component__create__button patient-component__create__button--remove"
-            onClick={() => console.log(drawRef!.getSaveData())}
+            onClick={() => handleDiagnosisRemove()}
           >
             <MdRemoveCircle />
             Remove
@@ -146,7 +167,14 @@ const PatientsCreate: FC<PatientsCreateProps> = ({ visible, onClose }) => {
         <ul className="patient-component__create__diagnoses__list">
           <span>Patient Diagnoses</span>
           {diagnoses.length
-            ? diagnoses.map((diagnosis) => <li key={diagnosis}>{diagnosis}</li>)
+            ? diagnoses.map((diagnosis) => (
+                <li
+                  key={diagnosis}
+                  onClick={() => setSelectedDiagnosis(diagnosis)}
+                >
+                  {diagnosis}
+                </li>
+              ))
             : null}
         </ul>
       </div>
