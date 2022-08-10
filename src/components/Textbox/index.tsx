@@ -10,10 +10,11 @@ export interface TextboxProps {
     required?: boolean;
     className?: string;
     value?: string;
+    "data-tip"?: string;
     onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
 }
 
-const Textbox: FC<TextboxProps> = ({ type = 'text', placeholder, className, value, required = false, onChange }) => {
+const Textbox: FC<TextboxProps> = ({ type = 'text', placeholder, className, value, required = false, onChange, "data-tip": dataTip }) => {
   
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     if(!onChange) return;
@@ -30,6 +31,7 @@ const Textbox: FC<TextboxProps> = ({ type = 'text', placeholder, className, valu
     value={value}
     onChange={(e) => handleChange(e)}
     required={required} 
+    data-tip={dataTip}
     />
     </>
   )

@@ -7,16 +7,18 @@ import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import Patients from './pages/Patients';
 import Surgeries from './pages/Surgeries';
-import Dates from './pages/Dates';
+// import Dates from './pages/Dates';
 import Staff from './pages/Staff';
 import { ToastContainer } from 'react-toastify';
+import ReactTooltip from 'react-tooltip';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
 root.render(
-  <React.StrictMode>
-    <ToastContainer />
+  <>
+  <ToastContainer />
+    <ReactTooltip effect="solid" multiline={true} />
     <BrowserRouter>
       <Routes>
         <Route path='/' element={<Login />} />
@@ -24,8 +26,8 @@ root.render(
         <Route path='/patients' element={<Patients />} />
         <Route path='/staff' element={<Staff />} />
         <Route path='/surgeries' element={<Surgeries />} />
-        <Route path='/calendar' element={<Dates />} />
+        {/* <Route path='/calendar' element={<Dates />} /> */}
       </Routes>
     </BrowserRouter>
-  </React.StrictMode>
+  </>
 );

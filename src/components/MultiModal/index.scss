@@ -1,0 +1,22 @@
+.multimodal {
+  width: 90%;
+  background: #f8f8f8;
+  border-radius: 0.4em;
+  padding: 2em;
+
+  &__header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
+    &__text {
+        font-weight: normal;
+        margin: 0 0 .5em 0;
+    }
+
+    &__close {
+        font-size: 2em;
+        cursor: pointer;
+    }
+  }
+}

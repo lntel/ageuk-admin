@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { MdNotificationsNone, MdOutlineArrowDropDown } from 'react-icons/md'
 import Textbox from '../Textbox'
-import ReactModal from 'react-modal'
 
 import './index.scss'
 import { Modal } from '../Modal'
@@ -21,7 +20,7 @@ export const Topbar = () => {
 
   return (
     <div className="topbar">
-        <Textbox type="text" placeholder="Search patients" className="topbar__search" />
+        <Textbox type="text" placeholder="Search patients" className="topbar__search" data-tip="Enter some information about the patient you<br /> want to find (e.g. first name, surname, dob)" />
         <div className="topbar__actions">
             <div className="topbar__actions__notifications">
                 <MdNotificationsNone 
