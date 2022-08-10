@@ -1,0 +1,27 @@
+.checkbox {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    &__checkmark {
+        height: 100%;
+        width: 20%;
+        display: grid;
+        place-items: center;
+        color: #fff;
+        border-radius: .2em;
+        cursor: pointer;
+        font-size: 1.7em;
+        transition: all .3s ease-in-out;
+        border: 1px solid #bdbdbd;
+        
+        &--checked {
+            border: 0;
+            background: #23A2D1;
+        }
+    }
+
+    &__text {
+        text-indent: .5em;
+    }
+}
