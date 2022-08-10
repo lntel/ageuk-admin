@@ -3,6 +3,7 @@ import CanvasDraw from "react-canvas-draw";
 import { MdAddCircle, MdClose, MdRemoveCircle } from "react-icons/md";
 import ReactModal from "react-modal";
 import { toast } from "react-toastify";
+import Checkbox from "../Checkbox";
 import Dropdown, { IDropdownOption } from "../Dropdown";
 import Textbox from "../Textbox";
 import WoundManager from "../WoundManager";
@@ -21,6 +22,7 @@ const PatientsCreate: FC<PatientsCreateProps> = ({ visible, onClose }) => {
   const [diagnoses, setDiagnoses] = useState<string[]>([]);
   const [diagnosis, setDiagnosis] = useState<string>("");
   const [selectedDiagnosis, setSelectedDiagnosis] = useState<string>("");
+  const [dnacpr, setDnacpr] = useState<boolean>(false);
 
   const [gpOptions, setGpOptions] = useState<IDropdownOption[]>([
     {
@@ -49,7 +51,6 @@ const PatientsCreate: FC<PatientsCreateProps> = ({ visible, onClose }) => {
   ]);
 
   const handleDiagnosisAdd = () => {
-    // TODO add alert message
     if (!diagnosis.length) return toast.error("You must enter a diagnosis");
 
     const exists = diagnoses.find(d => d == diagnosis);
@@ -60,6 +61,8 @@ const PatientsCreate: FC<PatientsCreateProps> = ({ visible, onClose }) => {
 
       return toast.error(`${diagnosis} is already within the diagnosis list`);
     }
+
+    toast.success("Diagnosis added to list")
 
     setDiagnoses([...diagnoses, diagnosis]);
     setDiagnosis("");
@@ -105,6 +108,16 @@ const PatientsCreate: FC<PatientsCreateProps> = ({ visible, onClose }) => {
           className="patient-component__create__input"
           placeholder="Patient Surname"
         />
+        <Textbox
+          type="phone"
+          className="patient-component__create__input"
+          placeholder="Patient Telephone"
+        />
+        {/* TODO add tooltip to this so it makes more sense */}
+        <Textbox
+          type="date"
+          className="patient-component__create__input"
+        />
         <Dropdown
           options={prognoses}
           placeholder="Select a prognosis"
@@ -140,6 +153,12 @@ const PatientsCreate: FC<PatientsCreateProps> = ({ visible, onClose }) => {
           className="patient-component__create__input"
           placeholder="Nurse Phone Number"
         />
+        <Textbox
+          type="text"
+          className="patient-component__create__input"
+          placeholder="Referred By"
+        />
+        <Checkbox text="DNACPR" checked={dnacpr} onClick={() => setDnacpr(!dnacpr)} />
       </div>
       <div className="patient-component__create__diagnoses">
         <Textbox
