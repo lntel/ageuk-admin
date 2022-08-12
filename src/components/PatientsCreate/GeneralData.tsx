@@ -1,4 +1,6 @@
-import React, { FC, useState } from "react";
+import classNames from "classnames";
+import React, { FC, useEffect, useState } from "react";
+import { toast } from "react-toastify";
 import ReactTooltip from "react-tooltip";
 import Dropdown, { IDropdownOption } from "../Dropdown";
 import Textbox from "../Textbox";
@@ -12,6 +14,7 @@ const GeneralData: FC<GeneralDataProps> = ({}) => {
   const [contactName, setContactName] = useState<string>("");
   const [contactNumber, setContactNumber] = useState<string>("");
   const [contacts, setContacts] = useState<string[]>([]);
+  const [selectedContact, setSelectedContact] = useState<string>("");
 
   const [gpOptions, setGpOptions] = useState<IDropdownOption[]>([
     {
@@ -41,8 +44,21 @@ const GeneralData: FC<GeneralDataProps> = ({}) => {
 
   const addContact = () => {
 
+    if(!contactName.length || !contactNumber.length)
+      return;
+
     const details = `${contactName} - ${contactNumber}`;
 
+    const exists = contacts.find(c => c == details);
+
+    if(exists)
+      return toast.error("This contact is already on the contact list");
+
+    setContactName("");
+    setContactNumber("");
+
+    toast.success("Added contact to contact list");
+    
     setContacts([
       ...contacts,
       details
@@ -50,8 +66,24 @@ const GeneralData: FC<GeneralDataProps> = ({}) => {
   }
   
   const removeContact = () => {
+    if(!selectedContact.length) return;
 
+    toast.success("Removed contact from contact list");
+    
+    setContacts([
+      ...contacts.filter(contact => contact != selectedContact)
+    ]);
+
+    setSelectedContact("");
   }
+
+  useEffect(() => {
+
+    const lsName = "patientCreateData";
+
+    
+
+  }, []);
 
   return (
     <div className="patient-component__general">
@@ -161,7 +193,7 @@ const GeneralData: FC<GeneralDataProps> = ({}) => {
         </div>
         <ul className="patient-component__general__contacts__list">
           { contacts.length ? contacts.map(contact => 
-            <li>
+            <li onClick={() => setSelectedContact(contact)} className={classNames("patient-component__general__contact", contact == selectedContact ? "patient-component__general__contact--selected" : null)}>
               { contact }
             </li>
           ) : null }
