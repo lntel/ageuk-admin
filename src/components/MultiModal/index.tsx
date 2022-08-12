@@ -1,4 +1,3 @@
-import classNames from "classnames";
 import React, { FC, useEffect, useState } from "react";
 import { MdClose } from "react-icons/md";
 import ReactModal from "react-modal";
@@ -16,6 +15,8 @@ export interface MultiModalProps {
   onClose: () => void;
   className?: string;
 }
+
+// ? potentially add a required callback for incomplete data fields etc?
 
 const MultiModal: FC<MultiModalProps> = ({
   visible,
