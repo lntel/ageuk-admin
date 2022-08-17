@@ -5,7 +5,8 @@ import { Patient } from "../../types";
 import { MdAddCircle, MdModeEdit, MdPersonRemove } from "react-icons/md";
 import { TableData, TableDataAction } from "../../components/TableData";
 import PatientsCreate from "../../components/PatientsCreate";
-import { get } from "../../helpers/request";
+import request from "../../helpers/request";
+import { toast } from "react-toastify";
 
 export interface PatientActionsProps {
   onPatientCreate: () => void;
@@ -33,13 +34,13 @@ const Patients = () => {
   }, []);
 
   const getPatients = async () => {
-    const request = await get({
+    const response = await request({
       url: '/patients'
     });
 
     
-    if(request.ok) {
-      const data = await request.json();
+    if(response.ok) {
+      const data = await response.json();
 
       console.log(data)
 
@@ -248,7 +249,24 @@ const Patients = () => {
     }
   ];
 
-  const handleDelete = () => {
+  const handleDelete = async () => {
+
+    if(!rowSelection) return;
+
+    const response = await request({
+      type: 'DELETE',
+      url: `/patients/${rowSelection.id}`
+    });
+
+    if(response.ok) {
+
+      // TODO clean this up with some proper types
+      setPatients([
+        ...patients.filter(p => p.id !== (rowSelection.id as unknown as string))
+      ]);
+
+      toast.success("Patient has been deleted");
+    }
 
   }
 
@@ -260,12 +278,12 @@ const Patients = () => {
     {
       action: "Edit Patient",
       icon: <MdModeEdit />,
-      onClicked: handleEdit
+      onClicked: () => handleEdit
     },
     {
       action: "Delete Patient",
       icon: <MdPersonRemove />,
-      onClicked: handleDelete
+      onClicked: () => handleDelete()
     }
   ]
 

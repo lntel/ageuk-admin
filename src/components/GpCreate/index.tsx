@@ -2,7 +2,7 @@ import React, { FC } from "react";
 import { useContext } from "react";
 import { toast } from "react-toastify";
 import { GpContext } from "../../context/GpContext";
-import { post } from "../../helpers/request";
+import request from "../../helpers/request";
 import MultiModal from "../MultiModal";
 import GeneralData, { SubmissionData } from "./GeneralData";
 
@@ -18,12 +18,13 @@ const GpCreate: FC<GpCreateProps> = ({ visible, onClose, onCreated }) => {
 
   const handleSubmit = async (data: SubmissionData) => {
 
-    const request = await post({
+    const response = await request({
+      type: 'POST',
       url: '/gp',
       data
     });
     
-    if(request.ok) {
+    if(response.ok) {
 
       onCreated();
 

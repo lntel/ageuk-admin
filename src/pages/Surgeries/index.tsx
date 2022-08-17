@@ -3,10 +3,11 @@ import { FC, useContext, useEffect, useState } from "react";
 import { IGpSurgery } from "../../types";
 import { MdAddCircle, MdModeEdit, MdPersonRemove } from "react-icons/md";
 import { TableData, TableDataAction } from "../../components/TableData";
-import { get } from "../../helpers/request";
 import GpCreate from "../../components/GpCreate";
 import "./index.scss";
 import { GpContext, GpContextType } from "../../context/GpContext";
+import request from "../../helpers/request";
+import { toast } from "react-toastify";
 
 export interface SurgeryActionsProps {
   onSurgeryCreate: () => void;
@@ -37,12 +38,12 @@ const Surgeries = () => {
   }, []);
 
   const getSurgeries = async () => {
-    const request = await get({
+    const response = await request({
       url: "/gp",
     });
 
-    if (request.ok) {
-      const data = await request.json();
+    if (response.ok) {
+      const data = await response.json();
 
       setSurgeries(data);
     }
@@ -55,6 +56,33 @@ const Surgeries = () => {
 
     setCreateVisible(false);
   };
+
+  const handleDelete = async () => {
+
+    if(!selectedGp) return;
+
+    const response = await request({
+      type: 'DELETE',
+      url: `/gp/${selectedGp.id}`
+    });
+
+    
+    if(response.ok) {
+      
+      setSurgeries([
+        ...surgeries.filter(s => s.id != selectedGp.id)
+      ]);
+      
+      toast.success("GP Surgery has been deleted")
+    } else {
+
+      const { message } = await response.json();
+
+      if(response.status == 409) {
+        toast.warn(message);
+      }
+    }
+  }
 
   // const [surgeries, setSurgeries] = useState<IGpSurgery[]>([
   //   // {
@@ -105,6 +133,7 @@ const Surgeries = () => {
     {
       action: "Delete GP",
       icon: <MdPersonRemove />,
+      onClicked: () => handleDelete()
     },
   ];
 
