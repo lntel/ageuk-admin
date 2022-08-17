@@ -1,15 +1,15 @@
-import React, { FC } from 'react'
+import React, { FC, FormEvent } from 'react'
 
 export interface FormProps {
     children?: any;
     className?: string;
-    onSubmit: () => void;
+    onSubmit: (e: FormEvent<HTMLFormElement>) => void;
 }
 
 const Form: FC<FormProps> = ({ children, onSubmit, className }) => {
 
   return (
-    <form className={className} onSubmit={() => onSubmit()}>
+    <form className={className} onSubmit={(e) => onSubmit(e)}>
         { children }
     </form>
   )
