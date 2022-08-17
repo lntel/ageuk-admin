@@ -1,9 +1,5 @@
 import React, { FormEvent, useState } from "react";
 import { FC } from "react";
-import { useContext } from "react";
-import { toast } from "react-toastify";
-import { GpContext } from "../../context/GpContext";
-import { post } from "../../helpers/request";
 import Form from "../Form";
 import Textbox from "../Textbox";
 
