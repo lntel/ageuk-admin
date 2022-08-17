@@ -11,13 +11,30 @@ export interface PaginatorProps {
 }
 
 const Paginator: FC<PaginatorProps> = ({ className, currentPage, totalPages, onBack, onForward }) => {
+
+  const handleForward = () => {
+    if(!onForward || !totalPages) return;
+
+    if(currentPage === totalPages) return;
+
+    onForward();
+  }
+
+  const handleBackward = () => {
+    if(!onBack || !totalPages) return;
+
+    if(currentPage === 1) return;
+
+    onBack();
+  }
+
   return (
     <div className={classNames("paginator-component", className)}>
-        <PaginatorButton type="back" disabled={currentPage == 1} onClick={() => onBack ? onBack() : null} />
+        <PaginatorButton type="back" disabled={currentPage == 1} onClick={() => handleBackward()} />
         <p className="paginator-component__pages">
-            { currentPage } of { totalPages }
+            { currentPage } of { totalPages >= 1 ? totalPages : 1 }
         </p>
-        <PaginatorButton type="forward" disabled={currentPage == totalPages} onClick={() => onForward ? onForward() : null} />
+        <PaginatorButton type="forward" disabled={currentPage == totalPages} onClick={() => handleForward()} />
     </div>
   );
 };
