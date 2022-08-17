@@ -1,4 +1,4 @@
-import React, { Children, createContext, FC, useEffect, useState } from "react";
+import React, { createContext, FC, useEffect, useState } from "react";
 import { IGpSurgery } from "../types";
 
 export interface GpContextType {

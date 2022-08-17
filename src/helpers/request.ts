@@ -9,7 +9,7 @@ export interface RequestData {
     data?: object;
 }
 
-export default async (requestData: RequestData) => {
+const request = async (requestData: RequestData) => {
     const request = await fetch(`${apiUrl}${requestData.url}`, {
         method: requestData.type ?? 'GET',
         body: requestData.data ? JSON.stringify(requestData.data) : null,
@@ -24,3 +24,5 @@ export default async (requestData: RequestData) => {
 
     return request;
 }
+
+export default request;

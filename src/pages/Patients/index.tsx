@@ -27,7 +27,6 @@ const PatientActions: FC<PatientActionsProps> = ({ onPatientCreate }) => {
 const Patients = () => {
   const [rowSelection, setSelectedRow] = useState<RowSelectionState>({});
   const [createVisible, setCreateVisible] = useState<boolean>(false);
-  const [nhsNumber, setNhsNumber] = useState<string>("");
 
   useEffect(() => {
     getPatients();
@@ -48,8 +47,8 @@ const Patients = () => {
     }
   }
 
-  // * Weeks by default
-  const [prognosis, setPrognosis] = useState<string>("weeks");
+  // // * Weeks by default
+  // const [prognosis, setPrognosis] = useState<string>("weeks");
 
   const [patients, setPatients] = useState<Patient[]>([
     // {
