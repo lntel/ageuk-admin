@@ -2,6 +2,10 @@
 
 .patient-component {
 
+    &__modal {
+        width: 90%;
+    }
+
     &__button {
         display: flex;
         flex-direction: row;
@@ -47,9 +51,17 @@
 
         &__textfields {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
+            grid-template-columns: repeat(2, minmax(20px, auto));
             grid-template-rows: repeat(9, 1fr);
             gap: .5em;
+        }
+
+        &__contact {
+            cursor: pointer;
+
+            &--selected {
+                color: #23A2D1;
+            }
         }
 
         &__contacts {

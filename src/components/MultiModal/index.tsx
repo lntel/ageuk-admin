@@ -1,3 +1,4 @@
+import classNames from "classnames";
 import React, { FC, useEffect, useState } from "react";
 import { MdClose } from "react-icons/md";
 import ReactModal from "react-modal";
@@ -14,6 +15,7 @@ export interface MultiModalProps {
   pages: MultiModalPage[];
   onClose: () => void;
   className?: string;
+  overlayClassName?: string;
 }
 
 // ? potentially add a required callback for incomplete data fields etc?
@@ -23,11 +25,16 @@ const MultiModal: FC<MultiModalProps> = ({
   pages,
   onClose,
   className,
+  overlayClassName
 }) => {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [page, setPage] = useState<MultiModalPage>();
 
   useEffect(() => {
+
+    if(!pages.length)
+      return console.error("Multimodal must have at least one page");
+
     setPage(pages[currentPage - 1]);
   }, [currentPage]);
 
@@ -42,7 +49,7 @@ const MultiModal: FC<MultiModalProps> = ({
   return (
     <ReactModal
       isOpen={visible}
-      className="multimodal"
+      className={classNames("multimodal", overlayClassName)}
       overlayClassName="modal-overlay"
     >
       <div className="multimodal__header">
@@ -53,12 +60,15 @@ const MultiModal: FC<MultiModalProps> = ({
         />
       </div>
       <div className={className}>{ page?.component }</div>
-      <Paginator
-        currentPage={currentPage}
-        totalPages={pages.length}
-        onForward={() => nextPage()}
-        onBack={() => prevPage()}
-      />
+      { pages.length > 1 ? (
+        <Paginator
+          currentPage={currentPage}
+          totalPages={pages.length}
+          onForward={() => nextPage()}
+          onBack={() => prevPage()}
+        />
+      ) : null }
+
     </ReactModal>
   );
 };

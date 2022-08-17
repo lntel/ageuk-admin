@@ -219,7 +219,7 @@ const PatientsCreate: FC<PatientsCreateProps> = ({ visible, onClose }) => {
     // </ReactModal>
 
     <MultiModal
-      className="patient-component"
+      overlayClassName="patient-component__modal"
       onClose={() => onClose()}
       visible={visible}
       pages={[
