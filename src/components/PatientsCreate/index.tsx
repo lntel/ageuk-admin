@@ -1,17 +1,10 @@
 import React, { FC, useState } from "react";
 import CanvasDraw from "react-canvas-draw";
-import { MdAddCircle, MdClose, MdRemoveCircle } from "react-icons/md";
-import ReactModal from "react-modal";
 import { toast } from "react-toastify";
-import Checkbox from "../Checkbox";
-import ReactTooltip from "react-tooltip";
-import Dropdown, { IDropdownOption } from "../Dropdown";
-import Textbox from "../Textbox";
-import WoundManager from "../WoundManager";
 import MultiModal from "../MultiModal";
 import GeneralData from "./GeneralData";
-import Consent from "./Consent";
-
+import { MultiModalProvider } from "../../context/MultiModalContext"
+import Diagnoses from "./Diagnoses";
 export interface PatientsCreateProps {
   visible: boolean;
   onClose: () => void;
@@ -23,7 +16,7 @@ const PatientsCreate: FC<PatientsCreateProps> = ({ visible, onClose }) => {
   const [diagnoses, setDiagnoses] = useState<string[]>([]);
   const [diagnosis, setDiagnosis] = useState<string>("");
   const [selectedDiagnosis, setSelectedDiagnosis] = useState<string>("");
-  const [dnacpr, setDnacpr] = useState<boolean>(false);
+  // const [dnacpr, setDnacpr] = useState<boolean>(false);
 
   const handleDiagnosisAdd = () => {
     if (!diagnosis.length) return toast.error("You must enter a diagnosis");
@@ -218,17 +211,24 @@ const PatientsCreate: FC<PatientsCreateProps> = ({ visible, onClose }) => {
     //   <ReactTooltip effect="solid" multiline={true} />
     // </ReactModal>
 
-    <MultiModal
-      overlayClassName="patient-component__modal"
-      onClose={() => onClose()}
-      visible={visible}
-      pages={[
-        {
-          header: "General Patient Information",
-          component: <GeneralData />
-        },
-      ]}
-    />
+    <MultiModalProvider>
+      <MultiModal
+        overlayClassName="patient-component__modal"
+        onClose={() => onClose()}
+        visible={visible}
+        pages={[
+          {
+            header: "General Patient Information",
+            component: <GeneralData />
+          },
+          {
+            header: "Diagnoses and Allergies",
+            component: <Diagnoses />
+          },
+        ]}
+      />
+    </MultiModalProvider>
+
   );
 };
 

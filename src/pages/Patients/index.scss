@@ -52,7 +52,7 @@
         &__textfields {
             display: grid;
             grid-template-columns: repeat(2, minmax(20px, auto));
-            grid-template-rows: repeat(9, 1fr);
+            grid-template-rows: repeat(8, 1fr);
             gap: .5em;
         }
 
