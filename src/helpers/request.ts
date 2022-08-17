@@ -2,21 +2,17 @@ import { toast } from "react-toastify";
 
 const apiUrl = "http://localhost:5000";
 
+export type RequestDataType = | 'GET' | 'POST' | 'PATCH' | 'DELETE';
 export interface RequestData {
+    type?: RequestDataType;
     url: string;
     data?: object;
 }
 
-const get = async (requestData: RequestData) => {
-    const request = await fetch(`${apiUrl}${requestData.url}`);
-
-    return request;
-}
-
-const post = async (requestData: RequestData) => {
+export default async (requestData: RequestData) => {
     const request = await fetch(`${apiUrl}${requestData.url}`, {
-        method: 'POST',
-        body: JSON.stringify(requestData.data),
+        method: requestData.type ?? 'GET',
+        body: requestData.data ? JSON.stringify(requestData.data) : null,
         headers: {
             'content-type': 'application/json'
         }
@@ -27,9 +23,4 @@ const post = async (requestData: RequestData) => {
     }
 
     return request;
-}
-
-export {
-    get,
-    post
 }
