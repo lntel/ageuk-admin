@@ -2,9 +2,9 @@ import classNames from "classnames";
 import React, { FC, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import ReactTooltip from "react-tooltip";
-import { get } from "../../helpers/request";
 import Dropdown, { IDropdownOption } from "../Dropdown";
 import Textbox from "../Textbox";
+import request from "../../helpers/request"
 
 export interface GeneralDataProps {}
 
@@ -22,12 +22,12 @@ const GeneralData: FC<GeneralDataProps> = ({}) => {
   }, []);
 
   const getGpSurgeries = async () => {
-    const request = await get({
+    const response = await request({
       url: "/gp",
     });
 
-    if (request.ok) {
-      const data: any[] = await request.json();
+    if (response.ok) {
+      const data: any[] = await response.json();
 
       setGpOptions(data.map((gp) => ({ key: gp.surgeryName, value: gp.id })));
     }
