@@ -11,23 +11,24 @@ import Surgeries from './pages/Surgeries';
 import Staff from './pages/Staff';
 import { ToastContainer } from 'react-toastify';
 import ReactTooltip from 'react-tooltip';
+import { GpProvider } from './context/GpContext';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
 root.render(
-  <>
-  <ToastContainer />
-    <ReactTooltip effect="solid" multiline={true} />
-    <BrowserRouter>
-      <Routes>
-        <Route path='/' element={<Login />} />
-        <Route path='/dashboard' element={<Dashboard />} />
-        <Route path='/patients' element={<Patients />} />
-        <Route path='/staff' element={<Staff />} />
-        <Route path='/surgeries' element={<Surgeries />} />
-        {/* <Route path='/calendar' element={<Dates />} /> */}
-      </Routes>
-    </BrowserRouter>
-  </>
+  <GpProvider>
+    <ToastContainer />
+      <ReactTooltip effect="solid" multiline={true} />
+      <BrowserRouter>
+        <Routes>
+          <Route path='/' element={<Login />} />
+          <Route path='/dashboard' element={<Dashboard />} />
+          <Route path='/patients' element={<Patients />} />
+          <Route path='/staff' element={<Staff />} />
+          <Route path='/surgeries' element={<Surgeries />} />
+          {/* <Route path='/calendar' element={<Dates />} /> */}
+        </Routes>
+      </BrowserRouter>
+  </GpProvider>
 );
