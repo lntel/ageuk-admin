@@ -1,5 +1,7 @@
 import React, { createContext, FC, useEffect, useState } from 'react'
 
+
+// TODO if possible, make the context strictly typed to an interface/generic this will make the dev experience much better
 export interface MultiModalContextType {
     state: any;
     setState: React.Dispatch<React.SetStateAction<any>>;
