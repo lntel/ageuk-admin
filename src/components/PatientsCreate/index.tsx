@@ -5,6 +5,7 @@ import MultiModal from "../MultiModal";
 import GeneralData from "./GeneralData";
 import { MultiModalProvider } from "../../context/MultiModalContext"
 import Diagnoses from "./Diagnoses";
+import Assessment from "./Assessment";
 export interface PatientsCreateProps {
   visible: boolean;
   onClose: () => void;
@@ -224,6 +225,10 @@ const PatientsCreate: FC<PatientsCreateProps> = ({ visible, onClose }) => {
           {
             header: "Diagnoses and Allergies",
             component: <Diagnoses />
+          },
+          {
+            header: "Patient Assessment",
+            component: <Assessment />
           },
         ]}
       />
