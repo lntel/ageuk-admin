@@ -76,6 +76,8 @@ const Surgeries = () => {
       toast.success("GP Surgery has been deleted")
     } else {
 
+      // TODO add 400 message or something
+
       const { message } = await response.json();
 
       if(response.status === 409) {
