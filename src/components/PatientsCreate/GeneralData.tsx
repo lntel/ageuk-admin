@@ -6,6 +6,7 @@ import Dropdown, { IDropdownOption } from "../Dropdown";
 import Textbox from "../Textbox";
 import request from "../../helpers/request";
 import { MultiModalContext } from "../../context/MultiModalContext";
+import ItemList from "../ItemList";
 
 export interface GeneralDataProps {}
 
@@ -17,11 +18,10 @@ const GeneralData: FC<GeneralDataProps> = ({}) => {
   const [selectedContact, setSelectedContact] = useState<string>("");
 
   useEffect(() => {
-
     // Check if the context state is empty already and set contacts array as empty to avoid errors
-    if(!Object.keys(state).length) {
+    if (!Object.keys(state).length) {
       setState({
-        contacts: []
+        contacts: [],
       });
     }
 
@@ -94,9 +94,11 @@ const GeneralData: FC<GeneralDataProps> = ({}) => {
 
     toast.success("Removed contact from contact list");
 
-    const tmpContacts = state.contacts.filter((c: string) => c !== selectedContact);
+    const tmpContacts = state.contacts.filter(
+      (c: string) => c !== selectedContact
+    );
 
-    setState({ ...state, contacts: tmpContacts })
+    setState({ ...state, contacts: tmpContacts });
     // setContacts([...contacts.filter((contact) => contact != selectedContact)]);
 
     setSelectedContact("");
@@ -122,8 +124,8 @@ const GeneralData: FC<GeneralDataProps> = ({}) => {
           type="date"
           className="patient-component__input"
           data-tip="Date of start of care provision"
-          value={state.startDate}
-          onChange={(e) => setState({ ...state, startDate: e.target.value })}
+          value={state.startDate ? state.startDate.toISOString().split('T')[0] : ""}
+          onChange={(e) => setState({ ...state, startDate: new Date(e.target.value) })}
         />
         <Textbox
           className="patient-component__input"
@@ -180,25 +182,27 @@ const GeneralData: FC<GeneralDataProps> = ({}) => {
           type="date"
           className="patient-component__input"
           data-tip="Please enter the patients DOB<br /> (You may also type the date in here)"
-          value={state.dob}
-          onChange={e => setState({...state, dob: e.target.value})}
+          value={state.dob ? state.dob.toISOString().split('T')[0] : ""}
+          onChange={(e) => setState({ ...state, dob: new Date(e.target.value) })}
         />
         <Textbox
           className="patient-component__input"
           placeholder="NHS Number"
           value={state.nhsNumber}
-          onChange={e => setState({...state, nhsNumber: e.target.value})}
+          onChange={(e) => setState({ ...state, nhsNumber: e.target.value })}
         />
         <Dropdown
           options={prognoses}
           placeholder="Select a prognosis"
-          onSelect={v => setState({ ...state, prognosis: v })}
+          value={state.prognosis}
+          onSelect={(v) => setState({ ...state, prognosis: v })}
           data-tip="Setting the prognosis to auto uses<br /> machine learning to determine the patients prognosis"
         />
         <Dropdown
           options={gpOptions}
           placeholder="Select patient's GP surgery"
-          onSelect={console.log}
+          value={state.gpSurgery}
+          onSelect={v => setState({ ...state, gpSurgery: Number(v) })}
         />
         <Textbox
           type="text"
@@ -206,7 +210,7 @@ const GeneralData: FC<GeneralDataProps> = ({}) => {
           placeholder="N.O.K Details"
           data-tip="Please enter the fullname and<br/> contact number of the patients next of kin<br/>e.g. (Tracy Exeter - 07836 738129)"
           value={state.nokDetails}
-          onChange={e => setState({...state, nokDetails: e.target.value})}
+          onChange={(e) => setState({ ...state, nokDetails: e.target.value })}
         />
         <Textbox
           type="text"
@@ -214,10 +218,34 @@ const GeneralData: FC<GeneralDataProps> = ({}) => {
           placeholder="First point of contact"
           data-tip="This is only necessary if the first point<br/> of contact differs from the patients N.O.K"
           value={state.firstContact}
-          onChange={e => setState({...state, firstContact: e.target.value})}
+          onChange={(e) => setState({ ...state, firstContact: e.target.value })}
         />
       </div>
-      <div className="patient-component__general__contacts">
+      <ItemList
+        items={state.contacts}
+        listTitle="Additional Contacts"
+        itemName="Contact"
+        onItemAdded={() => addContact()}
+        onItemRemoved={() => removeContact()}
+        onItemSelected={(item) => setSelectedContact(item)}
+        selectedItem={selectedContact}
+      >
+        <Textbox
+          type="text"
+          className="patient-component__input"
+          placeholder="Contact Name"
+          value={contactName}
+          onChange={(e) => setContactName(e.target.value)}
+        />
+        <Textbox
+          type="text"
+          className="patient-component__input"
+          placeholder="Contact Number"
+          value={contactNumber}
+          onChange={(e) => setContactNumber(e.target.value)}
+        />
+      </ItemList>
+      {/* <div className="patient-component__general__contacts">
         <h2 className="patient-component__general__contacts__header">
           Additional Contacts
         </h2>
@@ -266,7 +294,7 @@ const GeneralData: FC<GeneralDataProps> = ({}) => {
               ))
             : null}
         </ul>
-      </div>
+      </div> */}
       <ReactTooltip effect="solid" multiline={true} />
     </div>
   );
