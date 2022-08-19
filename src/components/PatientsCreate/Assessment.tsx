@@ -37,12 +37,10 @@ const Assessment = () => {
   const { state, setState } = useContext(MultiModalContext);
 
   useEffect(() => {
-
     setData({
-        ...data,
-        ...state.assessmentAreas
+      ...data,
+      ...state.assessmentAreas,
     });
-
   }, []);
 
   useEffect(() => {
@@ -116,15 +114,24 @@ const Assessment = () => {
         tooltip="If checked, please select the date the driver was set up"
         onClick={() => setData({ ...data, syringeDriver: !data.syringeDriver })}
       />
-      <Textbox
-        type="date"
-        data-tip="Date of syringe driver setup"
-        // https://stackoverflow.com/questions/12346381/set-date-in-input-type-date
-        value={data.syringeDriverSetupDate ? data.syringeDriverSetupDate.toISOString().split('T')[0] : ""}
-        onChange={(e) =>
-          setData({ ...data, syringeDriverSetupDate: new Date(e.target.value) })
-        }
-      />
+      {data.syringeDriver ? (
+        <Textbox
+          type="date"
+          data-tip="Date of syringe driver setup"
+          // https://stackoverflow.com/questions/12346381/set-date-in-input-type-date
+          value={
+            data.syringeDriverSetupDate
+              ? data.syringeDriverSetupDate.toISOString().split("T")[0]
+              : ""
+          }
+          onChange={(e) =>
+            setData({
+              ...data,
+              syringeDriverSetupDate: new Date(e.target.value),
+            })
+          }
+        />
+      ) : null}
       <ReactTooltip effect="solid" multiline={true} />
     </div>
   );
