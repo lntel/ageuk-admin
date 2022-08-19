@@ -6,6 +6,7 @@ type TextboxType = | 'text' | 'email' | 'password' | 'phone' | 'date';
 
 export interface TextboxProps {
     type?: TextboxType;
+    disabled?: boolean;
     placeholder?: string;
     required?: boolean;
     className?: string;
@@ -14,7 +15,7 @@ export interface TextboxProps {
     onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
 }
 
-const Textbox: FC<TextboxProps> = ({ type = 'text', placeholder, className, value, required = false, onChange, "data-tip": dataTip }) => {
+const Textbox: FC<TextboxProps> = ({ type = 'text', placeholder, className, value, required = false, onChange, "data-tip": dataTip, disabled }) => {
   
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     if(!onChange) return;
@@ -32,6 +33,7 @@ const Textbox: FC<TextboxProps> = ({ type = 'text', placeholder, className, valu
     onChange={(e) => handleChange(e)}
     required={required} 
     data-tip={dataTip}
+    disabled={disabled}
     />
     </>
   )
