@@ -214,21 +214,23 @@ const PatientsCreate: FC<PatientsCreateProps> = ({ visible, onClose }) => {
 
     <MultiModalProvider>
       <MultiModal
-        overlayClassName="patient-component__modal"
         onClose={() => onClose()}
         visible={visible}
         pages={[
           {
             header: "General Patient Information",
-            component: <GeneralData />
+            component: <GeneralData />,
+            className: "patient-component__general__modal"
           },
           {
             header: "Diagnoses and Allergies",
-            component: <Diagnoses />
+            component: <Diagnoses />,
+            className: "patient-component__diagnoses__modal"
           },
           {
             header: "Patient Assessment",
-            component: <Assessment />
+            component: <Assessment />,
+            className: "patient-component__assessment__modal"
           },
         ]}
       />
