@@ -223,7 +223,7 @@ const Patients = () => {
     },
     {
       accessorKey: "diagnoses",
-      cell: (info) => info.getValue(),
+      cell: (info) => (info.getValue() as string[])[0],
       header: "Diagnoses",
     },
     {
