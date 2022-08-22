@@ -1,11 +1,11 @@
-import { ColumnDef, RowSelectionState } from "@tanstack/react-table";
+import { ColumnDef } from "@tanstack/react-table";
 import { FC, useContext, useEffect, useState } from "react";
 import { IGpSurgery } from "../../types";
 import { MdAddCircle, MdModeEdit, MdPersonRemove } from "react-icons/md";
 import { TableData, TableDataAction } from "../../components/TableData";
 import GpCreate from "../../components/GpCreate";
 import "./index.scss";
-import { GpContext, GpContextType } from "../../context/GpContext";
+import { GpContext } from "../../context/GpContext";
 import request from "../../helpers/request";
 import { toast } from "react-toastify";
 
@@ -14,7 +14,7 @@ export interface SurgeryActionsProps {
 }
 
 const SurgeryActions: FC<SurgeryActionsProps> = ({
-  onSurgeryCreate: onSurgeryCreate,
+  onSurgeryCreate,
 }) => {
   return (
     <button
@@ -70,15 +70,17 @@ const Surgeries = () => {
     if(response.ok) {
       
       setSurgeries([
-        ...surgeries.filter(s => s.id != selectedGp.id)
+        ...surgeries.filter(s => s.id !== selectedGp.id)
       ]);
       
       toast.success("GP Surgery has been deleted")
     } else {
 
+      // TODO add 400 message or something
+
       const { message } = await response.json();
 
-      if(response.status == 409) {
+      if(response.status === 409) {
         toast.warn(message);
       }
     }

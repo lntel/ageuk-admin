@@ -1,11 +1,9 @@
-import React, { FC, ReactElement, useEffect, useState } from "react";
+import { FC, ReactElement } from "react";
 import "./index.scss";
 
 import Navigation from "../Navigation";
 import { Topbar } from "../Topbar";
 import classNames from "classnames";
-import { IGpSurgery } from "../../types";
-import { GpProvider } from "../../context/GpContext";
 
 export type TemplateLayout = "grid" | "none";
 export interface TemplateProps {
@@ -34,7 +32,7 @@ const Template: FC<TemplateProps> = ({
       <div
         className={classNames(
           "template__main",
-          layout == "grid" ? "template__main--grid" : null
+          layout === "grid" ? "template__main--grid" : null
         )}
       >
         {children}

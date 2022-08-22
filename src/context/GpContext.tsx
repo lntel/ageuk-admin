@@ -1,8 +1,8 @@
-import React, { Children, createContext, FC, useEffect, useState } from "react";
+import React, { createContext, FC, useEffect, useState } from "react";
 import { IGpSurgery } from "../types";
 
 export interface GpContextType {
-    surgeries: any[];
+    surgeries: IGpSurgery[];
     setSurgeries: React.Dispatch<React.SetStateAction<IGpSurgery[]>>
 }
 
@@ -18,10 +18,6 @@ export interface GpProviderProps {
 export const GpProvider: FC<GpProviderProps> = ({ children }) => {
 
     const [surgeries, setSurgeries] = useState<IGpSurgery[]>([]);
-
-    useEffect(() => {
-        console.log(surgeries)
-    }, [surgeries])
 
     return (
         <GpContext.Provider value={{ surgeries, setSurgeries  }}>

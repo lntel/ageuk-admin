@@ -3,7 +3,7 @@
 .patient-component {
 
     &__modal {
-        width: 90%;
+        // width: 90%;
     }
 
     &__button {
@@ -44,56 +44,20 @@
 
     &__general {
         display: grid;
-        grid-template-columns: 35% 25% 1fr;
+        grid-template-columns: 40% 30% 1fr;
         grid-template-rows: 1fr;
         margin: 0 0 1em 0;
         gap: 1em;
 
+        &__modal {
+            width: 80%;
+        }
+
         &__textfields {
             display: grid;
             grid-template-columns: repeat(2, minmax(20px, auto));
-            grid-template-rows: repeat(9, 1fr);
+            grid-template-rows: repeat(8, 1fr);
             gap: .5em;
-        }
-
-        &__contact {
-            cursor: pointer;
-
-            &--selected {
-                color: #23A2D1;
-            }
-        }
-
-        &__contacts {
-            display: flex;
-            flex-direction: column;
-
-            &__header {
-                font-weight: 400;
-                margin: 0 0 .5em 0;
-            }
-
-            &__list {
-                font-size: .9em;
-                padding: 1em;
-                list-style: none;
-                margin: .5em 0 0 0;
-                flex: 1;
-                border: 1px solid #bdbdbd;
-                border-radius: .4em;
-            }
-
-            &__inputs {
-                display: grid;
-                grid-template-columns: repeat(2, 1fr);
-                grid-template-rows: repeat(3, 1fr);
-                gap: .5em;
-
-
-                button {
-                    grid-column: 1 / 3;
-                }
-            }
         }
     }
 
@@ -119,36 +83,19 @@
     }
 
     &__diagnoses {
-        display: flex;
-        flex-direction: column;
-        grid-area: diagnoses;
+        display: grid;
+        grid-gap: 1em;
+        grid-template-rows: 100%;
+        grid-template-columns: repeat(2, 1fr);
+        margin: 0 0 1em 0;
 
-        &__list {
-            flex: 1;
-            list-style: none;
-            padding: 1em;
-            border: 1px solid #b8b8b8;
-            border-radius: .4em;
-            margin: .5em 0 0 0;
-            
-            li {
-                font-size: .9em;
-                cursor: pointer;
-            }
-        
-            span {
-                text-transform: uppercase;
-                font-size: .8em;
-                font-weight: 600;
-            }
+        &__modal {
+            width: 60%;
         }
 
-        &__actions {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            grid-template-rows: 1fr;
-            gap: 1em;
-            margin: .5em 0 0 0;
+        &__input {
+            padding: 1em;
+            grid-column: 1 / 3;
         }
     }
 
@@ -165,11 +112,36 @@
     }
 
     &__assessment {
-        display: flex;
-        flex-direction: column;
-        grid-area: assessment;
-        // background: red;
-        padding: 0 .5em;
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        grid-template-rows: repeat(7, 1fr);
+        row-gap: .5em;
+        margin: 0 0 1em 0;
+
+        &__submit {
+            grid-column: 1 / 2;
+
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            border: 0;
+            background: #23A2D1;
+            color: #fff;
+            padding: 1em 1.3em;
+            border-radius: .4em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background .3s ease-in-out;
+
+            &:hover {
+                background: darken(#23A2D1, 5%);
+            }
+        }
+
+        &__modal {
+            width: 80%;
+        }
 
         &__title {
             font-size: 1.2em;

@@ -8,6 +8,7 @@ import "./index.scss";
 export interface MultiModalPage {
     header: string;
     component: React.ReactNode;
+    className?: string;
 }
 
 export interface MultiModalProps {
@@ -49,7 +50,7 @@ const MultiModal: FC<MultiModalProps> = ({
   return (
     <ReactModal
       isOpen={visible}
-      className={classNames("multimodal", overlayClassName)}
+      className={classNames("multimodal", overlayClassName ?? page?.className)}
       overlayClassName="modal-overlay"
     >
       <div className="multimodal__header">
