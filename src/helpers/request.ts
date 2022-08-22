@@ -1,4 +1,5 @@
 import { toast } from "react-toastify";
+import errorHandler from "./errorHandler";
 
 const apiUrl = "http://localhost:5000";
 
@@ -18,9 +19,7 @@ const request = async (requestData: RequestData) => {
         }
     });
 
-    if(request.status === 429) {
-        toast.error("You are making too many requests, please wait and try again");
-    }
+    if(!request.ok) errorHandler(request);
 
     return request;
 }
