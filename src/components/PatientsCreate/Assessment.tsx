@@ -1,15 +1,15 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { FC, useContext, useEffect, useState } from "react";
 import ReactTooltip from "react-tooltip";
 import { MultiModalContext } from "../../context/MultiModalContext";
 import Checkbox from "../Checkbox";
 import Textbox from "../Textbox";
 
-interface AssessmentData {
+export interface AssessmentData {
   dnacpr: boolean;
   personalCare: boolean;
   riskOfPressure: boolean;
   pressureSore: boolean;
-  poorMobility: boolean;
+  reducedMobility: boolean;
   weightBear: boolean;
   careAssistant: boolean;
   painSymptom: boolean;
@@ -19,13 +19,17 @@ interface AssessmentData {
   syringeDriverSetupDate?: Date;
 }
 
-const Assessment = () => {
+export interface AssessmentProps {
+  onSubmitted: () => void;
+}
+
+const Assessment: FC<AssessmentProps> = ({ onSubmitted }) => {
   const [data, setData] = useState<AssessmentData>({
     dnacpr: false,
     personalCare: false,
     riskOfPressure: false,
     pressureSore: false,
-    poorMobility: false,
+    reducedMobility: false,
     weightBear: false,
     careAssistant: false,
     painSymptom: false,
@@ -37,16 +41,22 @@ const Assessment = () => {
   const { state, setState } = useContext(MultiModalContext);
 
   useEffect(() => {
-    setData({
-      ...data,
-      ...state.assessmentAreas,
-    });
+    // TODO find a way to load in pre-existing data but also set default bool values
+    // setData({
+    //   ...data,
+    //   ...state.assessmentAreas,
+    // });
+
+    setState({
+      ...state,
+      assessment: data
+    })
   }, []);
 
   useEffect(() => {
     setState({
       ...state,
-      assessmentAreas: data,
+      assessment: data,
     });
   }, [data]);
 
@@ -77,10 +87,10 @@ const Assessment = () => {
         onClick={() => setData({ ...data, pressureSore: !data.pressureSore })}
       />
       <Checkbox
-        checked={data.poorMobility}
+        checked={data.reducedMobility}
         text="Reduced Mobility/Assistance needed with transfers"
         tooltip="(poor balance, weakness, breathlessness)"
-        onClick={() => setData({ ...data, poorMobility: !data.poorMobility })}
+        onClick={() => setData({ ...data, reducedMobility: !data.reducedMobility })}
       />
       <Checkbox
         checked={data.weightBear}
@@ -132,6 +142,9 @@ const Assessment = () => {
           }
         />
       ) : null}
+      <button className="patient-component__assessment__submit" onClick={() => onSubmitted()}>
+        Save Patient
+      </button>
       <ReactTooltip effect="solid" multiline={true} />
     </div>
   );
