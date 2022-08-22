@@ -52,6 +52,7 @@ const MultiModal: FC<MultiModalProps> = ({
       isOpen={visible}
       className={classNames("multimodal", overlayClassName ?? page?.className)}
       overlayClassName="modal-overlay"
+      ariaHideApp={false}
     >
       <div className="multimodal__header">
         <h1 className="multimodal__header__text">{ page?.header }</h1>

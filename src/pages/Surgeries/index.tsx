@@ -3,7 +3,7 @@ import { FC, useContext, useEffect, useState } from "react";
 import { IGpSurgery } from "../../types";
 import { MdAddCircle, MdModeEdit, MdPersonRemove } from "react-icons/md";
 import { TableData, TableDataAction } from "../../components/TableData";
-import GpCreate from "../../components/GpCreate";
+import GpCreate, { GpCreateMode } from "../../components/GpCreate";
 import "./index.scss";
 import { GpContext } from "../../context/GpContext";
 import request from "../../helpers/request";
@@ -28,10 +28,10 @@ const SurgeryActions: FC<SurgeryActionsProps> = ({
 };
 
 const Surgeries = () => {
-  const [selectedGp, setSelectedGp] = useState<IGpSurgery>();
   const [createVisible, setCreateVisible] = useState<boolean>(false);
+  const [mode, setMode] = useState<GpCreateMode>("create");
 
-  const { surgeries, setSurgeries } = useContext(GpContext);
+  const { state, dispatch } = useContext(GpContext);
 
   useEffect(() => {
     getSurgeries();
@@ -45,12 +45,24 @@ const Surgeries = () => {
     if (response.ok) {
       const data = await response.json();
 
-      setSurgeries(data);
+      dispatch({
+        type: "SET_SURGERIES",
+        state: {
+          ...state,
+          surgeries: data
+        }
+      });
     }
   };
 
   const handleCreated = async () => {
-    setSurgeries([]);
+    dispatch({
+      type: "SET_SURGERIES",
+      state: {
+        ...state,
+        surgeries: []
+      }
+    });
 
     await getSurgeries();
 
@@ -59,19 +71,23 @@ const Surgeries = () => {
 
   const handleDelete = async () => {
 
-    if(!selectedGp) return;
+    if(!state.selectedGp) return;
 
     const response = await request({
       type: 'DELETE',
-      url: `/gp/${selectedGp.id}`
+      url: `/gp/${state.selectedGp.id}`
     });
 
     
     if(response.ok) {
       
-      setSurgeries([
-        ...surgeries.filter(s => s.id !== selectedGp.id)
-      ]);
+      dispatch({
+        type: "SET_SURGERIES",
+        state: {
+          ...state,
+          surgeries: state.surgeries.filter(s => s.id !== state.selectedGp?.id)
+        }
+      });
       
       toast.success("GP Surgery has been deleted")
     } else {
@@ -84,6 +100,12 @@ const Surgeries = () => {
         toast.warn(message);
       }
     }
+  }
+
+  const handleEdit = () => {
+    setMode("update");
+    setCreateVisible(true);
+
   }
 
   // const [surgeries, setSurgeries] = useState<IGpSurgery[]>([
@@ -131,6 +153,7 @@ const Surgeries = () => {
     {
       action: "Edit GP",
       icon: <MdModeEdit />,
+      onClicked: () => handleEdit()
     },
     {
       action: "Delete GP",
@@ -142,18 +165,26 @@ const Surgeries = () => {
   return (
     <TableData
       columns={columns}
-      data={surgeries}
+      data={state.surgeries}
       className="gp-component"
       entityName="GP Surgeries"
       createComponent={
         <GpCreate
           visible={createVisible}
+          gpSurgery={state.selectedGp}
+          mode={mode}
           onClose={() => setCreateVisible(!createVisible)}
           onCreated={() => handleCreated()}
         />
       }
       actions={actions}
-      onRowSelected={(r) => setSelectedGp(r)}
+      onRowSelected={(r) => dispatch({
+        type: "SET_SELECTED",
+        state: {
+          ...state,
+          selectedGp: r
+        }
+      })}
       actionComponent={
         <SurgeryActions
           onSurgeryCreate={() => setCreateVisible(!createVisible)}

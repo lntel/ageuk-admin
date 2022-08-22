@@ -1,5 +1,7 @@
-import React, { FormEvent, useState } from "react";
+import React, { FormEvent, useContext, useEffect, useState } from "react";
 import { FC } from "react";
+import { GpContext } from "../../context/GpContext";
+import { IGpSurgery } from "../../types";
 import Form from "../Form";
 import Textbox from "../Textbox";
 
@@ -10,14 +12,17 @@ export interface SubmissionData {
 }
 
 export interface GeneralDataProps {
+  data?: IGpSurgery;
   onSubmit: (data: SubmissionData) => void;
 } 
 
-const GeneralData: FC<GeneralDataProps> = ({ onSubmit }) => {
+const GeneralData: FC<GeneralDataProps> = ({ onSubmit, data }) => {
 
-  const [name, setName] = useState<string>("");
-  const [address, setAddress] = useState<string>("");
-  const [number, setNumber] = useState<string>("");
+  const { state } = useContext(GpContext);
+
+  const [name, setName] = useState<string>(state.selectedGp?.surgeryName || "");
+  const [address, setAddress] = useState<string>(state.selectedGp?.address || "");
+  const [number, setNumber] = useState<string>(state.selectedGp?.phoneNumber || "");
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
