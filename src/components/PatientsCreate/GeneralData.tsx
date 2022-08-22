@@ -188,8 +188,8 @@ const GeneralData: FC<GeneralDataProps> = ({}) => {
         <Textbox
           className="patient-component__input"
           placeholder="NHS Number"
-          value={state.nhsNumber}
-          onChange={(e) => setState({ ...state, nhsNumber: e.target.value })}
+          value={state.id}
+          onChange={(e) => setState({ ...state, id: e.target.value })}
         />
         <Dropdown
           options={prognoses}
@@ -201,8 +201,8 @@ const GeneralData: FC<GeneralDataProps> = ({}) => {
         <Dropdown
           options={gpOptions}
           placeholder="Select patient's GP surgery"
-          value={state.gpSurgery}
-          onSelect={v => setState({ ...state, gpSurgery: Number(v) })}
+          value={state.gpId}
+          onSelect={v => setState({ ...state, gpId: Number(v) })}
         />
         <Textbox
           type="text"
