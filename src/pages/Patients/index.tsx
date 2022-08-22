@@ -7,6 +7,7 @@ import { TableData, TableDataAction } from "../../components/TableData";
 import PatientsCreate from "../../components/PatientsCreate";
 import request from "../../helpers/request";
 import { toast } from "react-toastify";
+import { MultiModalProvider } from "../../context/MultiModalContext";
 
 export interface PatientActionsProps {
   onPatientCreate: () => void;
@@ -287,20 +288,22 @@ const Patients = () => {
   ]
 
   return (
-    <TableData
-      actionComponent={
-        <PatientActions
-          onPatientCreate={() => setCreateVisible(!createVisible)}
-        />
-      }
-      createComponent={<PatientsCreate visible={createVisible} onClose={() => handleModalClose()} />}
-      columns={columns}
-      data={patients}
-      actions={actions}
-      entityName="Patients"
-      onRowSelected={(r) => setSelectedRow(r)}
-      className="patient-component"
-    />
+    <MultiModalProvider>
+      <TableData
+        actionComponent={
+          <PatientActions
+            onPatientCreate={() => setCreateVisible(!createVisible)}
+          />
+        }
+        createComponent={<PatientsCreate visible={createVisible} onClose={() => handleModalClose()} />}
+        columns={columns}
+        data={patients}
+        actions={actions}
+        entityName="Patients"
+        onRowSelected={(r) => setSelectedRow(r)}
+        className="patient-component"
+      />
+    </MultiModalProvider>
   );
 };
 
