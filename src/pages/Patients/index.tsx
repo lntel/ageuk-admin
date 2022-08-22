@@ -35,18 +35,17 @@ const Patients = () => {
 
   const getPatients = async () => {
     const response = await request({
-      url: '/patients'
+      url: "/patients",
     });
 
-    
-    if(response.ok) {
+    if (response.ok) {
       const data = await response.json();
 
-      console.log(data)
+      console.log(data);
 
-      setPatients(data)
+      setPatients(data);
     }
-  }
+  };
 
   // // * Weeks by default
   // const [prognosis, setPrognosis] = useState<string>("weeks");
@@ -208,7 +207,7 @@ const Patients = () => {
 
   const handleModalClose = () => {
     setCreateVisible(!createVisible);
-  }
+  };
 
   // TODO query if NHS number is used as a search term
 
@@ -246,46 +245,43 @@ const Patients = () => {
       accessorKey: "dob",
       cell: (info) => new Date(info.getValue()).toLocaleDateString(),
       header: "DOB",
-    }
+    },
   ];
 
   const handleDelete = async () => {
-
-    if(!rowSelection) return;
+    if (!rowSelection) return;
 
     const response = await request({
-      type: 'DELETE',
-      url: `/patients/${rowSelection.id}`
+      type: "DELETE",
+      url: `/patients/${rowSelection.id}`,
     });
 
-    if(response.ok) {
-
+    if (response.ok) {
       // TODO clean this up with some proper types
       setPatients([
-        ...patients.filter(p => p.id !== (rowSelection.id as unknown as string))
+        ...patients.filter(
+          (p) => p.id !== (rowSelection.id as unknown as string)
+        ),
       ]);
 
       toast.success("Patient has been deleted");
     }
+  };
 
-  }
-
-  const handleEdit = () => {
-
-  }
+  const handleEdit = () => {};
 
   const actions: TableDataAction[] = [
     {
       action: "Edit Patient",
       icon: <MdModeEdit />,
-      onClicked: () => handleEdit
+      onClicked: () => handleEdit(),
     },
     {
       action: "Delete Patient",
       icon: <MdPersonRemove />,
-      onClicked: () => handleDelete()
-    }
-  ]
+      onClicked: () => handleDelete(),
+    },
+  ];
 
   return (
     <MultiModalProvider>
@@ -295,7 +291,13 @@ const Patients = () => {
             onPatientCreate={() => setCreateVisible(!createVisible)}
           />
         }
-        createComponent={<PatientsCreate visible={createVisible} onClose={() => handleModalClose()} />}
+        createComponent={
+          <PatientsCreate
+            visible={createVisible}
+            onCreated={() => getPatients()}
+            onClose={() => handleModalClose()}
+          />
+        }
         columns={columns}
         data={patients}
         actions={actions}
