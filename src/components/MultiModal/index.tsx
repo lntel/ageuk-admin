@@ -50,7 +50,7 @@ const MultiModal: FC<MultiModalProps> = ({
   return (
     <ReactModal
       isOpen={visible}
-      className={classNames("multimodal", pages[currentPage] && pages[currentPage].className ? pages[currentPage].className : null, overlayClassName)}
+      className={classNames("multimodal", pages[currentPage - 1].className, overlayClassName)}
       overlayClassName="modal-overlay"
       ariaHideApp={false}
     >
