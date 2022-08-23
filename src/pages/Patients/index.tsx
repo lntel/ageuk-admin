@@ -289,19 +289,17 @@ const Patients = () => {
             onPatientCreate={() => setCreateVisible(!createVisible)}
           />
         }
-        createComponent={
-          <PatientsCreate
-            visible={createVisible}
-            onCreated={() => getPatients()}
-            onClose={() => handleModalClose()}
-          />
-        }
         columns={columns}
         data={patients}
         actions={actions}
         entityName="Patients"
         onRowSelected={(r) => setSelectedRow(r)}
         className="patient-component"
+      />
+      <PatientsCreate
+        visible={createVisible}
+        onCreated={() => getPatients()}
+        onClose={() => handleModalClose()}
       />
     </MultiModalProvider>
   );
