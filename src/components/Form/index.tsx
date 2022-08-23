@@ -9,7 +9,7 @@ export interface FormProps {
 const Form: FC<FormProps> = ({ children, onSubmit, className }) => {
 
   return (
-    <form className={className} onSubmit={(e) => onSubmit(e)}>
+    <form className={className} onSubmit={onSubmit}>
         { children }
     </form>
   )

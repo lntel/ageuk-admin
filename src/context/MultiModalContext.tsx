@@ -19,12 +19,7 @@ export interface MultiModalProviderProps {
 export const MultiModalProvider: FC<MultiModalProviderProps> = ({ children }) => {
 
     const [state, setState] = useState<any>({});
-
-    useEffect(() => {
-        console.log(state)
-    }, [state])
     
-
     return (
         <MultiModalContext.Provider value={{ state, setState }}>
             { children }

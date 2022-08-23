@@ -1,14 +1,18 @@
-import React, { createContext, FC, useEffect, useState } from "react";
+import React, { createContext, FC, useEffect, useReducer, useState } from "react";
+import gpReducer, { GpAction, GpState } from "../reducer/GpReducer";
 import { IGpSurgery } from "../types";
 
-export interface GpContextType {
-    surgeries: IGpSurgery[];
-    setSurgeries: React.Dispatch<React.SetStateAction<IGpSurgery[]>>
+export interface GpContext {
+    state: GpState;
+    dispatch: React.Dispatch<GpAction>;
 }
 
-export const GpContext = createContext<GpContextType>({
-    surgeries: [],
-    setSurgeries: (gp) => {}
+export const GpContext = createContext<GpContext>({
+    state: {
+        surgeries: [],
+        mode: "CREATE"
+    },
+    dispatch: () => {}
 });
 
 export interface GpProviderProps {
@@ -17,10 +21,13 @@ export interface GpProviderProps {
 
 export const GpProvider: FC<GpProviderProps> = ({ children }) => {
 
-    const [surgeries, setSurgeries] = useState<IGpSurgery[]>([]);
-
+    const [state, dispatch] = useReducer(gpReducer, {
+        surgeries: [],
+        mode: "CREATE"
+    });
+    
     return (
-        <GpContext.Provider value={{ surgeries, setSurgeries  }}>
+        <GpContext.Provider value={{ state, dispatch }}>
             { children }
         </GpContext.Provider>
     );
