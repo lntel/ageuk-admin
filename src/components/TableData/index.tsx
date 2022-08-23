@@ -28,6 +28,7 @@ export interface TableDataProps {
   createComponent?: ReactElement<any>;
   onRowSelected: (record: any) => void;
   className?: string;
+  children?: any;
 }
 
 export const TableData: FC<TableDataProps> = ({
@@ -38,7 +39,8 @@ export const TableData: FC<TableDataProps> = ({
   onRowSelected,
   entityName,
   className,
-  actions
+  actions,
+  children
 }) => {
   const [rowSelection, setSelectedRow] = useState<RowSelectionState>({});
 
@@ -98,7 +100,7 @@ export const TableData: FC<TableDataProps> = ({
       className={className}
       headerChildren={actionComponent}
     >
-      {createComponent}
+      {children}
       <Table table={table} className="table-component__table" maxRows={6} />
       <TablePaginator table={table} className="table-component__paginator" />
       <ActionModal visible={Boolean(Object.keys(rowSelection).length)} actions={actions} />

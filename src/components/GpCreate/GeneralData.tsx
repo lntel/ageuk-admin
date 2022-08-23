@@ -1,6 +1,6 @@
 import React, { FormEvent, useContext, useEffect, useState } from "react";
 import { FC } from "react";
-import { GpContext } from "../../context/GpContext";
+import { GpContext, GpProvider } from "../../context/GpContext";
 import { IGpSurgery } from "../../types";
 import Form from "../Form";
 import Textbox from "../Textbox";
@@ -12,11 +12,10 @@ export interface SubmissionData {
 }
 
 export interface GeneralDataProps {
-  data?: IGpSurgery;
   onSubmit: (data: SubmissionData) => void;
 } 
 
-const GeneralData: FC<GeneralDataProps> = ({ onSubmit, data }) => {
+const GeneralData: FC<GeneralDataProps> = ({ onSubmit }) => {
 
   const { state } = useContext(GpContext);
 
@@ -26,16 +25,16 @@ const GeneralData: FC<GeneralDataProps> = ({ onSubmit, data }) => {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
+    
     onSubmit({
       surgeryName: name,
       phoneNumber: number,
       address
     });
   }
-
+  
   return (
-    <Form onSubmit={e => handleSubmit(e)}>
+    <Form onSubmit={handleSubmit}>
       <Textbox
         type="text"
         placeholder="Surgery Name"
@@ -61,7 +60,7 @@ const GeneralData: FC<GeneralDataProps> = ({ onSubmit, data }) => {
         required
       />
       <button className="gp-component__submit" type="submit">
-        Create GP Surgery
+        { state.mode === "CREATE" ? "Create" : "Update" } GP Surgery
       </button>
     </Form>
   );

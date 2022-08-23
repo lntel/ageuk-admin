@@ -3,9 +3,9 @@ import { FC, useContext, useEffect, useState } from "react";
 import { IGpSurgery } from "../../types";
 import { MdAddCircle, MdModeEdit, MdPersonRemove } from "react-icons/md";
 import { TableData, TableDataAction } from "../../components/TableData";
-import GpCreate, { GpCreateMode } from "../../components/GpCreate";
+import GpCreate from "../../components/GpCreate";
 import "./index.scss";
-import { GpContext } from "../../context/GpContext";
+import { GpContext, GpProvider } from "../../context/GpContext";
 import request from "../../helpers/request";
 import { toast } from "react-toastify";
 
@@ -13,9 +13,7 @@ export interface SurgeryActionsProps {
   onSurgeryCreate: () => void;
 }
 
-const SurgeryActions: FC<SurgeryActionsProps> = ({
-  onSurgeryCreate,
-}) => {
+const SurgeryActions: FC<SurgeryActionsProps> = ({ onSurgeryCreate }) => {
   return (
     <button
       className="patient-component__new"
@@ -29,7 +27,6 @@ const SurgeryActions: FC<SurgeryActionsProps> = ({
 
 const Surgeries = () => {
   const [createVisible, setCreateVisible] = useState<boolean>(false);
-  const [mode, setMode] = useState<GpCreateMode>("create");
 
   const { state, dispatch } = useContext(GpContext);
 
@@ -49,8 +46,8 @@ const Surgeries = () => {
         type: "SET_SURGERIES",
         state: {
           ...state,
-          surgeries: data
-        }
+          surgeries: data,
+        },
       });
     }
   };
@@ -60,8 +57,8 @@ const Surgeries = () => {
       type: "SET_SURGERIES",
       state: {
         ...state,
-        surgeries: []
-      }
+        surgeries: [],
+      },
     });
 
     await getSurgeries();
@@ -70,43 +67,47 @@ const Surgeries = () => {
   };
 
   const handleDelete = async () => {
-
-    if(!state.selectedGp) return;
+    if (!state.selectedGp) return;
 
     const response = await request({
-      type: 'DELETE',
-      url: `/gp/${state.selectedGp.id}`
+      type: "DELETE",
+      url: `/gp/${state.selectedGp.id}`,
     });
 
-    
-    if(response.ok) {
-      
+    if (response.ok) {
       dispatch({
         type: "SET_SURGERIES",
         state: {
           ...state,
-          surgeries: state.surgeries.filter(s => s.id !== state.selectedGp?.id)
-        }
+          surgeries: state.surgeries.filter(
+            (s) => s.id !== state.selectedGp?.id
+          ),
+        },
       });
-      
-      toast.success("GP Surgery has been deleted")
-    } else {
 
+      toast.success("GP Surgery has been deleted");
+    } else {
       // TODO add 400 message or something
 
       const { message } = await response.json();
 
-      if(response.status === 409) {
+      if (response.status === 409) {
         toast.warn(message);
       }
     }
-  }
+  };
 
   const handleEdit = () => {
-    setMode("update");
-    setCreateVisible(true);
+    dispatch({
+      type: "SET_MODE",
+      state: {
+        ...state,
+        mode: "UPDATE",
+      },
+    });
 
-  }
+    setCreateVisible(true);
+  };
 
   // const [surgeries, setSurgeries] = useState<IGpSurgery[]>([
   //   // {
@@ -153,12 +154,12 @@ const Surgeries = () => {
     {
       action: "Edit GP",
       icon: <MdModeEdit />,
-      onClicked: () => handleEdit()
+      onClicked: () => handleEdit(),
     },
     {
       action: "Delete GP",
       icon: <MdPersonRemove />,
-      onClicked: () => handleDelete()
+      onClicked: () => handleDelete(),
     },
   ];
 
@@ -168,29 +169,29 @@ const Surgeries = () => {
       data={state.surgeries}
       className="gp-component"
       entityName="GP Surgeries"
-      createComponent={
-        <GpCreate
-          visible={createVisible}
-          gpSurgery={state.selectedGp}
-          mode={mode}
-          onClose={() => setCreateVisible(!createVisible)}
-          onCreated={() => handleCreated()}
-        />
-      }
       actions={actions}
-      onRowSelected={(r) => dispatch({
-        type: "SET_SELECTED",
-        state: {
-          ...state,
-          selectedGp: r
-        }
-      })}
+      onRowSelected={(r) =>
+        dispatch({
+          type: "SET_SELECTED",
+          state: {
+            ...state,
+            selectedGp: r,
+          },
+        })
+      }
       actionComponent={
         <SurgeryActions
           onSurgeryCreate={() => setCreateVisible(!createVisible)}
         />
       }
-    />
+    >
+      <GpCreate
+        visible={createVisible}
+        gpSurgery={state.selectedGp}
+        onClose={() => setCreateVisible(!createVisible)}
+        onCreated={() => handleCreated()}
+      />
+    </TableData>
   );
 };
 

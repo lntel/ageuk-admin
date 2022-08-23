@@ -10,6 +10,7 @@ export interface GpContext {
 export const GpContext = createContext<GpContext>({
     state: {
         surgeries: [],
+        mode: "CREATE"
     },
     dispatch: () => {}
 });
@@ -21,9 +22,10 @@ export interface GpProviderProps {
 export const GpProvider: FC<GpProviderProps> = ({ children }) => {
 
     const [state, dispatch] = useReducer(gpReducer, {
-        surgeries: []
+        surgeries: [],
+        mode: "CREATE"
     });
-
+    
     return (
         <GpContext.Provider value={{ state, dispatch }}>
             { children }

@@ -17,6 +17,7 @@ export interface MultiModalProps {
   onClose: () => void;
   className?: string;
   overlayClassName?: string;
+  children?: any;
 }
 
 // ? potentially add a required callback for incomplete data fields etc?
@@ -26,18 +27,17 @@ const MultiModal: FC<MultiModalProps> = ({
   pages,
   onClose,
   className,
-  overlayClassName
+  overlayClassName,
 }) => {
   const [currentPage, setCurrentPage] = useState<number>(1);
-  const [page, setPage] = useState<MultiModalPage>();
 
   useEffect(() => {
 
     if(!pages.length)
       return console.error("Multimodal must have at least one page");
 
-    setPage(pages[currentPage - 1]);
-  }, [currentPage]);
+  }, []);
+  
 
   const nextPage = () => {
     setCurrentPage(currentPage + 1);
@@ -50,18 +50,18 @@ const MultiModal: FC<MultiModalProps> = ({
   return (
     <ReactModal
       isOpen={visible}
-      className={classNames("multimodal", overlayClassName ?? page?.className)}
+      className={classNames("multimodal", pages[currentPage] && pages[currentPage].className ? pages[currentPage].className : null, overlayClassName)}
       overlayClassName="modal-overlay"
       ariaHideApp={false}
     >
       <div className="multimodal__header">
-        <h1 className="multimodal__header__text">{ page?.header }</h1>
+        <h1 className="multimodal__header__text">{ pages.length ? pages[currentPage - 1].header : null }</h1>
         <MdClose
           className="multimodal__header__close"
           onClick={() => onClose()}
         />
       </div>
-      <div className={className}>{ page?.component }</div>
+      <div className={className}>{ pages.length ? pages[currentPage - 1].component : null }</div>
       { pages.length > 1 ? (
         <Paginator
           currentPage={currentPage}
