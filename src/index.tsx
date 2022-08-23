@@ -18,9 +18,9 @@ const root = ReactDOM.createRoot(
 );
 root.render(
   <React.StrictMode>
-    <ToastContainer />
-    <ReactTooltip effect="solid" multiline={true} />
     <GpProvider>
+      <ToastContainer />
+      <ReactTooltip effect="solid" multiline={true} />
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Login />} />
