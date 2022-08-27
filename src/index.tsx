@@ -12,12 +12,13 @@ import Staff from "./pages/Staff";
 import { ToastContainer } from "react-toastify";
 import ReactTooltip from "react-tooltip";
 import { GpProvider } from "./context/GpContext";
+import { AuthProvider } from "./context/AuthContext";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
 );
 root.render(
-  <React.StrictMode>
+  <AuthProvider>
     <GpProvider>
       <ToastContainer />
       <ReactTooltip effect="solid" multiline={true} />
@@ -32,5 +33,5 @@ root.render(
         </Routes>
       </BrowserRouter>
     </GpProvider>
-  </React.StrictMode>
+  </AuthProvider>
 );
