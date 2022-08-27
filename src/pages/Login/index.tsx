@@ -59,7 +59,7 @@ const Login = () => {
 
     const timeout = setTimeout(() => {
       
-      // window.location.href = "/dashboard";
+      window.location.href = "/dashboard";
 
       clearTimeout(timeout);
 
