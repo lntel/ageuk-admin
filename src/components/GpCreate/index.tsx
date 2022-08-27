@@ -1,6 +1,7 @@
 import React, { FC, useEffect } from "react";
 import { useContext } from "react";
 import { toast } from "react-toastify";
+import { AuthContext } from "../../context/AuthContext";
 import { GpContext } from "../../context/GpContext";
 import request from "../../helpers/request";
 import { IGpSurgery } from "../../types";
@@ -25,6 +26,7 @@ const GpCreate: FC<GpCreateProps> = ({
   gpSurgery,
 }) => {
   const { state, dispatch } = useContext(GpContext);
+  const { state: authState } = useContext(AuthContext);
 
   const handleClose = () => {
     onClose();
@@ -61,6 +63,9 @@ const GpCreate: FC<GpCreateProps> = ({
         type: "POST",
         url: "/gp",
         data,
+        headers: {
+          Authorization: `Bearer ${authState.accessToken}`
+        }
       });
 
       if (response.ok) {
@@ -73,6 +78,9 @@ const GpCreate: FC<GpCreateProps> = ({
         type: "PATCH",
         url: `/gp/${state.selectedGp?.id}`,
         data,
+        headers: {
+          Authorization: `Bearer ${authState.accessToken}`
+        }
       });
 
       if(response.ok) {

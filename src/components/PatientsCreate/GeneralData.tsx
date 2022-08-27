@@ -7,11 +7,13 @@ import Textbox from "../Textbox";
 import request from "../../helpers/request";
 import { MultiModalContext } from "../../context/MultiModalContext";
 import ItemList from "../ItemList";
+import { AuthContext } from "../../context/AuthContext";
 
 export interface GeneralDataProps {}
 
 const GeneralData: FC<GeneralDataProps> = ({}) => {
   const { state, setState } = useContext(MultiModalContext);
+  const { state: authState } = useContext(AuthContext);
 
   const [contactName, setContactName] = useState<string>("");
   const [contactNumber, setContactNumber] = useState<string>("");
@@ -31,6 +33,9 @@ const GeneralData: FC<GeneralDataProps> = ({}) => {
   const getGpSurgeries = async () => {
     const response = await request({
       url: "/gp",
+      headers: {
+        Authorization: `Bearer ${authState.accessToken}`
+      }
     });
 
     if (response.ok) {
