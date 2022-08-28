@@ -7,6 +7,7 @@ import { MultiModalContext, MultiModalProvider } from "../../context/MultiModalC
 import Diagnoses from "./Diagnoses";
 import Assessment from "./Assessment";
 import request from "../../helpers/request";
+import { AuthContext } from "../../context/AuthContext";
 export interface PatientsCreateProps {
   visible: boolean;
   onClose: () => void;
@@ -22,6 +23,7 @@ const PatientsCreate: FC<PatientsCreateProps> = ({ visible, onClose, onCreated }
   // const [dnacpr, setDnacpr] = useState<boolean>(false);
 
   const { state, setState } = useContext(MultiModalContext);
+  const { state: authState } = useContext(AuthContext);
 
   const handleDiagnosisAdd = () => {
     if (!diagnosis.length) return toast.error("You must enter a diagnosis");
@@ -51,7 +53,10 @@ const PatientsCreate: FC<PatientsCreateProps> = ({ visible, onClose, onCreated }
     const response = await request({
       type: 'POST',
       url: '/patients',
-      data
+      data,
+      headers: {
+        Authorization: `Bearer ${authState.accessToken}`
+      }
     });
 
     if(response.status === 409) {

@@ -8,6 +8,9 @@ export interface RequestData {
     type?: RequestDataType;
     url: string;
     data?: object;
+    headers?: {
+        [key: string]: string;
+    }
 }
 
 const request = async (requestData: RequestData) => {
@@ -15,7 +18,8 @@ const request = async (requestData: RequestData) => {
         method: requestData.type ?? 'GET',
         body: requestData.data ? JSON.stringify(requestData.data) : null,
         headers: {
-            'content-type': 'application/json'
+            'content-type': 'application/json',
+            ...requestData.headers
         }
     });
 

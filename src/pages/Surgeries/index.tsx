@@ -8,6 +8,7 @@ import "./index.scss";
 import { GpContext, GpProvider } from "../../context/GpContext";
 import request from "../../helpers/request";
 import { toast } from "react-toastify";
+import { AuthContext } from "../../context/AuthContext";
 
 export interface SurgeryActionsProps {
   onSurgeryCreate: () => void;
@@ -29,6 +30,7 @@ const Surgeries = () => {
   const [createVisible, setCreateVisible] = useState<boolean>(false);
 
   const { state, dispatch } = useContext(GpContext);
+  const { state: authState } = useContext(AuthContext);
 
   useEffect(() => {
     getSurgeries();
@@ -37,6 +39,9 @@ const Surgeries = () => {
   const getSurgeries = async () => {
     const response = await request({
       url: "/gp",
+      headers: {
+        Authorization: `Bearer ${authState.accessToken}`
+      }
     });
 
     if (response.ok) {
@@ -72,6 +77,9 @@ const Surgeries = () => {
     const response = await request({
       type: "DELETE",
       url: `/gp/${state.selectedGp.id}`,
+      headers: {
+        Authorization: `Bearer ${authState.accessToken}`
+      }
     });
 
     if (response.ok) {

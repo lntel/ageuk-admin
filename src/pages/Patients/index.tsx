@@ -1,5 +1,5 @@
 import { ColumnDef, RowSelectionState } from "@tanstack/react-table";
-import React, { FC, useEffect, useState } from "react";
+import React, { FC, useContext, useEffect, useState } from "react";
 import "./index.scss";
 import { Patient } from "../../types";
 import { MdAddCircle, MdModeEdit, MdPersonRemove } from "react-icons/md";
@@ -8,6 +8,7 @@ import PatientsCreate from "../../components/PatientsCreate";
 import request from "../../helpers/request";
 import { toast } from "react-toastify";
 import { MultiModalProvider } from "../../context/MultiModalContext";
+import { AuthContext } from "../../context/AuthContext";
 
 export interface PatientActionsProps {
   onPatientCreate: () => void;
@@ -29,6 +30,8 @@ const Patients = () => {
   const [rowSelection, setSelectedRow] = useState<RowSelectionState>({});
   const [createVisible, setCreateVisible] = useState<boolean>(false);
 
+  const { state } = useContext(AuthContext);
+
   useEffect(() => {
     getPatients();
   }, []);
@@ -36,6 +39,9 @@ const Patients = () => {
   const getPatients = async () => {
     const response = await request({
       url: "/patients",
+      headers: {
+        Authorization: `Bearer ${state.accessToken}`
+      }
     });
 
     if (response.ok) {
