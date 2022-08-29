@@ -1,6 +1,6 @@
 import { FC, ReactElement } from 'react'
 import './index.scss'
-import { MdCalendarToday, MdHome, MdMedicalServices, MdPeopleAlt, MdStoreMallDirectory } from "react-icons/md";
+import { MdCalendarToday, MdHome, MdMedicalServices, MdPeopleAlt, MdShield, MdStoreMallDirectory } from "react-icons/md";
 
 import Logo from '../../assets/images/age-uk-logo-no-strap.png'
 import { Link, To } from 'react-router-dom';
@@ -15,6 +15,7 @@ const Navigation: FC = () => {
             <NavLink label="Staff" icon={<MdMedicalServices />} to="/staff" />
             <NavLink label="Patients" icon={<MdPeopleAlt />} to="/patients" />
             <NavLink label="GP Surgeries" icon={<MdStoreMallDirectory />} to="/surgeries" />
+            <NavLink label="Access Roles" icon={<MdShield />} to="/roles" />
         </div>
     </nav>
   )

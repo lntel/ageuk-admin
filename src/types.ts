@@ -32,3 +32,10 @@ export interface IGpSurgery {
     surgeryName: string;
     address: string;
 }
+
+export interface IRole {
+    id: string;
+    name: string;
+    created: Date;
+    lastUpdated: Date;
+}
