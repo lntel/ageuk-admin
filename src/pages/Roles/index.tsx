@@ -10,6 +10,8 @@ import request from "../../helpers/request";
 import { toast } from "react-toastify";
 import { AuthContext } from "../../context/AuthContext";
 import { RoleContext } from "../../context/RoleContext";
+import RoleCreate from "../../components/RoleCreate";
+import { MultiModalProvider } from "../../context/MultiModalContext";
 
 export interface RoleActionsProps {
   onRoleCreate: () => void;
@@ -173,34 +175,31 @@ const Roles = () => {
   ];
 
   return (
-    <TableData
-      columns={columns}
-      data={state.roles}
-      className="roles-component"
-      entityName="roles and permissions"
-      actions={actions}
-      onRowSelected={(r) =>
-        dispatch({
-          type: "SET_SELECTED",
-          state: {
-            ...state,
-            selectedRole: r,
-          },
-        })
-      }
-      actionComponent={
-        <SurgeryActions
-          onRoleCreate={() => setCreateVisible(!createVisible)}
-        />
-      }
-    >
-      {/* <GpCreate
-        visible={createVisible}
-        gpSurgery={state.selectedGp}
-        onClose={() => setCreateVisible(!createVisible)}
-        onCreated={() => handleCreated()}
-      /> */}
-    </TableData>
+    <MultiModalProvider>
+      <TableData
+        columns={columns}
+        data={state.roles}
+        className="roles-component"
+        entityName="roles and permissions"
+        actions={actions}
+        onRowSelected={(r) =>
+          dispatch({
+            type: "SET_SELECTED",
+            state: {
+              ...state,
+              selectedRole: r,
+            },
+          })
+        }
+        actionComponent={
+          <SurgeryActions
+            onRoleCreate={() => setCreateVisible(!createVisible)}
+          />
+        }
+      >
+        <RoleCreate visible={createVisible} onClose={() => setCreateVisible(!createVisible)} onCreated={handleCreated} />
+      </TableData>
+    </MultiModalProvider>
   );
 };
 
