@@ -1,4 +1,3 @@
-import { toast } from "react-toastify";
 import errorHandler from "./errorHandler";
 
 const apiUrl = "http://localhost:5000";
@@ -13,7 +12,12 @@ export interface RequestData {
     }
 }
 
-const refreshTokens = async (refreshToken: string) => {
+type TokenData = {
+    accessToken: string;
+    refreshToken: string;
+}
+
+const refreshTokens = async (refreshToken: string): Promise<TokenData | undefined> => {
     const response = await request({
         type: 'POST',
         url: '/auth/refresh',
@@ -22,14 +26,14 @@ const refreshTokens = async (refreshToken: string) => {
         }
     });
 
-    if(!response.ok) return false;
+    if(!response.ok) return undefined;
 
     const tokens = await response.json();
 
     return tokens;
 }
 
-const request = async (requestData: RequestData, refreshToken?: string, tokenRefreshCb?: (tokens: object) => void) => {
+const request = async (requestData: RequestData, refreshToken?: string) => {
     let response = await fetch(`${apiUrl}${requestData.url}`, {
         method: requestData.type ?? 'GET',
         body: requestData.data ? JSON.stringify(requestData.data) : null,
@@ -39,17 +43,22 @@ const request = async (requestData: RequestData, refreshToken?: string, tokenRef
         }
     });
 
-    if(response.status === 401 && refreshToken && tokenRefreshCb) {
+    if(response.status === 401 && refreshToken) {
         const tokens = await refreshTokens(refreshToken);
 
+        // TODO add error handling here
+        if(!tokens) {
+            window.location.href = "/";
+        }
+        
+        localStorage.setItem("tokens", JSON.stringify(tokens));
+        
         response = await request({
             ...requestData,
             headers: {
-                'Authorization': `Bearer ${tokens.refreshToken}`
+                'Authorization': `Bearer ${tokens?.accessToken}`
             }
-        }, tokens.refreshToken)
-
-        tokenRefreshCb(tokens);
+        }, refreshToken);
     }
         
 
