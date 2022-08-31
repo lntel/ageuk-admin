@@ -2,7 +2,7 @@ import { toast } from "react-toastify";
 
 const errorHandler = async (response: Response) => {
 
-    let body;
+    let body, messages;
 
     switch(response.status) {
         case 429:
@@ -13,9 +13,17 @@ const errorHandler = async (response: Response) => {
 
         body = await response.json();
 
-        let messages = body.message;
+        messages = body.message;
 
         toast.error(messages[0]);
+
+        break;
+
+        case 409:
+
+        body = await response.json();
+
+        toast.error(body.message);
 
         break;
     }
