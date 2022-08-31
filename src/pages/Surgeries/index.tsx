@@ -30,7 +30,7 @@ const Surgeries = () => {
   const [createVisible, setCreateVisible] = useState<boolean>(false);
 
   const { state, dispatch } = useContext(GpContext);
-  const { state: authState } = useContext(AuthContext);
+  const { state: authState, dispatch: authDispatch } = useContext(AuthContext);
 
   useEffect(() => {
     getSurgeries();
@@ -42,7 +42,9 @@ const Surgeries = () => {
       headers: {
         Authorization: `Bearer ${authState.accessToken}`
       }
-    });
+    }, authState.refreshToken, tokens => authDispatch({
+      type: ""
+    }));
 
     if (response.ok) {
       const data = await response.json();

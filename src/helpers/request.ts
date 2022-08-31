@@ -13,8 +13,24 @@ export interface RequestData {
     }
 }
 
-const request = async (requestData: RequestData) => {
-    const request = await fetch(`${apiUrl}${requestData.url}`, {
+const refreshTokens = async (refreshToken: string) => {
+    const response = await request({
+        type: 'POST',
+        url: '/auth/refresh',
+        headers: {
+            'Authorization': `Bearer ${refreshToken}`
+        }
+    });
+
+    if(!response.ok) return false;
+
+    const tokens = await response.json();
+
+    return tokens;
+}
+
+const request = async (requestData: RequestData, refreshToken?: string, tokenRefreshCb?: (tokens: object) => void) => {
+    let response = await fetch(`${apiUrl}${requestData.url}`, {
         method: requestData.type ?? 'GET',
         body: requestData.data ? JSON.stringify(requestData.data) : null,
         headers: {
@@ -23,9 +39,23 @@ const request = async (requestData: RequestData) => {
         }
     });
 
-    if(!request.ok) errorHandler(request);
+    if(response.status === 401 && refreshToken && tokenRefreshCb) {
+        const tokens = await refreshTokens(refreshToken);
 
-    return request;
+        response = await request({
+            ...requestData,
+            headers: {
+                'Authorization': `Bearer ${tokens.refreshToken}`
+            }
+        }, tokens.refreshToken)
+
+        tokenRefreshCb(tokens);
+    }
+        
+
+    if(!response.ok) errorHandler(response);
+
+    return response;
 }
 
 export default request;
