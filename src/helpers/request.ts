@@ -33,7 +33,12 @@ const refreshTokens = async (refreshToken: string): Promise<TokenData | undefine
     return tokens;
 }
 
-const request = async (requestData: RequestData, refreshToken?: string) => {
+const request = async (requestData: RequestData) => {
+
+    const tokens = localStorage.getItem("tokens");
+
+    const refreshToken = tokens ? JSON.parse(tokens).refreshToken : "";
+
     let response = await fetch(`${apiUrl}${requestData.url}`, {
         method: requestData.type ?? 'GET',
         body: requestData.data ? JSON.stringify(requestData.data) : null,
@@ -58,7 +63,7 @@ const request = async (requestData: RequestData, refreshToken?: string) => {
             headers: {
                 'Authorization': `Bearer ${tokens?.accessToken}`
             }
-        }, refreshToken);
+        });
     }
         
 
