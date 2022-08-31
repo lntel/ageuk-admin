@@ -42,9 +42,7 @@ const Surgeries = () => {
       headers: {
         Authorization: `Bearer ${authState.accessToken}`
       }
-    }, authState.refreshToken, tokens => authDispatch({
-      type: ""
-    }));
+    }, authState.refreshToken);
 
     if (response.ok) {
       const data = await response.json();
