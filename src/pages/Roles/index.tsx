@@ -1,7 +1,13 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { FC, useContext, useEffect, useState } from "react";
 import { IGpSurgery, IRole } from "../../types";
-import { MdAddCircle, MdAddModerator, MdModeEdit, MdPersonRemove, MdRemoveModerator } from "react-icons/md";
+import {
+  MdAddCircle,
+  MdAddModerator,
+  MdModeEdit,
+  MdPersonRemove,
+  MdRemoveModerator,
+} from "react-icons/md";
 import { TableData, TableDataAction } from "../../components/TableData";
 import GpCreate from "../../components/GpCreate";
 import "./index.scss";
@@ -19,10 +25,7 @@ export interface RoleActionsProps {
 
 const SurgeryActions: FC<RoleActionsProps> = ({ onRoleCreate }) => {
   return (
-    <button
-      className="patient-component__new"
-      onClick={() => onRoleCreate()}
-    >
+    <button className="patient-component__new" onClick={() => onRoleCreate()}>
       <MdAddCircle />
       Add Role
     </button>
@@ -43,8 +46,8 @@ const Roles = () => {
     const response = await request({
       url: "/roles",
       headers: {
-        Authorization: `Bearer ${authState.accessToken}`
-      }
+        Authorization: `Bearer ${authState.accessToken}`,
+      },
     });
 
     if (response.ok) {
@@ -79,10 +82,10 @@ const Roles = () => {
 
     const response = await request({
       type: "DELETE",
-      url: `/gp/${state.selectedRole.id}`,
+      url: `/roles/${state.selectedRole.id}`,
       headers: {
-        Authorization: `Bearer ${authState.accessToken}`
-      }
+        Authorization: `Bearer ${authState.accessToken}`,
+      },
     });
 
     if (response.ok) {
@@ -90,13 +93,11 @@ const Roles = () => {
         type: "SET_ROLES",
         state: {
           ...state,
-          roles: state.roles.filter(
-            (s) => s.id !== state.selectedRole?.id
-          ),
+          roles: state.roles.filter((s) => s.id !== state.selectedRole?.id),
         },
       });
 
-      toast.success("GP Surgery has been deleted");
+      toast.success("Access role has been deleted");
     } else {
       // TODO add 400 message or something
 
@@ -197,7 +198,11 @@ const Roles = () => {
           />
         }
       >
-        <RoleCreate visible={createVisible} onClose={() => setCreateVisible(!createVisible)} onCreated={handleCreated} />
+        <RoleCreate
+          visible={createVisible}
+          onClose={() => setCreateVisible(!createVisible)}
+          onCreated={handleCreated}
+        />
       </TableData>
     </MultiModalProvider>
   );

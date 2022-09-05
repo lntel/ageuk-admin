@@ -4,7 +4,9 @@ import { MdAddCircle, MdRemoveCircle } from "react-icons/md";
 import ReactModal from "react-modal";
 import { toast } from "react-toastify";
 import ReactTooltip from "react-tooltip";
+import { AuthContext } from "../../context/AuthContext";
 import { MultiModalContext } from "../../context/MultiModalContext";
+import { RoleContext } from "../../context/RoleContext";
 import { PermissionTypeEnum } from "../../enums/permissions";
 import request from "../../helpers/request";
 import Checkbox from "../Checkbox";
@@ -24,8 +26,11 @@ export interface GeneralDataProps {
 }
 
 const GeneralData: FC<GeneralDataProps> = ({ onSubmitted }) => {
-  const [name, setName] = useState<string>("");
-  const [permissions, setPermissions] = useState<PermissionTypeEnum[]>([]);
+
+  const { state } = useContext(RoleContext);
+
+  const [name, setName] = useState<string>(state.selectedRole?.name || "");
+  const [permissions, setPermissions] = useState<PermissionTypeEnum[]>(state.selectedRole?.permissions || []);
 
   const { setState } = useContext(MultiModalContext);
 
@@ -79,7 +84,7 @@ const GeneralData: FC<GeneralDataProps> = ({ onSubmitted }) => {
           className="roles-component__form__checkbox"
         /> */}
       </div>
-      <button type="submit" className="roles-component__submit">Create role</button>
+      <button type="submit" className="roles-component__submit">{ state.mode === "UPDATE" ? "Update" : "Create"  } role</button>
       <ReactTooltip effect="solid" multiline={true} />
     </Form>
   );
@@ -87,34 +92,73 @@ const GeneralData: FC<GeneralDataProps> = ({ onSubmitted }) => {
 
 const RoleCreate: FC<RoleCreateProps> = ({ visible, onClose, onCreated }) => {
 
-  const { state } = useContext(MultiModalContext);
+  const { state: authState } = useContext(AuthContext);
+  const { state, dispatch } = useContext(RoleContext);
+  const { state: modalState } = useContext(MultiModalContext);
 
   const handleCreate = async (e: React.FormEvent<HTMLFormElement>) => {
 
     e.preventDefault();
 
-    const response = await request({
-      type: "POST",
-      url: "/roles",
-      data: state
+    if(state.mode === "CREATE") {
+      const response = await request({
+        type: "POST",
+        url: "/roles",
+        data: modalState
+      });
+  
+      // if(!response.ok) {
+      //   if(response.status === 400)
+      // }
+  
+      if(response.ok) {
+  
+        onCreated();
+  
+        toast.success("Role has been created");
+      }
+    } else {
+      const response = await request({
+        type: "PATCH",
+        url: `/roles/${state.selectedRole?.id}`,
+        data: modalState,
+        headers: {
+          Authorization: `Bearer ${authState.accessToken}`
+        }
+      });
+
+      if(response.ok) {
+        onCreated();
+
+        toast.success("Access role has been updated");
+      }
+    }
+  };
+
+  const handleClose = () => {
+
+    dispatch({
+      type: "SET_MODE",
+      state: {
+        ...state,
+        mode: "CREATE"
+      }
     });
 
-    // if(!response.ok) {
-    //   if(response.status === 400)
-    // }
+    dispatch({
+      type: "SET_SELECTED",
+      state: {
+        ...state,
+        selectedRole: undefined
+      }
+    });
 
-    if(response.ok) {
-
-      onCreated();
-
-      toast.success("Role has been created");
-    }
-
-  };
+    onClose();
+  }
 
   return (
     <MultiModal
-      onClose={() => onClose()}
+      onClose={() => handleClose()}
       overlayClassName="roles-component__modal"
       className="roles-component__general"
       pages={[
