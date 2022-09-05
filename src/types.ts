@@ -1,3 +1,5 @@
+import { PermissionTypeEnum } from "./enums/permissions";
+
 export interface Patient {
     surname: string;
     addressLine: string;
@@ -38,4 +40,5 @@ export interface IRole {
     name: string;
     created: Date;
     lastUpdated: Date;
+    permissions: PermissionTypeEnum[];
 }
