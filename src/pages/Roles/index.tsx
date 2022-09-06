@@ -1,7 +1,13 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { FC, useContext, useEffect, useState } from "react";
-import { IGpSurgery } from "../../types";
-import { MdAddCircle, MdModeEdit, MdPersonRemove } from "react-icons/md";
+import { IGpSurgery, IRole } from "../../types";
+import {
+  MdAddCircle,
+  MdAddModerator,
+  MdModeEdit,
+  MdPersonRemove,
+  MdRemoveModerator,
+} from "react-icons/md";
 import { TableData, TableDataAction } from "../../components/TableData";
 import GpCreate from "../../components/GpCreate";
 import "./index.scss";
@@ -9,49 +15,49 @@ import { GpContext, GpProvider } from "../../context/GpContext";
 import request from "../../helpers/request";
 import { toast } from "react-toastify";
 import { AuthContext } from "../../context/AuthContext";
+import { RoleContext } from "../../context/RoleContext";
+import RoleCreate from "../../components/RoleCreate";
+import { MultiModalProvider } from "../../context/MultiModalContext";
 
-export interface SurgeryActionsProps {
-  onSurgeryCreate: () => void;
+export interface RoleActionsProps {
+  onRoleCreate: () => void;
 }
 
-const SurgeryActions: FC<SurgeryActionsProps> = ({ onSurgeryCreate }) => {
+const SurgeryActions: FC<RoleActionsProps> = ({ onRoleCreate }) => {
   return (
-    <button
-      className="patient-component__new"
-      onClick={() => onSurgeryCreate()}
-    >
+    <button className="patient-component__new" onClick={() => onRoleCreate()}>
       <MdAddCircle />
-      Add GP Surgery
+      Add Role
     </button>
   );
 };
 
-const Surgeries = () => {
+const Roles = () => {
   const [createVisible, setCreateVisible] = useState<boolean>(false);
 
-  const { state, dispatch } = useContext(GpContext);
-  const { state: authState, dispatch: authDispatch } = useContext(AuthContext);
+  const { state, dispatch } = useContext(RoleContext);
+  const { state: authState } = useContext(AuthContext);
 
   useEffect(() => {
-    getSurgeries();
+    getRoles();
   }, []);
 
-  const getSurgeries = async () => {
+  const getRoles = async () => {
     const response = await request({
-      url: "/gp",
+      url: "/roles",
       headers: {
-        Authorization: `Bearer ${authState.accessToken}`
-      }
+        Authorization: `Bearer ${authState.accessToken}`,
+      },
     });
 
     if (response.ok) {
       const data = await response.json();
 
       dispatch({
-        type: "SET_SURGERIES",
+        type: "SET_ROLES",
         state: {
           ...state,
-          surgeries: data,
+          roles: data,
         },
       });
     }
@@ -59,41 +65,39 @@ const Surgeries = () => {
 
   const handleCreated = async () => {
     dispatch({
-      type: "SET_SURGERIES",
+      type: "SET_ROLES",
       state: {
         ...state,
-        surgeries: [],
+        roles: [],
       },
     });
 
-    await getSurgeries();
+    await getRoles();
 
     setCreateVisible(false);
   };
 
   const handleDelete = async () => {
-    if (!state.selectedGp) return;
+    if (!state.selectedRole) return;
 
     const response = await request({
       type: "DELETE",
-      url: `/gp/${state.selectedGp.id}`,
+      url: `/roles/${state.selectedRole.id}`,
       headers: {
-        Authorization: `Bearer ${authState.accessToken}`
-      }
+        Authorization: `Bearer ${authState.accessToken}`,
+      },
     });
 
     if (response.ok) {
       dispatch({
-        type: "SET_SURGERIES",
+        type: "SET_ROLES",
         state: {
           ...state,
-          surgeries: state.surgeries.filter(
-            (s) => s.id !== state.selectedGp?.id
-          ),
+          roles: state.roles.filter((s) => s.id !== state.selectedRole?.id),
         },
       });
 
-      toast.success("GP Surgery has been deleted");
+      toast.success("Access role has been deleted");
     } else {
       // TODO add 400 message or something
 
@@ -140,67 +144,68 @@ const Surgeries = () => {
 
   // TODO query if NHS number is used as a search term
 
-  const columns: ColumnDef<IGpSurgery>[] = [
+  const columns: ColumnDef<IRole>[] = [
     {
-      accessorKey: "surgeryName",
+      accessorKey: "name",
       cell: (info) => info.getValue(),
-      header: "Surgery Name",
+      header: "Role Name",
     },
     {
-      accessorKey: "phoneNumber",
-      cell: (info) => info.getValue(),
-      header: "Telephone Number",
+      accessorKey: "created",
+      cell: (info) => new Date(info.getValue()).toLocaleString(),
+      header: "Created",
     },
     {
-      accessorKey: "address",
-      cell: (info) => info.getValue(),
-      header: "Address",
+      accessorKey: "lastUpdated",
+      cell: (info) => new Date(info.getValue()).toLocaleString(),
+      header: "Last Updated",
     },
   ];
 
   const actions: TableDataAction[] = [
     {
-      action: "Edit GP",
-      icon: <MdModeEdit />,
+      action: "Edit Role",
+      icon: <MdAddModerator />,
       onClicked: () => handleEdit(),
     },
     {
-      action: "Delete GP",
-      icon: <MdPersonRemove />,
+      action: "Delete Role",
+      icon: <MdRemoveModerator />,
       onClicked: () => handleDelete(),
     },
   ];
 
   return (
-    <TableData
-      columns={columns}
-      data={state.surgeries}
-      className="gp-component"
-      entityName="GP Surgeries"
-      actions={actions}
-      onRowSelected={(r) =>
-        dispatch({
-          type: "SET_SELECTED",
-          state: {
-            ...state,
-            selectedGp: r,
-          },
-        })
-      }
-      actionComponent={
-        <SurgeryActions
-          onSurgeryCreate={() => setCreateVisible(!createVisible)}
+    <MultiModalProvider>
+      <TableData
+        columns={columns}
+        data={state.roles}
+        className="roles-component"
+        entityName="roles and permissions"
+        actions={actions}
+        onRowSelected={(r) =>
+          dispatch({
+            type: "SET_SELECTED",
+            state: {
+              ...state,
+              selectedRole: r,
+            },
+          })
+        }
+        actionComponent={
+          <SurgeryActions
+            onRoleCreate={() => setCreateVisible(!createVisible)}
+          />
+        }
+      >
+        <RoleCreate
+          visible={createVisible}
+          onClose={() => setCreateVisible(!createVisible)}
+          onCreated={handleCreated}
         />
-      }
-    >
-      <GpCreate
-        visible={createVisible}
-        gpSurgery={state.selectedGp}
-        onClose={() => setCreateVisible(!createVisible)}
-        onCreated={() => handleCreated()}
-      />
-    </TableData>
+      </TableData>
+    </MultiModalProvider>
   );
 };
 
-export default Surgeries;
+export default Roles;

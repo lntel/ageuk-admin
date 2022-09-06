@@ -21,6 +21,7 @@ const Login = () => {
     const response = await request({
       type: "POST",
       url: "/auth/login",
+      shouldRefresh: false,
       data: {
         emailAddress,
         password

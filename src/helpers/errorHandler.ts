@@ -2,6 +2,8 @@ import { toast } from "react-toastify";
 
 const errorHandler = async (response: Response) => {
 
+    let body, messages;
+
     switch(response.status) {
         case 429:
             toast.error("You are making too many requests, please wait and try again");
@@ -9,11 +11,19 @@ const errorHandler = async (response: Response) => {
 
         case 400:
 
-        const body = await response.json();
+        body = await response.json();
 
-        const messages = body.message;
+        messages = body.message;
 
         toast.error(messages[0]);
+
+        break;
+
+        case 409:
+
+        body = await response.json();
+
+        toast.error(body.message);
 
         break;
     }

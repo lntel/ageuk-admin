@@ -1,4 +1,4 @@
-export type AuthActionType = | "SET_ACCESS_TOKEN" | "SET_REFRESH_TOKEN";
+export type AuthActionType = | "SET_ACCESS_TOKEN" | "SET_REFRESH_TOKEN" | "REFRESH_TOKENS";
 
 export interface AuthAction {
     state: AuthState;
