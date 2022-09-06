@@ -1,14 +1,12 @@
-import {
-  ColumnDef,
-} from "@tanstack/react-table";
+import { ColumnDef } from "@tanstack/react-table";
 import { FC, useState } from "react";
-import {
-  MdAddCircle,
-  MdModeEdit,
-  MdPersonRemove,
-} from "react-icons/md";
+import { MdAddCircle, MdModeEdit, MdPersonRemove } from "react-icons/md";
+import StaffCreate from "../../components/StaffCreate";
 import { TableData, TableDataAction } from "../../components/TableData";
+import { MultiModalProvider } from "../../context/MultiModalContext";
+import { PermissionTypeEnum } from "../../enums/permissions";
 import { IStaff } from "../../types";
+import "./index.scss";
 
 export interface StaffActionsProps {
   onPatientCreate: () => void;
@@ -31,17 +29,25 @@ const Staff = () => {
 
   const [staff, setStaff] = useState<IStaff[]>([
     {
-      firstName: "Joseph",
+      forename: "Joseph",
       surname: "Harris",
-      addressLine: "64 Zoo Lane",
+      // addressLine: "64 Zoo Lane",
       dob: new Date("17/10/2000"),
-      postcode: "NN4 8SW",
+      emailAddress: "test@t.com",
+      role: {
+        id: "1",
+        created: new Date(),
+        lastUpdated: new Date(),
+        name: "test",
+        permissions: [PermissionTypeEnum.MANAGE_STAFF]
+      }
+      // postcode: "NN4 8SW",
     },
   ]);
 
   const columns: ColumnDef<IStaff>[] = [
     {
-      accessorKey: "firstName",
+      accessorKey: "forename",
       cell: (info) => info.getValue(),
       header: "First Name",
     },
@@ -50,16 +56,16 @@ const Staff = () => {
       cell: (info) => info.getValue(),
       header: "Surname",
     },
-    {
-      accessorKey: "addressLine",
-      cell: (info) => info.getValue(),
-      header: "Address Line",
-    },
-    {
-      accessorKey: "postcode",
-      cell: (info) => info.getValue(),
-      header: "Postcode",
-    },
+    // {
+    //   accessorKey: "addressLine",
+    //   cell: (info) => info.getValue(),
+    //   header: "Address Line",
+    // },
+    // {
+    //   accessorKey: "postcode",
+    //   cell: (info) => info.getValue(),
+    //   header: "Postcode",
+    // },
     {
       accessorKey: "dob",
       cell: (info) => new Date(info.getValue()).toLocaleDateString(),
@@ -79,18 +85,25 @@ const Staff = () => {
   ];
 
   return (
-    <TableData
-      columns={columns}
-      data={staff}
-      entityName="Staff"
-      onRowSelected={(r) => setSelectedStaff(r)}
-      actions={actions}
-      actionComponent={
-        <StaffActions
-          onPatientCreate={() => setCreateVisible(!createVisible)}
+    <MultiModalProvider>
+      <TableData
+        columns={columns}
+        data={staff}
+        entityName="Staff"
+        onRowSelected={(r) => setSelectedStaff(r)}
+        actions={actions}
+        actionComponent={
+          <StaffActions
+            onPatientCreate={() => setCreateVisible(!createVisible)}
+          />
+        }
+      >
+        <StaffCreate
+          visible={createVisible}
+          onClose={() => setCreateVisible(!createVisible)}
         />
-      }
-    />
+      </TableData>
+    </MultiModalProvider>
   );
 };
 
