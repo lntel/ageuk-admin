@@ -5,6 +5,7 @@ const apiUrl = "http://localhost:5000";
 export type RequestDataType = | 'GET' | 'POST' | 'PATCH' | 'DELETE';
 export interface RequestData {
     type?: RequestDataType;
+    shouldRefresh?: boolean;
     url: string;
     data?: object;
     headers?: {
@@ -35,10 +36,6 @@ const refreshTokens = async (refreshToken: string): Promise<TokenData | undefine
 
 const request = async (requestData: RequestData) => {
 
-    const tokens = localStorage.getItem("tokens");
-
-    const refreshToken = tokens ? JSON.parse(tokens).refreshToken : "";
-
     let response = await fetch(`${apiUrl}${requestData.url}`, {
         method: requestData.type ?? 'GET',
         body: requestData.data ? JSON.stringify(requestData.data) : null,
@@ -48,24 +45,29 @@ const request = async (requestData: RequestData) => {
         }
     });
 
-    if(response.status === 401 && refreshToken) {
-        const tokens = await refreshTokens(refreshToken);
+    if(requestData.shouldRefresh || requestData.shouldRefresh === undefined) {
+        const tokens = localStorage.getItem("tokens");
+    
+        const refreshToken = tokens ? JSON.parse(tokens).refreshToken : "";
 
-        // TODO add error handling here
-        if(!tokens) {
-            window.location.href = "/";
-        }
-        
-        localStorage.setItem("tokens", JSON.stringify(tokens));
-        
-        response = await request({
-            ...requestData,
-            headers: {
-                'Authorization': `Bearer ${tokens?.accessToken}`
+        if(response.status === 401 && refreshToken) {
+            const tokens = await refreshTokens(refreshToken);
+    
+            // TODO add error handling here
+            if(!tokens) {
+                window.location.href = "/";
             }
-        });
-    }
-        
+            
+            localStorage.setItem("tokens", JSON.stringify(tokens));
+            
+            response = await request({
+                ...requestData,
+                headers: {
+                    'Authorization': `Bearer ${tokens?.accessToken}`
+                }
+            });
+        }
+    }        
 
     if(!response.ok) errorHandler(response);
 
