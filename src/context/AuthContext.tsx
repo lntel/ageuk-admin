@@ -9,7 +9,8 @@ export interface AuthContext {
 export const AuthContext = createContext<AuthContext>({
     state: {
         accessToken: "",
-        refreshToken: ""
+        refreshToken: "",
+        permissions: []
     },
     dispatch: () => {}
 });
@@ -23,19 +24,22 @@ export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
     const [state, dispatch] = useReducer(authReducer, {
         accessToken: "",
         refreshToken: "",
+        permissions: []
     }, (defaultState) => {
         const data = localStorage.getItem("tokens");
 
         if(!data) return {
             accessToken: "",
-            refreshToken: ""
+            refreshToken: "",
+            permissions: []
         };
 
         const parsedData = JSON.parse(data);
         
         return {
             accessToken: parsedData.accessToken,
-            refreshToken: parsedData.refreshToken
+            refreshToken: parsedData.refreshToken,
+            permissions: parsedData.permissions
         }
     });
 

@@ -22,11 +22,13 @@ export interface Patient {
 }
 
 export interface IStaff {
-    firstName: string;
+    forename: string;
     surname: string;
     dob: Date;
-    addressLine: string;
-    postcode: string;
+    emailAddress: string;
+    role: IRole;
+    // addressLine: string;
+    // postcode: string;
 }
 export interface IGpSurgery {
     id: number;
