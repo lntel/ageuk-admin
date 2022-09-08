@@ -1,10 +1,13 @@
 import { ColumnDef } from "@tanstack/react-table";
-import { FC, useState } from "react";
+import { FC, useContext, useEffect, useState } from "react";
 import { MdAddCircle, MdModeEdit, MdPersonRemove } from "react-icons/md";
+import { toast } from "react-toastify";
 import StaffCreate from "../../components/StaffCreate";
 import { TableData, TableDataAction } from "../../components/TableData";
-import { MultiModalProvider } from "../../context/MultiModalContext";
+import { AuthContext } from "../../context/AuthContext";
+import { MultiModalContext, MultiModalContextType, MultiModalProvider } from "../../context/MultiModalContext";
 import { PermissionTypeEnum } from "../../enums/permissions";
+import request from "../../helpers/request";
 import { IStaff } from "../../types";
 import "./index.scss";
 
@@ -23,12 +26,26 @@ const StaffActions: FC<StaffActionsProps> = ({
   );
 };
 
+export type StaffFormData = {
+  editMode: boolean;
+  data: IStaff;
+}
+
 const Staff = () => {
   const [selectedStaff, setSelectedStaff] = useState<IStaff>();
   const [createVisible, setCreateVisible] = useState<boolean>(false);
 
+  const { state: authState } = useContext(AuthContext);
+  const { state, setState } = useContext<MultiModalContextType<StaffFormData>>(MultiModalContext);
+
+  // useEffect(() => {
+  //   console.log(selectedStaff)
+  // }, [selectedStaff])
+  
+
   const [staff, setStaff] = useState<IStaff[]>([
     {
+      id: "1",
       forename: "Joseph",
       surname: "Harris",
       // addressLine: "64 Zoo Lane",
@@ -45,6 +62,29 @@ const Staff = () => {
     },
   ]);
 
+  const getStaff = async () => {
+
+    const response = await request({
+      type: "GET",
+      url: "/staff",
+      headers: {
+        Authorization: `Bearer ${authState.accessToken}`
+      }
+    });
+
+    if(!response.ok) 
+      return;
+
+    const data = await response.json();
+
+    setStaff(data);
+  }
+
+  useEffect(() => {
+    getStaff();
+  }, []);
+  
+
   const columns: ColumnDef<IStaff>[] = [
     {
       accessorKey: "forename",
@@ -55,6 +95,11 @@ const Staff = () => {
       accessorKey: "surname",
       cell: (info) => info.getValue(),
       header: "Surname",
+    },
+    {
+      accessorFn: staff => staff.role.name,
+      cell: (info) => info.getValue(),
+      header: "Role",
     },
     // {
     //   accessorKey: "addressLine",
@@ -73,14 +118,53 @@ const Staff = () => {
     },
   ];
 
+  const handleDelete = async () => {
+  
+    if(!selectedStaff)
+      return;
+
+    const response = await request({
+      type: "DELETE",
+      url: `/staff/${selectedStaff.id}`,
+      headers: {
+        Authorization: `Bearer ${authState.accessToken}`
+      }
+    });
+
+    if(!response.ok)
+      return;
+
+    // Remove it from the current state
+    setStaff([
+      ...staff.filter(s => s.id !== selectedStaff.id)
+    ]);
+
+    toast.success("Staff member has been removed");
+  }
+
+  const handleEdit = () => {
+
+    if(!selectedStaff) 
+      return;
+
+    setCreateVisible(!createVisible);
+
+    setState({
+      editMode: true,
+      data: selectedStaff
+    });
+  }
+
   const actions: TableDataAction[] = [
     {
       action: "Edit Staff",
       icon: <MdModeEdit />,
+      onClicked: () => handleEdit()
     },
     {
       action: "Delete Staff",
       icon: <MdPersonRemove />,
+      onClicked: () => handleDelete()
     },
   ];
 

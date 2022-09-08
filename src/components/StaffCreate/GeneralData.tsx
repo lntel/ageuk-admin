@@ -1,11 +1,13 @@
 import React, { FC, useContext, useEffect, useState } from "react";
 import ReactTooltip from "react-tooltip";
 import { AuthContext } from "../../context/AuthContext";
+import { CreateContext } from "../../context/CreateContext";
 import {
   MultiModalContext,
   MultiModalContextType,
 } from "../../context/MultiModalContext";
 import request from "../../helpers/request";
+import { StaffFormData } from "../../pages/Staff";
 import { IRole, IStaff } from "../../types";
 import Dropdown from "../Dropdown";
 import Form from "../Form";
@@ -19,20 +21,25 @@ const GeneralData: FC<GeneralDataProps> = ({ onSubmit }) => {
   const [selectedRole, setSelectedRole] = useState<IRole>();
   const [roles, setRoles] = useState<IRole[]>([]);
 
-  const { state, setState } =
-    useContext<MultiModalContextType<IStaff>>(MultiModalContext);
+  const { state, dispatch } = useContext(CreateContext);
+  const { state: multiState, setState: setMultiState } = useContext(MultiModalContext);
   const { state: authState } = useContext(AuthContext);
 
   useEffect(() => {
     getRoles();
+
+    console.log(state)
   }, []);
 
   useEffect(() => {
     if (!selectedRole) return;
 
-    setState({
-      ...state,
-      role: selectedRole,
+    dispatch({
+      type: "SET_DATA",
+      state: {
+        ...state,
+        selectedRole: selectedRole,
+      }
     });
   }, [selectedRole]);
 
@@ -55,7 +62,7 @@ const GeneralData: FC<GeneralDataProps> = ({ onSubmit }) => {
   };
 
   const handleStateChange = (key: string, value: string) => {
-    setState({
+    setMultiState({
       ...state,
       [key]: value,
     });
@@ -98,7 +105,7 @@ const GeneralData: FC<GeneralDataProps> = ({ onSubmit }) => {
         data-tip="Select an access role for this staff member"
         onSelect={handleSelected}
       />
-      <button className="staff-component__submit">Create Staff</button>
+      {/* <button className="staff-component__submit">{ state.editMode ? "Update" : "Create" } Staff</button> */}
       <ReactTooltip />
     </Form>
   );

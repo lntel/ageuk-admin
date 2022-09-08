@@ -22,6 +22,7 @@ export interface Patient {
 }
 
 export interface IStaff {
+    id: string;
     forename: string;
     surname: string;
     dob: Date;
