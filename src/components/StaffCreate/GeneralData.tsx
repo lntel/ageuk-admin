@@ -4,9 +4,11 @@ import { AuthContext } from "../../context/AuthContext";
 import { CreateContext } from "../../context/CreateContext";
 import {
   MultiModalContext,
+  MultiModalContextType,
 } from "../../context/MultiModalContext";
 import request from "../../helpers/request";
-import { IRole } from "../../types";
+import { StaffFormData } from "../../pages/Staff";
+import { IRole, IStaff } from "../../types";
 import Dropdown from "../Dropdown";
 import Form from "../Form";
 import Textbox from "../Textbox";
