@@ -24,6 +24,9 @@ const GeneralData: FC<GeneralDataProps> = ({ onSubmit }) => {
   const { state: authState } = useContext(AuthContext);
 
   useEffect(() => {
+
+    setSelectedRole(roles[0]);
+
     getRoles();
 
     console.log(state)
@@ -67,7 +70,7 @@ const GeneralData: FC<GeneralDataProps> = ({ onSubmit }) => {
   };
 
   return (
-    <Form onSubmit={onSubmit}>
+    <Form onSubmit={onSubmit} autoComplete="off">
       <Textbox
         type="text"
         placeholder="First Name"
@@ -91,6 +94,13 @@ const GeneralData: FC<GeneralDataProps> = ({ onSubmit }) => {
         placeholder="Email Address"
         className="staff-component__input"
         onChange={(e) => handleStateChange("emailAddress", e.target.value)}
+      />
+      <Textbox
+        type="password"
+        placeholder="Password"
+        className="staff-component__input"
+        
+        onChange={(e) => handleStateChange("password", e.target.value)}
       />
       <Dropdown
         options={[
