@@ -28,7 +28,7 @@ const StaffActions: FC<StaffActionsProps> = ({
 
 export type StaffFormData = {
   editMode: boolean;
-  data: IStaff;
+  data?: IStaff;
 }
 
 const Staff = () => {
@@ -142,6 +142,12 @@ const Staff = () => {
     toast.success("Staff member has been removed");
   }
 
+  const handleCreation = () => {
+    getStaff();
+
+    setCreateVisible(!createVisible)
+  }
+
   const handleEdit = () => {
 
     if(!selectedStaff) 
@@ -185,6 +191,7 @@ const Staff = () => {
         <StaffCreate
           visible={createVisible}
           onClose={() => setCreateVisible(!createVisible)}
+          onCreated={handleCreation}
         />
       </TableData>
     </MultiModalProvider>

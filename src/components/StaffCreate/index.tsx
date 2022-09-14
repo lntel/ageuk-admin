@@ -1,6 +1,7 @@
 import React, { FC, useContext, useEffect } from "react";
 import { toast } from "react-toastify";
 import { AuthContext } from "../../context/AuthContext";
+import { CreateContext } from "../../context/CreateContext";
 import { MultiModalContext, MultiModalContextType } from "../../context/MultiModalContext";
 import request from "../../helpers/request";
 import { StaffFormData } from "../../pages/Staff";
@@ -11,11 +12,12 @@ import GeneralData from "./GeneralData";
 export interface StaffCreateProps {
   visible: boolean;
   onClose: () => void;
+  onCreated: () => void;
 }
 
-const StaffCreate: FC<StaffCreateProps> = ({ visible, onClose }) => {
+const StaffCreate: FC<StaffCreateProps> = ({ visible, onClose, onCreated }) => {
   const { state: authState } = useContext(AuthContext);
-  const { state } = useContext<MultiModalContextType<StaffFormData>>(MultiModalContext);
+  const { state } = useContext(CreateContext);
 
   const handleClose = () => {
     onClose();
@@ -24,21 +26,14 @@ const StaffCreate: FC<StaffCreateProps> = ({ visible, onClose }) => {
   const handleCreation = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    // return console.log({
-    //   ...state,
-    //   role: undefined,
-    //   roleId: state.role.id,
-    //   password: "testing123"
-    // })
+
+    if(!state.data) return;
 
     const response = await request({
       type: "POST",
       url: "/staff",
       data: {
-        ...state,
-        role: undefined,
-        roleId: state.data.role.id,
-        password: "testing123"
+        ...state.data
       },
       headers: {
         Authorization: `Bearer ${authState.accessToken}`
@@ -47,6 +42,8 @@ const StaffCreate: FC<StaffCreateProps> = ({ visible, onClose }) => {
 
     if(response.ok) {
       toast.success("Staff member has been created");
+
+      onCreated();
     }
   };
 

@@ -2,9 +2,6 @@ import React, { FC, useContext, useEffect, useState } from "react";
 import ReactTooltip from "react-tooltip";
 import { AuthContext } from "../../context/AuthContext";
 import { CreateContext } from "../../context/CreateContext";
-import {
-  MultiModalContext,
-} from "../../context/MultiModalContext";
 import request from "../../helpers/request";
 import { IRole } from "../../types";
 import Dropdown from "../Dropdown";
@@ -20,17 +17,14 @@ const GeneralData: FC<GeneralDataProps> = ({ onSubmit }) => {
   const [roles, setRoles] = useState<IRole[]>([]);
 
   const { state, dispatch } = useContext(CreateContext);
-  const { state: multiState, setState: setMultiState } = useContext(MultiModalContext);
   const { state: authState } = useContext(AuthContext);
 
   useEffect(() => {
 
-    setSelectedRole(roles[0]);
-
     getRoles();
 
-    console.log(state)
   }, []);
+  
 
   useEffect(() => {
     if (!selectedRole) return;
@@ -39,7 +33,10 @@ const GeneralData: FC<GeneralDataProps> = ({ onSubmit }) => {
       type: "SET_DATA",
       state: {
         ...state,
-        selectedRole: selectedRole,
+        data: {
+          ...state.data,
+          roleId: selectedRole.id,
+        }
       }
     });
   }, [selectedRole]);
@@ -54,7 +51,11 @@ const GeneralData: FC<GeneralDataProps> = ({ onSubmit }) => {
     });
 
     if (response.ok) {
-      setRoles(await response.json());
+      const data = await response.json();
+
+      setRoles(data);
+
+      setSelectedRole(data[0]);
     }
   };
 
@@ -63,10 +64,16 @@ const GeneralData: FC<GeneralDataProps> = ({ onSubmit }) => {
   };
 
   const handleStateChange = (key: string, value: string) => {
-    setMultiState({
-      ...state,
-      [key]: value,
-    });
+    dispatch({
+      type: "SET_DATA",
+      state: {
+        ...state,
+        data: {
+          ...state.data,
+          [key]: value
+        }
+      }
+    })
   };
 
   return (
@@ -113,7 +120,7 @@ const GeneralData: FC<GeneralDataProps> = ({ onSubmit }) => {
         data-tip="Select an access role for this staff member"
         onSelect={handleSelected}
       />
-      {/* <button className="staff-component__submit">{ state.editMode ? "Update" : "Create" } Staff</button> */}
+      <button type="submit" className="staff-component__submit">{ state.mode === "UPDATE" ? "Update" : "Create" } Staff</button>
       <ReactTooltip />
     </Form>
   );
