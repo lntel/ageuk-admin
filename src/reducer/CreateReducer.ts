@@ -9,7 +9,7 @@ export interface CreateAction {
 }
 
 export interface CreateState {
-    data: any;
+    data?: any;
     selected?: any;
     mode: CreateActionMode;
 }
@@ -20,7 +20,7 @@ const createReducer = (state: CreateState, action: CreateAction) => {
         case "SET_SELECTED":
             return {
                 ...state,
-                selectedRole: action.state.selected   
+                selected: action.state.selected   
             }
 
         case "SET_DATA":

@@ -13,6 +13,10 @@ export interface GeneralDataProps {
 }
 
 const GeneralData: FC<GeneralDataProps> = ({ onSubmit }) => {
+  const [forename, setForename] = useState<string>("");
+  const [surname, setSurname] = useState<string>("");
+  const [dob, setDob] = useState<string>("");
+  const [emailAddress, setEmailAddress] = useState<string>("");
   const [selectedRole, setSelectedRole] = useState<IRole>();
   const [roles, setRoles] = useState<IRole[]>([]);
 
@@ -23,8 +27,19 @@ const GeneralData: FC<GeneralDataProps> = ({ onSubmit }) => {
 
     getRoles();
 
+    if(state.mode === "UPDATE") {
+
+      setForename(state.selected.forename)
+      setSurname(state.selected.surname)
+      setDob(state.selected.dob)
+      setEmailAddress(state.selected.emailAddress)
+      setSelectedRole(state.selected.role);
+
+      console.log(state.selected.role)
+
+    }
+
   }, []);
-  
 
   useEffect(() => {
     if (!selectedRole) return;
@@ -82,32 +97,37 @@ const GeneralData: FC<GeneralDataProps> = ({ onSubmit }) => {
         type="text"
         placeholder="First Name"
         className="staff-component__input"
-        onChange={(e) => handleStateChange("forename", e.target.value)}
+        onChange={(e) => setForename(e.target.value)}
+        value={forename}
+        autoComplete="off"
       />
       <Textbox
         type="text"
         placeholder="Surname"
         className="staff-component__input"
-        onChange={(e) => handleStateChange("surname", e.target.value)}
+        onChange={(e) => setForename(e.target.value)}
+        value={surname}
       />
       <Textbox
         type="date"
         data-tip="Date of birth"
         className="staff-component__input"
-        onChange={(e) => handleStateChange("dob", e.target.value)}
+        onChange={(e) => setForename(e.target.value)}
+        value={dob}
       />
       <Textbox
         type="text"
         placeholder="Email Address"
         className="staff-component__input"
-        onChange={(e) => handleStateChange("emailAddress", e.target.value)}
+        onChange={(e) => setForename(e.target.value)}
+        value={emailAddress}
       />
       <Textbox
         type="password"
         placeholder="Password"
         className="staff-component__input"
-        
-        onChange={(e) => handleStateChange("password", e.target.value)}
+        onChange={(e) => setForename(e.target.value)}
+        // value={}
       />
       <Dropdown
         options={[

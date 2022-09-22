@@ -54,7 +54,7 @@ const StaffCreate: FC<StaffCreateProps> = ({ visible, onClose, onCreated }) => {
       className="staff-component__general"
       pages={[
         {
-          header: "Staff Member Information",
+          header: state.mode === "CREATE" ? "Staff Member Information" : `Editing ${state.selected.emailAddress}`,
           component: <GeneralData onSubmit={handleCreation} />, // onSubmitted={handleCreate}
         },
       ]}
