@@ -1,8 +1,17 @@
 import { toast } from "react-toastify";
 
-const errorHandler = async (response: Response) => {
+const errorHandler = async (response?: Response) => {
 
     let body, messages;
+
+    // Providing the toast id prevents duplicates from all api requests
+    const toastUnresponsiveId = "unresponsive-api";
+
+    // The api is not responding
+    if(!response) 
+        return toast.error("The server is currently unresponsive, please wait and try again", {
+            toastId: toastUnresponsiveId
+        });
 
     switch(response.status) {
         case 429:

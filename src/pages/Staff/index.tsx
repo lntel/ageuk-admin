@@ -2,9 +2,11 @@ import { ColumnDef } from "@tanstack/react-table";
 import { FC, useContext, useEffect, useState } from "react";
 import { MdAddCircle, MdModeEdit, MdPersonRemove } from "react-icons/md";
 import { toast } from "react-toastify";
+import { createContext } from "vm";
 import StaffCreate from "../../components/StaffCreate";
 import { TableData, TableDataAction } from "../../components/TableData";
 import { AuthContext } from "../../context/AuthContext";
+import { CreateContext } from "../../context/CreateContext";
 import { MultiModalContext, MultiModalContextType, MultiModalProvider } from "../../context/MultiModalContext";
 import { PermissionTypeEnum } from "../../enums/permissions";
 import request from "../../helpers/request";
@@ -28,15 +30,16 @@ const StaffActions: FC<StaffActionsProps> = ({
 
 export type StaffFormData = {
   editMode: boolean;
-  data: IStaff;
+  data?: IStaff;
 }
 
 const Staff = () => {
-  const [selectedStaff, setSelectedStaff] = useState<IStaff>();
+  // const [selectedStaff, setSelectedStaff] = useState<IStaff>();
   const [createVisible, setCreateVisible] = useState<boolean>(false);
 
   const { state: authState } = useContext(AuthContext);
-  const { state, setState } = useContext<MultiModalContextType<StaffFormData>>(MultiModalContext);
+  // const { state, setState } = useContext<MultiModalContextType<StaffFormData>>(MultiModalContext);
+  const { state, dispatch } = useContext(CreateContext);
 
   // useEffect(() => {
   //   console.log(selectedStaff)
@@ -120,12 +123,14 @@ const Staff = () => {
 
   const handleDelete = async () => {
   
-    if(!selectedStaff)
+    if(!state.selected)
       return;
+
+    // TODO add some check for super users (maybe implement some super user column in roles)
 
     const response = await request({
       type: "DELETE",
-      url: `/staff/${selectedStaff.id}`,
+      url: `/staff/${state.selected.id}`,
       headers: {
         Authorization: `Bearer ${authState.accessToken}`
       }
@@ -136,23 +141,51 @@ const Staff = () => {
 
     // Remove it from the current state
     setStaff([
-      ...staff.filter(s => s.id !== selectedStaff.id)
+      ...staff.filter(s => s.id !== state.selected.id)
     ]);
 
     toast.success("Staff member has been removed");
   }
 
+  const handleCreation = () => {
+    getStaff();
+
+    setCreateVisible(!createVisible)
+  }
+
+  const handleClose = () => {
+    dispatch({
+      type: "SET_MODE",
+      state: {
+        ...state,
+        mode: "CREATE"
+      }
+    })
+
+    dispatch({
+      type: "SET_SELECTED",
+      state: {
+        ...state,
+        selected: undefined
+      }
+    });
+
+    setCreateVisible(!createVisible);
+  }
+ 
   const handleEdit = () => {
 
-    if(!selectedStaff) 
-      return;
+    // TODO add some check for super users (maybe implement some super user column in roles)
 
     setCreateVisible(!createVisible);
 
-    setState({
-      editMode: true,
-      data: selectedStaff
-    });
+    dispatch({
+      type: "SET_MODE",
+      state: {
+        ...state,
+        mode: "UPDATE"
+      }
+    })
   }
 
   const actions: TableDataAction[] = [
@@ -174,7 +207,13 @@ const Staff = () => {
         columns={columns}
         data={staff}
         entityName="Staff"
-        onRowSelected={(r) => setSelectedStaff(r)}
+        onRowSelected={(r) => dispatch({
+          type: "SET_SELECTED",
+          state: {
+            ...state,
+            selected: r
+          }
+        })}
         actions={actions}
         actionComponent={
           <StaffActions
@@ -184,7 +223,8 @@ const Staff = () => {
       >
         <StaffCreate
           visible={createVisible}
-          onClose={() => setCreateVisible(!createVisible)}
+          onClose={handleClose}
+          onCreated={handleCreation}
         />
       </TableData>
     </MultiModalProvider>

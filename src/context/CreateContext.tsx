@@ -8,7 +8,7 @@ export interface CreateContext {
 
 export const CreateContext = createContext<CreateContext>({
     state: {
-        data: [],
+        data: {},
         mode: "CREATE"
     },
     dispatch: () => {}
@@ -21,7 +21,7 @@ export interface RoleProviderProps {
 export const CreateProvider: FC<RoleProviderProps> = ({ children }) => {
 
     const [state, dispatch] = useReducer(createReducer, {
-        data: [],
+        data: {},
         mode: "CREATE"
     });
     

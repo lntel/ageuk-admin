@@ -18,6 +18,12 @@ type TokenData = {
     refreshToken: string;
 }
 
+// TODO this needs a way to refresh either access or refresh tokens individually
+/**
+ * Refreshes both the access token and refresh token
+ * @param refreshToken The valid refresh token
+ * @returns TokenData object containing JWT tokens
+ */
 const refreshTokens = async (refreshToken: string): Promise<TokenData | undefined> => {
     const response = await request({
         type: 'POST',
@@ -34,16 +40,29 @@ const refreshTokens = async (refreshToken: string): Promise<TokenData | undefine
     return tokens;
 }
 
-const request = async (requestData: RequestData) => {
+/**
+ * The request method wraps JS fetch to provide error handling and ease-of-use of the fetch api
+ * @param requestData An object containing request data
+ * @returns Response containing HTTP data
+ */
+const request = async (requestData: RequestData): Promise<Response> => {
+    let response;
 
-    let response = await fetch(`${apiUrl}${requestData.url}`, {
-        method: requestData.type ?? 'GET',
-        body: requestData.data ? JSON.stringify(requestData.data) : null,
-        headers: {
-            'content-type': 'application/json',
-            ...requestData.headers
-        }
-    });
+    try {
+        response = await fetch(`${apiUrl}${requestData.url}`, {
+            method: requestData.type ?? 'GET',
+            body: requestData.data ? JSON.stringify(requestData.data) : null,
+            headers: {
+                'content-type': 'application/json',
+                ...requestData.headers
+            }
+        });
+    } catch (error) {
+        errorHandler();
+
+        return Promise.reject();
+    }
+
 
     if(requestData.shouldRefresh || requestData.shouldRefresh === undefined) {
         const tokens = localStorage.getItem("tokens");
