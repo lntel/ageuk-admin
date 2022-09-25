@@ -26,16 +26,15 @@ const GeneralData: FC<GeneralDataProps> = ({ onSubmit }) => {
 
   useEffect(() => {
 
-    getRoles();
-
-    if(state.mode === "UPDATE") {
-
+    if(state.mode === "UPDATE") {  
       setForename(state.selected.forename)
       setSurname(state.selected.surname)
       setDob(state.selected.dob)
       setEmailAddress(state.selected.emailAddress)
       setSelectedRole(state.selected.role);
     }
+
+    getRoles();
   }, []);
 
   useEffect(() => {
@@ -56,24 +55,8 @@ const GeneralData: FC<GeneralDataProps> = ({ onSubmit }) => {
       }
     });
     
-  }, [forename, surname, dob, emailAddress, password])
+  }, [forename, surname, dob, emailAddress, password, selectedRole])
   
-
-  useEffect(() => {
-    if (!selectedRole) return;
-
-    dispatch({
-      type: "SET_DATA",
-      state: {
-        ...state,
-        data: {
-          ...state.data,
-          roleId: selectedRole.id,
-        }
-      }
-    });
-  }, [selectedRole]);
-
   const getRoles = async () => {
     const response = await request({
       type: "GET",
@@ -88,7 +71,7 @@ const GeneralData: FC<GeneralDataProps> = ({ onSubmit }) => {
 
       setRoles(data);
 
-      if(selectedRole)
+      if(state.mode === "CREATE")
         setSelectedRole(data[0])
     }
   };
