@@ -26,25 +26,44 @@ const StaffCreate: FC<StaffCreateProps> = ({ visible, onClose, onCreated }) => {
   const handleCreation = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-
     if(!state.data) return;
 
-    const response = await request({
-      type: "POST",
-      url: "/staff",
-      data: {
-        ...state.data
-      },
-      headers: {
-        Authorization: `Bearer ${authState.accessToken}`
+    if(state.mode === "CREATE") {
+      const response = await request({
+        type: "POST",
+        url: "/staff",
+        data: {
+          ...state.data
+        },
+        headers: {
+          Authorization: `Bearer ${authState.accessToken}`
+        }
+      });
+  
+      if(response.ok) {
+        toast.success("Staff member has been created");
+  
+        onCreated();
       }
-    });
-
-    if(response.ok) {
-      toast.success("Staff member has been created");
-
-      onCreated();
+    } else {
+      const response = await request({
+        type: "PATCH",
+        url: `/staff/${state.selected.id}`,
+        data: {
+          ...state.data
+        },
+        headers: {
+          Authorization: `Bearer ${authState.accessToken}`
+        }
+      });
+  
+      if(response.ok) {
+        toast.success("Staff member has been created");
+  
+        onCreated();
+      }
     }
+
   };
 
   return (

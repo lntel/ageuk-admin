@@ -151,6 +151,26 @@ const Staff = () => {
     setCreateVisible(!createVisible)
   }
 
+  const handleClose = () => {
+    dispatch({
+      type: "SET_MODE",
+      state: {
+        ...state,
+        mode: "CREATE"
+      }
+    })
+
+    dispatch({
+      type: "SET_SELECTED",
+      state: {
+        ...state,
+        selected: undefined
+      }
+    });
+
+    setCreateVisible(!createVisible);
+  }
+ 
   const handleEdit = () => {
 
     setCreateVisible(!createVisible);
@@ -199,7 +219,7 @@ const Staff = () => {
       >
         <StaffCreate
           visible={createVisible}
-          onClose={() => setCreateVisible(!createVisible)}
+          onClose={handleClose}
           onCreated={handleCreation}
         />
       </TableData>
