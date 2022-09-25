@@ -199,14 +199,14 @@ const GeneralData: FC<GeneralDataProps> = ({}) => {
         <Dropdown
           options={prognoses}
           placeholder="Select a prognosis"
-          value={state.prognosis}
+          selected={state.prognosis}
           onSelect={(v) => setState({ ...state, prognosis: v })}
           data-tip="Setting the prognosis to auto uses<br /> machine learning to determine the patients prognosis"
         />
         <Dropdown
           options={gpOptions}
           placeholder="Select patient's GP surgery"
-          value={state.gpId}
+          selected={state.gpId}
           onSelect={v => setState({ ...state, gpId: Number(v) })}
         />
         <Textbox
