@@ -126,6 +126,8 @@ const Staff = () => {
     if(!state.selected)
       return;
 
+    // TODO add some check for super users (maybe implement some super user column in roles)
+
     const response = await request({
       type: "DELETE",
       url: `/staff/${state.selected.id}`,
@@ -172,6 +174,8 @@ const Staff = () => {
   }
  
   const handleEdit = () => {
+
+    // TODO add some check for super users (maybe implement some super user column in roles)
 
     setCreateVisible(!createVisible);
 
