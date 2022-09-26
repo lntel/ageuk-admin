@@ -51,6 +51,7 @@ const ItemList: FC<ItemListProps> = ({
           ? items.map((item: string) => (
               <li
                 onClick={() => onItemSelected(item)}
+                key={item}
                 className={classNames(
                   "item-list__item",
                   item == selectedItem
