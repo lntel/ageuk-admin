@@ -1,6 +1,6 @@
 import React, { FC, useContext, useEffect, useState } from "react";
 import ReactTooltip from "react-tooltip";
-import { MultiModalContext } from "../../context/MultiModalContext";
+import { CreateContext } from "../../context/CreateContext";
 import Checkbox from "../Checkbox";
 import Textbox from "../Textbox";
 
@@ -38,26 +38,26 @@ const Assessment: FC<AssessmentProps> = ({ onSubmitted }) => {
     syringeDriver: false,
   });
 
-  const { state, setState } = useContext(MultiModalContext);
+  const { state, dispatch } = useContext(CreateContext);
 
   useEffect(() => {
-    // TODO find a way to load in pre-existing data but also set default bool values
-    // setData({
-    //   ...data,
-    //   ...state.assessmentAreas,
-    // });
+    if(!state.data.assessment) return;
 
-    setState({
-      ...state,
-      assessment: data
-    })
+    setData(state.data.assessment);
+
   }, []);
 
   useEffect(() => {
-    setState({
-      ...state,
-      assessment: data,
-    });
+    dispatch({
+      type: "SET_DATA",
+      state: {
+        ...state,
+        data: {
+          ...state.data,
+          assessment: data
+        }
+      }
+    })
   }, [data]);
 
   return (
