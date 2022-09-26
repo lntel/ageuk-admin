@@ -24,7 +24,7 @@ type TokenData = {
  * @param refreshToken The valid refresh token
  * @returns TokenData object containing JWT tokens
  */
-const refreshTokens = async (refreshToken: string): Promise<TokenData | undefined> => {
+export const refreshTokens = async (refreshToken: string): Promise<TokenData | undefined> => {
     const response = await request({
         type: 'POST',
         url: '/auth/refresh',

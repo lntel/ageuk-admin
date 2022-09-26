@@ -4,7 +4,7 @@ import "./index.scss";
 import Navigation from "../Navigation";
 import { Topbar } from "../Topbar";
 import classNames from "classnames";
-import request from "../../helpers/request";
+import request, { refreshTokens } from "../../helpers/request";
 import { AuthContext } from "../../context/AuthContext";
 
 export type TemplateLayout = "grid" | "none";
@@ -27,12 +27,15 @@ const Template: FC<TemplateProps> = ({
   const { state: authState, dispatch } = useContext(AuthContext);
 
   const getCurrentStaff = async () => {
+
     const response = await request({
       url: "/auth/profile",
       headers: {
         Authorization: `Bearer ${authState.accessToken}`
       }
     });
+
+    console.log(response)
 
     if(response.ok) {
       const data = await response.json();
@@ -46,6 +49,21 @@ const Template: FC<TemplateProps> = ({
           permissions
         }
       });
+    } else {
+      if(!authState.refreshToken)
+        return;
+
+      const tokens = await refreshTokens(authState.refreshToken);
+
+      console.log(tokens)
+
+      dispatch({
+        type: "SET_ACCESS_TOKEN",
+        state: {
+          ...authState,
+          accessToken: tokens?.accessToken
+        }
+      })
     }
   }
 
