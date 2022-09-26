@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
+import { CreateContext } from "../../context/CreateContext";
 import { MultiModalContext } from "../../context/MultiModalContext";
 import ItemList from "../ItemList";
 import Textbox from "../Textbox";
@@ -7,7 +8,7 @@ import Textbox from "../Textbox";
 const Diagnoses = () => {
 
   // Grab multimodal context
-  const { state, setState } = useContext(MultiModalContext);
+  const { state, dispatch } = useContext(CreateContext);
 
   // Diagnoses state
   const [diagnoses, setDiagnoses] = useState<string[]>([]);
@@ -21,17 +22,23 @@ const Diagnoses = () => {
 
   useEffect(() => {
 
-    setAllergies(state.allergies ?? []);
-    setDiagnoses(state.diagnoses ?? []);
+    setAllergies(state.data.allergies ?? []);
+    setDiagnoses(state.data.diagnoses ?? []);
 
   }, []);
 
   useEffect(() => {
 
-    setState({
-      ...state,
-      diagnoses,
-      allergies
+    dispatch({
+      type: "SET_DATA",
+      state: {
+        ...state,
+        data: {
+          ...state.data,
+          diagnoses,
+          allergies
+        }
+      }
     })
 
   }, [allergies, diagnoses]);

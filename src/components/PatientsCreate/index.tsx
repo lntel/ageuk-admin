@@ -1,4 +1,4 @@
-import React, { FC, useContext, useState } from "react";
+import React, { FC, useContext, useEffect, useState } from "react";
 import CanvasDraw from "react-canvas-draw";
 import { toast } from "react-toastify";
 import MultiModal from "../MultiModal";
@@ -8,6 +8,7 @@ import Diagnoses from "./Diagnoses";
 import Assessment from "./Assessment";
 import request from "../../helpers/request";
 import { AuthContext } from "../../context/AuthContext";
+import { CreateContext } from "../../context/CreateContext";
 export interface PatientsCreateProps {
   visible: boolean;
   onClose: () => void;
@@ -22,8 +23,13 @@ const PatientsCreate: FC<PatientsCreateProps> = ({ visible, onClose, onCreated }
   const [selectedDiagnosis, setSelectedDiagnosis] = useState<string>("");
   // const [dnacpr, setDnacpr] = useState<boolean>(false);
 
-  const { state, setState } = useContext(MultiModalContext);
+  const { state, dispatch } = useContext(CreateContext);
   const { state: authState } = useContext(AuthContext);
+
+  // useEffect(() => {
+  //   console.log(state.data)
+  // }, [state])
+  
 
   const handleDiagnosisAdd = () => {
     if (!diagnosis.length) return toast.error("You must enter a diagnosis");
@@ -48,7 +54,9 @@ const PatientsCreate: FC<PatientsCreateProps> = ({ visible, onClose, onCreated }
   };
 
   const handlePatientCreate = async () => {
-    const data = state;
+    const { data } = state;
+
+    console.log(data)
 
     const response = await request({
       type: 'POST',
@@ -64,6 +72,15 @@ const PatientsCreate: FC<PatientsCreateProps> = ({ visible, onClose, onCreated }
     }
 
     if(response.ok) {
+
+      // Empty data for new insertion
+      dispatch({
+        type: "SET_DATA",
+        state: {
+          ...state,
+          data: {}
+        }
+      });
 
       onCreated();
 
