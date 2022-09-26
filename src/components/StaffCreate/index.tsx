@@ -58,7 +58,7 @@ const StaffCreate: FC<StaffCreateProps> = ({ visible, onClose, onCreated }) => {
       });
   
       if(response.ok) {
-        toast.success("Staff member has been created");
+        toast.success("Staff member has been updated");
   
         onCreated();
       }
