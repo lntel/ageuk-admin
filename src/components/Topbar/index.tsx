@@ -4,11 +4,49 @@ import Textbox from '../Textbox'
 
 import './index.scss'
 import { Modal } from '../Modal'
+import { INotification } from '../../types'
+import request, { Sse } from '../../helpers/request'
+import errorHandler from '../../helpers/errorHandler'
 
 export const Topbar = () => {
 
     const [notifyCount, setNotifyCount] = useState<number>(12);
     const [notifyVisible, setNotifyVisible] = useState<boolean>(false);
+    const [notifications, setNotifications] = useState<INotification[]>([]);
+
+    useEffect(() => {
+      getNotifications();
+
+      const eventSource = Sse('/notifications/sse');
+
+      eventSource.onmessage = ({ data }) => {
+
+        const newNotifications = JSON.parse(data).filter((d: any) => notifications.find(n => n.id === d.id));
+
+        console.log(newNotifications)
+      }
+
+      return () => {
+        eventSource.close();
+      }
+    }, [])
+    
+  
+    const getNotifications = async () => {
+      const response = await request({
+        url: '/notifications',
+      });
+  
+      if(!response.ok) {
+        return errorHandler(response);
+      }
+  
+      const result = await response.json();
+  
+      setNotifications(result);
+      setNotifyCount(result.length);
+    }
+  
 
     useEffect(() => {
 
@@ -33,7 +71,7 @@ export const Topbar = () => {
                     </span>
                 ) : null }
             </div>
-            <Modal visible={notifyVisible} title="Notifications" />
+            <Modal visible={notifyVisible} title="Notifications" notifications={notifications} />
             <div className="topbar__actions__profile">
                 <img src="https://cdn-prod.medicalnewstoday.com/content/images/articles/147/147142/nursing-is-a-varied-and-respected-profession.jpg" alt="" />
                 <span className="topbar__actions__profile__name">
