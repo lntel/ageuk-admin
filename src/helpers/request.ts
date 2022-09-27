@@ -18,6 +18,10 @@ type TokenData = {
     refreshToken: string;
 }
 
+export const Sse = (url: string) => {
+    return new EventSource(`${apiUrl}${url}`);
+}
+
 // TODO this needs a way to refresh either access or refresh tokens individually
 /**
  * Refreshes both the access token and refresh token
