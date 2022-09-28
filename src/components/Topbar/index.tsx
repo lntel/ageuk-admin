@@ -13,40 +13,42 @@ export const Topbar = () => {
   const [notifyVisible, setNotifyVisible] = useState<boolean>(false);
   const [notifications, setNotifications] = useState<INotification[]>([]);
 
-  // const eventSource = Sse("/notifications/sse");
+  let eventSource;
 
   useEffect(() => {
     getNotifications();
   }, []);
 
-  // useEffect(() => {
-  //   eventSource.onmessage = ({ data }) => {
-
-  //     if(!notifications.length) return;
-
-  //     const newNotifications = JSON.parse(data);
-
-  //     const result = newNotifications.filter((d: any) => {
-  //       return !notifications.some(n => n.id == d.id);
-  //     });
-
-  //     if(!result.length) return;
-
-  //     setNotifications([
-  //       ...notifications,
-  //       ...result
-  //     ]);
-
-  //     setNotifyCount(notifyCount + result.length);
-  //   };
-
-  //   console.log(notifications)
-
-  //   return () => {
-  //     eventSource.close();
-  //   };
-  // }, []);
-
+  // ! Due to how react behaves, there doesn't seem to be a better way to do this
+  useEffect(() => {
+    const eventSource = Sse("/notifications/sse");
+  
+    eventSource.onmessage = ({ data }) => {
+    
+      if(!notifications.length) return;
+  
+      const newNotifications = JSON.parse(data);
+  
+      const result = newNotifications.filter((d: any) => {
+        return !notifications.some(n => n.id == d.id);
+      });
+  
+      if(!result.length) return;
+  
+      setNotifications([
+        ...notifications,
+        ...result
+      ]);
+  
+      setNotifyCount(notifyCount + result.length);
+    };
+  
+    return () => {
+      eventSource.close();
+    };
+  }, [notifications])
+  
+  
   const getNotifications = async () => {
     const response = await request({
       url: "/notifications",
