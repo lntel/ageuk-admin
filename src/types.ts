@@ -45,3 +45,23 @@ export interface IRole {
     lastUpdated: Date;
     permissions: PermissionTypeEnum[];
 }
+
+export enum NotificationVerbEnum {
+    CREATE = 'CREATE',
+    UPDATE = 'UPDATE',
+    DELETE = 'DELETE',
+  }
+
+export type INotificationStaff = {
+    forename: string;
+    surname: string;
+}
+export interface INotification {
+    id: string;
+    verb?: NotificationVerbEnum;
+    entityName?: string;
+    performedBy?: INotificationStaff;
+    system?: boolean;
+    message?: string;
+    createdAt: Date;
+}

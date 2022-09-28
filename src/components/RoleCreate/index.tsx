@@ -104,6 +104,9 @@ const RoleCreate: FC<RoleCreateProps> = ({ visible, onClose, onCreated }) => {
       const response = await request({
         type: "POST",
         url: "/roles",
+        headers: {
+          Authorization: `Bearer ${authState.accessToken}`
+        },
         data: modalState
       });
   

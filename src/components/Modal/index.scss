@@ -1,26 +1,104 @@
 .modal {
+    display: flex;
+    flex-direction: column;
     position: absolute;
-    top: 7%;
-    width: 20%;
-    height: 50%;
-    background: #222;
+    top: 9%;
+    width: 25%;
+    height: 60%;
+    background: #f1f1f1;
+    border: 1px solid #e6e6e6;
     border-radius: .4em;
     padding: 1em;
     opacity: 0;
     transition: opacity .3s ease-in-out;
-    z-index: 1;
+    z-index: 2;
+    // https://getcssscan.com/css-box-shadow-examples
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
 
     // TODO implement actual DOM events to remove components before animation
     pointer-events: none;
 
+    &__header {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    &__mark-button {
+        border: 0;
+        text-decoration: underline;
+        color: #222;
+        font-size: .9em;
+        font-weight: 600;
+        cursor: pointer;
+    }
+
+    &__notifications {
+        flex: 1;
+        margin: 2em 0 0 0;
+        padding: 0 1em 0 0;
+        overflow: auto;
+
+        &::-webkit-scrollbar {
+            width: 7px;
+        }
+
+        &::-webkit-scrollbar-track {
+            background: #e6e6e6;
+            border-radius: .2em;
+        }
+
+        &::-webkit-scrollbar-thumb {
+            border-radius: .2em;
+            background: #d6d6d6;
+        }
+    }
+
+    &__notification {
+        display: flex;
+        flex-direction: row;
+        margin: 0 0 1.2em 0;
+        padding: 0 0 1.2em 0;
+        border-bottom: 1px solid #e6e6e6;
+
+        &__avatar {
+            width: 10%;
+            border-radius: .5em;
+        }
+
+        &__divider {
+            margin: 0 0 0 1em;
+        }
+
+        &__message {
+            margin-inline: 0;
+            &__important {
+                font-weight: 600;
+            }
+        }
+
+        &__timestamp {
+            font-size: .9em;
+            color: #919191;
+        }
+    }
+
     &__title {
-        font-size: 1.3em;
-        color: #f1f1f1;
-        font-weight: 400;
+        font-size: 1.4em;
+        font-weight: 600;
+        color: #222;
     }
 
     &--visible {
         opacity: 1;
         pointer-events: all;
+    }
+}
+
+@media (max-width: 1366px) {
+    .modal {
+        width: 33%;
+        height: 65%;
     }
 }
