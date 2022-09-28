@@ -95,3 +95,10 @@
         pointer-events: all;
     }
 }
+
+@media (max-width: 1366px) {
+    .modal {
+        width: 33%;
+        height: 65%;
+    }
+}
