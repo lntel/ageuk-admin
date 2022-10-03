@@ -64,6 +64,7 @@ const MultiModal: FC<MultiModalProps> = ({
       <div className={className}>{ pages.length ? pages[currentPage - 1].component : null }</div>
       { pages.length > 1 ? (
         <Paginator
+          className="multimodal__paginator"
           currentPage={currentPage}
           totalPages={pages.length}
           onForward={() => nextPage()}

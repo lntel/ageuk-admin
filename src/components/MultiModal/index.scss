@@ -4,6 +4,22 @@
   border-radius: 0.4em;
   padding: 2em;
 
+  &__paginator {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    background: transparent;
+    width: 100%;
+
+    & > p {
+      color: #23A2D1;
+    }
+
+    button {
+      background: #23A2D1;
+    }
+  }
+
   &__header {
     display: flex;
     flex-direction: row;
