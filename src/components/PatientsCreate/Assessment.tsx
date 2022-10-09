@@ -20,10 +20,9 @@ export interface AssessmentData {
 }
 
 export interface AssessmentProps {
-  onSubmitted: () => void;
 }
 
-const Assessment: FC<AssessmentProps> = ({ onSubmitted }) => {
+const Assessment: FC<AssessmentProps> = () => {
   const [data, setData] = useState<AssessmentData>({
     dnacpr: false,
     personalCare: false,
@@ -142,9 +141,6 @@ const Assessment: FC<AssessmentProps> = ({ onSubmitted }) => {
           }
         />
       ) : null}
-      <button className="patient-component__assessment__submit" onClick={() => onSubmitted()}>
-        Save Patient
-      </button>
       <ReactTooltip effect="solid" multiline={true} />
     </div>
   );

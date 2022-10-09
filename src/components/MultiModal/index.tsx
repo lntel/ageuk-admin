@@ -1,6 +1,6 @@
 import classNames from "classnames";
 import React, { FC, useEffect, useState } from "react";
-import { MdClose } from "react-icons/md";
+import { MdClose, MdDone } from "react-icons/md";
 import ReactModal from "react-modal";
 import Paginator from "../Paginator";
 import "./index.scss";
@@ -15,6 +15,7 @@ export interface MultiModalProps {
   visible: boolean;
   pages: MultiModalPage[];
   onClose: () => void;
+  onComplete?: () => void;
   className?: string;
   overlayClassName?: string;
   children?: any;
@@ -26,6 +27,7 @@ const MultiModal: FC<MultiModalProps> = ({
   visible,
   pages,
   onClose,
+  onComplete,
   className,
   overlayClassName,
 }) => {
@@ -69,6 +71,8 @@ const MultiModal: FC<MultiModalProps> = ({
           totalPages={pages.length}
           onForward={() => nextPage()}
           onBack={() => prevPage()}
+          finishBtnName="Complete"
+          onComplete={() => onComplete ? onComplete() : null}
         />
       ) : null }
 

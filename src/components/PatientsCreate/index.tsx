@@ -93,6 +93,7 @@ const PatientsCreate: FC<PatientsCreateProps> = ({ visible, onClose, onCreated }
   return (
       <MultiModal
         onClose={() => onClose()}
+        onComplete={() => handlePatientCreate()}
         visible={visible}
         pages={[
           {
@@ -107,7 +108,7 @@ const PatientsCreate: FC<PatientsCreateProps> = ({ visible, onClose, onCreated }
           },
           {
             header: "Patient Assessment",
-            component: <Assessment onSubmitted={() => handlePatientCreate()} />,
+            component: <Assessment />,
             className: "patient-component__assessment__modal"
           },
         ]}
