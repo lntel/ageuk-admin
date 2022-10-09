@@ -50,7 +50,6 @@ const Paginator: FC<PaginatorProps> = ({
         type="back"
         disabled={currentPage == 1}
         onClick={() => handleBackward()}
-        iconDisabled={false}
       />
       <p className="paginator-component__pages">
         {currentPage} of {totalPages >= 1 ? totalPages : 1}
@@ -60,7 +59,6 @@ const Paginator: FC<PaginatorProps> = ({
         disabled={currentPage === totalPages && !onComplete}
         onClick={() => handleForward()}
         value={currentPage === totalPages ? finishBtnName : "Next"}
-        iconDisabled={currentPage === totalPages}
       />
     </div>
   );
@@ -72,7 +70,6 @@ export interface PaginatorButtonProps {
   disabled?: boolean;
   onClick?: () => void;
   value?: string;
-  iconDisabled: boolean;
 }
 
 export const PaginatorButton: FC<PaginatorButtonProps> = ({
@@ -80,7 +77,6 @@ export const PaginatorButton: FC<PaginatorButtonProps> = ({
   disabled,
   onClick,
   value,
-  iconDisabled,
 }) => {
   return (
     <button
@@ -92,7 +88,7 @@ export const PaginatorButton: FC<PaginatorButtonProps> = ({
       <p className="paginator-component__button__text">
         {type == "back" ? "Prev" : value ? value : "Next"}
       </p>
-      {type == "forward" && !iconDisabled ? <MdChevronRight /> : null}
+      {type == "forward" ? <MdChevronRight /> : null}
     </button>
   );
 };
