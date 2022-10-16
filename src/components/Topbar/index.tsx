@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { MdNotificationsNone, MdOutlineArrowDropDown } from "react-icons/md";
 import Textbox from "../Textbox";
 
@@ -7,11 +7,14 @@ import { Modal } from "../Modal";
 import { INotification } from "../../types";
 import request, { Sse } from "../../helpers/request";
 import errorHandler from "../../helpers/errorHandler";
+import { AuthContext } from "../../context/AuthContext";
 
 export const Topbar = () => {
   const [notifyCount, setNotifyCount] = useState<number>(12);
   const [notifyVisible, setNotifyVisible] = useState<boolean>(false);
   const [notifications, setNotifications] = useState<INotification[]>([]);
+
+  const { state } =  useContext(AuthContext);
 
   let eventSource;
 
@@ -32,7 +35,7 @@ export const Topbar = () => {
       const result = newNotifications.filter((d: any) => {
         return !notifications.some(n => n.id == d.id);
       });
-  
+        
       if(!result.length) return;
   
       setNotifications([
@@ -52,6 +55,9 @@ export const Topbar = () => {
   const getNotifications = async () => {
     const response = await request({
       url: "/notifications",
+      headers: {
+        Authorization: `Bearer ${state.accessToken}`
+      }
     });
 
     if (!response.ok) {
@@ -60,15 +66,31 @@ export const Topbar = () => {
 
     const result = await response.json();
 
+    const unread = (result as INotification[]).filter(n => !n.read).length;
+
     setNotifications(result);
-    setNotifyCount(result.length);
+    setNotifyCount(unread);
   };
 
-  useEffect(() => {
-    if (!notifyVisible && notifyCount) return;
+  // ? try to achieve this with actual reads
+  // useEffect(() => {
+  //   if (!notifyVisible && notifyCount) return;
 
-    setNotifyCount(0);
-  }, [notifyVisible]);
+  //   setNotifyCount(0);
+  // }, [notifyVisible]);
+
+  const markAsRead = (id: string) => {
+
+    setNotifyCount(count => count - 1);
+
+    setNotifications(messages => [
+      ...messages.filter(m => m.id !== id),
+      {
+        ...messages.find(m => m.id === id)!,
+        read: true
+      }
+    ])
+  }
 
   return (
     <div className="topbar">
@@ -94,6 +116,7 @@ export const Topbar = () => {
           visible={notifyVisible}
           title="Notifications"
           notifications={notifications}
+          onRead={markAsRead}
         />
         <div className="topbar__actions__profile">
           <img

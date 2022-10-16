@@ -1,5 +1,6 @@
 import errorHandler from "./errorHandler";
 
+// uon@ddns.net
 const apiUrl = "http://localhost:5000";
 
 export type RequestDataType = | 'GET' | 'POST' | 'PATCH' | 'DELETE';
