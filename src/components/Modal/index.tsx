@@ -93,7 +93,7 @@ export const Modal: FC<ModalProps> = ({
         <button className="modal__mark-button">Mark all as read</button>
       </div>
       <div className="modal__notifications">
-        {notifications && notifications.length
+        {notifications && notifications.length && visible
           ? notifications
               .sort(
                 (a, b) =>
@@ -104,7 +104,7 @@ export const Modal: FC<ModalProps> = ({
                 (notification) => (
                   <InView
                     as="div"
-                    delay={2500}
+                    delay={3500}
                     className="modal__notification"
                     onChange={(inview, entry) =>
                       inview && !notification.read
@@ -112,7 +112,7 @@ export const Modal: FC<ModalProps> = ({
                         : null
                     }
                     key={notification.id}
-                    initialInView={true}
+                    initialInView={false}
                     triggerOnce={true}
                   >
                     {!notification.read ? (
