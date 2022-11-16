@@ -24,7 +24,11 @@ export const Topbar = () => {
 
   // ! Due to how react behaves, there doesn't seem to be a better way to do this
   useEffect(() => {
-    const eventSource = Sse("/notifications/sse");
+    const eventSource = Sse("/notifications/sse", state.accessToken!);
+
+    eventSource.onopen = () => {
+      console.log("connected")
+    }
   
     eventSource.onmessage = ({ data }) => {
     
@@ -32,7 +36,7 @@ export const Topbar = () => {
   
       const newNotifications = JSON.parse(data);
   
-      const result = newNotifications.filter((d: any) => {
+      const result: INotification[] = newNotifications.filter((d: any) => {
         return !notifications.some(n => n.id == d.id);
       });
         
@@ -43,8 +47,12 @@ export const Topbar = () => {
         ...result
       ]);
   
-      setNotifyCount(notifyCount + result.length);
+      setNotifyCount(notifyCount + result.filter(r => r.read != null).length);
     };
+
+    eventSource.onerror = (event) => {
+      console.log(event)
+    }
   
     return () => {
       eventSource.close();
@@ -66,7 +74,7 @@ export const Topbar = () => {
 
     const result = await response.json();
 
-    const unread = (result as INotification[]).filter(n => !n.read).length;
+    const unread = (result as INotification[]).filter(n => !n.read && n.read != null).length;
 
     setNotifications(result);
     setNotifyCount(unread);

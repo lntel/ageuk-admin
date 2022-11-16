@@ -107,7 +107,7 @@ export const Modal: FC<ModalProps> = ({
                     delay={3500}
                     className="modal__notification"
                     onChange={(inview, entry) =>
-                      inview && !notification.read
+                      inview && !notification.read && notification.read != null
                         ? markAsRead(notification.id)
                         : null
                     }
@@ -115,7 +115,7 @@ export const Modal: FC<ModalProps> = ({
                     initialInView={false}
                     triggerOnce={true}
                   >
-                    {!notification.read ? (
+                    {!notification.read && notification.read != null ? (
                       <div className="modal__notification__dot"></div>
                     ) : null}
                     {/* <img src="https://img.freepik.com/free-vector/businessman-character-avatar-isolated_24877-60111.jpg?w=2000" alt="" className="modal__notification__avatar" /> */}
