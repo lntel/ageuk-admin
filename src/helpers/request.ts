@@ -1,5 +1,7 @@
+import { EventSourcePolyfill } from "event-source-polyfill";
 import errorHandler from "./errorHandler";
 
+// uon@ddns.net
 const apiUrl = "http://localhost:5000";
 
 export type RequestDataType = | 'GET' | 'POST' | 'PATCH' | 'DELETE';
@@ -18,8 +20,12 @@ type TokenData = {
     refreshToken: string;
 }
 
-export const Sse = (url: string) => {
-    return new EventSource(`${apiUrl}${url}`);
+export const Sse = (url: string, accessToken: string) => {
+    return new EventSourcePolyfill(`${apiUrl}${url}`, {
+        headers: {
+            'Authorization': `Bearer ${accessToken}`
+        }
+    });
 }
 
 // TODO this needs a way to refresh either access or refresh tokens individually
@@ -33,7 +39,7 @@ const refreshTokens = async (refreshToken: string): Promise<TokenData | undefine
         type: 'POST',
         url: '/auth/refresh',
         headers: {
-            'Authorization': `Bearer ${refreshToken}`
+            Authorization: `Bearer ${refreshToken}`
         }
     });
 

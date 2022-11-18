@@ -58,10 +58,20 @@
     &__notification {
         display: flex;
         flex-direction: row;
+        align-items: center;
         margin: 0 0 1.2em 0;
         padding: 0 0 1.2em 0;
         border-bottom: 1px solid #e6e6e6;
 
+        &__dot {
+            width: 10px;
+            height: 10px;
+            background: red;
+            border-radius: 50%;
+            margin: 0 .5em;
+        }
+
+        // TODO this may need removing
         &__avatar {
             width: 10%;
             border-radius: .5em;

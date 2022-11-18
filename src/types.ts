@@ -58,10 +58,7 @@ export type INotificationStaff = {
 }
 export interface INotification {
     id: string;
-    verb?: NotificationVerbEnum;
-    entityName?: string;
-    performedBy?: INotificationStaff;
-    system?: boolean;
-    message?: string;
+    content: string;
+    read: boolean;
     createdAt: Date;
 }
