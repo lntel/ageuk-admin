@@ -8,6 +8,7 @@ import request, { Sse } from "../../helpers/request";
 import errorHandler from "../../helpers/errorHandler";
 import { AuthContext } from "../../context/AuthContext";
 import SettingsModal from "../SettingsModal";
+import { toast } from "react-toastify";
 
 export const Topbar = () => {
   const [notifyCount, setNotifyCount] = useState<number>(12);
@@ -15,7 +16,7 @@ export const Topbar = () => {
   const [profileVisible, setProfileVisible] = useState<boolean>(false);
   const [notifications, setNotifications] = useState<INotification[]>([]);
 
-  const { state, dispatch } =  useContext(AuthContext);
+  const { state, dispatch } = useContext(AuthContext);
 
   let eventSource;
 
@@ -28,53 +29,55 @@ export const Topbar = () => {
     const eventSource = Sse("/notifications/sse", state.accessToken!);
 
     eventSource.onopen = () => {
-      console.log("connected")
-    }
-  
+      console.log("connected");
+    };
+
     eventSource.onmessage = ({ data }) => {
-    
-      if(!notifications.length) return;
-  
+      if (!notifications.length) return;
+
       const newNotifications = JSON.parse(data);
-  
+
       const result: INotification[] = newNotifications.filter((d: any) => {
-        return !notifications.some(n => n.id == d.id);
+        return !notifications.some((n) => n.id == d.id);
       });
-        
-      if(!result.length) return;
-  
-      setNotifications([
-        ...notifications,
-        ...result
-      ]);
-  
-      setNotifyCount(notifyCount + result.filter(r => r.read != null).length);
+
+      if (!result.length) return;
+
+      setNotifications([...notifications, ...result]);
+
+      setNotifyCount(notifyCount + result.filter((r) => r.read != null).length);
     };
 
     eventSource.onerror = (event) => {
-      console.log(event)
-    }
-  
+      console.log(event);
+    };
+
     return () => {
       eventSource.close();
     };
-  }, [notifications])
+  }, [notifications]);
 
   const handleLogout = () => {
-    dispatch({
-      type: "LOGOUT",
-      state: {}
-    });
+    toast.success("Signing out, see you next time");
 
-    window.location.href = "/";
-  }
-  
+    const timeout = setTimeout(() => {
+      dispatch({
+        type: "LOGOUT",
+        state: {},
+      });
+
+      window.location.href = "/";
+
+      clearTimeout(timeout);
+    }, 1000);
+  };
+
   const getNotifications = async () => {
     const response = await request({
       url: "/notifications",
       headers: {
-        Authorization: `Bearer ${state.accessToken}`
-      }
+        Authorization: `Bearer ${state.accessToken}`,
+      },
     });
 
     if (!response.ok) {
@@ -83,7 +86,9 @@ export const Topbar = () => {
 
     const result = await response.json();
 
-    const unread = (result as INotification[]).filter(n => !n.read && n.read != null).length;
+    const unread = (result as INotification[]).filter(
+      (n) => !n.read && n.read != null
+    ).length;
 
     setNotifications(result);
     setNotifyCount(unread);
@@ -97,17 +102,16 @@ export const Topbar = () => {
   // }, [notifyVisible]);
 
   const markAsRead = (id: string) => {
+    setNotifyCount((count) => count - 1);
 
-    setNotifyCount(count => count - 1);
-
-    setNotifications(messages => [
-      ...messages.filter(m => m.id !== id),
+    setNotifications((messages) => [
+      ...messages.filter((m) => m.id !== id),
       {
-        ...messages.find(m => m.id === id)!,
-        read: true
-      }
-    ])
-  }
+        ...messages.find((m) => m.id === id)!,
+        read: true,
+      },
+    ]);
+  };
 
   return (
     <div className="topbar">
@@ -135,7 +139,10 @@ export const Topbar = () => {
           notifications={notifications}
           onRead={markAsRead}
         />
-        <div className="topbar__actions__profile" onClick={() => setProfileVisible(!profileVisible)}>
+        <div
+          className="topbar__actions__profile"
+          onClick={() => setProfileVisible(!profileVisible)}
+        >
           <img
             src="https://cdn-prod.medicalnewstoday.com/content/images/articles/147/147142/nursing-is-a-varied-and-respected-profession.jpg"
             alt=""
