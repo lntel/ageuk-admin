@@ -6,14 +6,18 @@ import { MdLogout } from "react-icons/md";
 import "./index.scss";
 
 export interface SettingsModalProps {
-    visible: boolean;
-    onLogout: () => void;
+  visible: boolean;
+  onLogout: () => void;
 }
 
 const SettingsModal: FC<SettingsModalProps> = ({ visible, onLogout }) => {
-
   return (
-    <div className={classNames("settings-modal", visible ? "settings-modal--visible" : null)}>
+    <div
+      className={classNames(
+        "settings-modal",
+        visible ? "settings-modal--visible" : null
+      )}
+    >
       <SettingMenuItem
         label="Profile"
         icon={<BsFillPersonFill />}
@@ -24,11 +28,7 @@ const SettingsModal: FC<SettingsModalProps> = ({ visible, onLogout }) => {
         icon={<IoMdSettings />}
         onClick={() => console.log("test")}
       />
-      <SettingMenuItem
-        label="Logout"
-        icon={<MdLogout />}
-        onClick={onLogout}
-      />
+      <SettingMenuItem label="Logout" icon={<MdLogout />} onClick={onLogout} />
     </div>
   );
 };
