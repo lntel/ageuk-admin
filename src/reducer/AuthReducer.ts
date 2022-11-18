@@ -1,6 +1,6 @@
 import { PermissionTypeEnum } from "../enums/permissions";
 
-export type AuthActionType = | "SET_ACCESS_TOKEN" | "SET_REFRESH_TOKEN" | "REFRESH_TOKENS" | "SET_PERMISSIONS";
+export type AuthActionType = | "SET_ACCESS_TOKEN" | "SET_REFRESH_TOKEN" | "REFRESH_TOKENS" | "SET_PERMISSIONS" | "LOGOUT";
 
 export interface AuthAction {
     state: AuthState;
@@ -32,6 +32,9 @@ const authReducer = (state: AuthState, action: AuthAction) => {
                 ...state,
                 permissions: action.state.permissions
             }
+
+        case "LOGOUT":
+            return {}
 
         default:
             return state;

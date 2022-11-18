@@ -1,20 +1,21 @@
 import React, { useContext, useEffect, useState } from "react";
 import { MdNotificationsNone, MdOutlineArrowDropDown } from "react-icons/md";
 import Textbox from "../Textbox";
-
 import "./index.scss";
 import { Modal } from "../Modal";
 import { INotification } from "../../types";
 import request, { Sse } from "../../helpers/request";
 import errorHandler from "../../helpers/errorHandler";
 import { AuthContext } from "../../context/AuthContext";
+import SettingsModal from "../SettingsModal";
 
 export const Topbar = () => {
   const [notifyCount, setNotifyCount] = useState<number>(12);
   const [notifyVisible, setNotifyVisible] = useState<boolean>(false);
+  const [profileVisible, setProfileVisible] = useState<boolean>(false);
   const [notifications, setNotifications] = useState<INotification[]>([]);
 
-  const { state } =  useContext(AuthContext);
+  const { state, dispatch } =  useContext(AuthContext);
 
   let eventSource;
 
@@ -58,7 +59,15 @@ export const Topbar = () => {
       eventSource.close();
     };
   }, [notifications])
-  
+
+  const handleLogout = () => {
+    dispatch({
+      type: "LOGOUT",
+      state: {}
+    });
+
+    window.location.href = "/";
+  }
   
   const getNotifications = async () => {
     const response = await request({
@@ -126,7 +135,7 @@ export const Topbar = () => {
           notifications={notifications}
           onRead={markAsRead}
         />
-        <div className="topbar__actions__profile">
+        <div className="topbar__actions__profile" onClick={() => setProfileVisible(!profileVisible)}>
           <img
             src="https://cdn-prod.medicalnewstoday.com/content/images/articles/147/147142/nursing-is-a-varied-and-respected-profession.jpg"
             alt=""
@@ -134,6 +143,7 @@ export const Topbar = () => {
           <span className="topbar__actions__profile__name">Sue Brazell</span>
           <MdOutlineArrowDropDown />
         </div>
+        <SettingsModal visible={profileVisible} onLogout={handleLogout} />
       </div>
     </div>
   );
