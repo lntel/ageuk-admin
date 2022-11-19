@@ -1,9 +1,8 @@
 .template {
     display: grid;
     grid-template-columns: 17% 1fr;
-    grid-template-rows: 10% 8% 1fr;
+    grid-template-rows: 10% 8% 82%;
     height: 100vh;
-    gap: 1em;
     grid-template-areas: 
         "nav topbar"
         "nav header"
@@ -16,18 +15,20 @@
         align-items: center;
         justify-content: space-between;
         flex-direction: row;
-        padding: 0 1em 0 0;
+        margin: 0 0 0 1em;
     }
 
     &__main {
         grid-area: main;
         position: relative;
-        padding: 0 1em 0 0;
+        margin: 2em;
+        // overflow: hidden;
         
         &--grid {
             display: grid;
-            grid-template-columns: repeat(12, 1fr);
+            grid-template-columns: repeat(14, 1fr);
             grid-template-rows: repeat(12, 1fr);
+            gap: 2em;
         }
     }
 }
