@@ -50,7 +50,8 @@ const Profile = () => {
       data: {
         forename,
         surname,
-        emailAddress
+        emailAddress,
+        password
       },
       headers: {
         Authorization: `Bearer ${state.accessToken}`
@@ -64,6 +65,12 @@ const Profile = () => {
       setLastUpdated(new Date(lastUpdated).toLocaleString());
 
       toast.success("Your profile has been updated");
+    } else {
+      if(response.status === 403) {
+        const { message } = await response.json();
+
+        return toast.error(message);
+      }
     }
 
     // TODO handle error
