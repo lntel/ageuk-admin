@@ -9,3 +9,20 @@
   // padding: 5%;
   background: #0000008c;
 }
+
+
+@mixin Button {
+  cursor: pointer;
+  border: 0;
+  padding: 1em;
+  color: #fff;
+  font-weight: 500;
+  border-radius: .4em;
+  font-size: 1em;
+  background: #23A2D1;
+  transition: background .3s ease-in-out;
+
+  &:hover {
+      background: darken(#23A2D1, 10%);
+  }
+}
