@@ -9,6 +9,7 @@ import errorHandler from "../../helpers/errorHandler";
 import { AuthContext } from "../../context/AuthContext";
 import SettingsModal from "../SettingsModal";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 export const Topbar = () => {
   const [notifyCount, setNotifyCount] = useState<number>(12);
@@ -17,6 +18,8 @@ export const Topbar = () => {
   const [notifications, setNotifications] = useState<INotification[]>([]);
 
   const { state, dispatch } = useContext(AuthContext);
+
+  const navigate = useNavigate();
 
   let eventSource;
 
@@ -66,7 +69,7 @@ export const Topbar = () => {
         state: {},
       });
 
-      window.location.href = "/";
+      navigate("/");
 
       clearTimeout(timeout);
     }, 1000);

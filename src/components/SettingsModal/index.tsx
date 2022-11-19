@@ -3,6 +3,7 @@ import React, { FC } from "react";
 import { BsFillPersonFill } from "react-icons/bs";
 import { IoMdSettings } from "react-icons/io";
 import { MdLogout } from "react-icons/md";
+import { useNavigate } from 'react-router-dom';
 import "./index.scss";
 
 export interface SettingsModalProps {
@@ -11,6 +12,9 @@ export interface SettingsModalProps {
 }
 
 const SettingsModal: FC<SettingsModalProps> = ({ visible, onLogout }) => {
+
+  const navigate = useNavigate();
+
   return (
     <div
       className={classNames(
@@ -21,7 +25,7 @@ const SettingsModal: FC<SettingsModalProps> = ({ visible, onLogout }) => {
       <SettingMenuItem
         label="Profile"
         icon={<BsFillPersonFill />}
-        onClick={() => console.log("test")}
+        onClick={() => navigate('/profile')}
       />
       <SettingMenuItem
         label="Settings"
