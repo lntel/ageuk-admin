@@ -11,12 +11,13 @@ export interface TextboxProps {
     required?: boolean;
     autoComplete?: string;
     className?: string;
+    label?: string;
     value?: string;
     "data-tip"?: string;
     onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
 }
 
-const Textbox: FC<TextboxProps> = ({ type = 'text', placeholder, className, value, required = false, onChange, "data-tip": dataTip, disabled, autoComplete = "off" }) => {
+const Textbox: FC<TextboxProps> = ({ type = 'text', placeholder, className, value, required = false, onChange, "data-tip": dataTip, disabled, autoComplete = "off", label }) => {
   
   // https://stackoverflow.com/a/69600390
   const convertToDate = (date: string) => {
@@ -36,19 +37,23 @@ const Textbox: FC<TextboxProps> = ({ type = 'text', placeholder, className, valu
   }
 
   return (
-    <>
+    <div className="textbox-container">
+    {label ? (
+      <label htmlFor={label} className="textbox-container__label">{label}</label>
+    ) : null}
     <input 
     type={type} 
     placeholder={placeholder}
     className={classNames("textbox", className)} 
     value={value ? type === "date" ? convertToDate(value) : value : ""}
+    id={label}
     onChange={(e) => handleChange(e)}
     required={required} 
     data-tip={dataTip}
     disabled={disabled}
     autoComplete={autoComplete}
     />
-    </>
+    </div>
   )
 }
 
