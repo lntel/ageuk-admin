@@ -1,6 +1,7 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { createRef, useContext, useEffect, useState } from "react";
 import { MdDeleteForever } from "react-icons/md";
 import { toast } from "react-toastify";
+import placeholderAvatar from "../../assets/images/avatar.svg";
 import Form from "../../components/Form";
 import Template from "../../components/Template";
 import Textbox from "../../components/Textbox";
@@ -12,11 +13,13 @@ const Profile = () => {
   const [forename, setForename] = useState<string>("");
   const [surname, setSurname] = useState<string>("");
   const [password, setPassword] = useState<string>("");
-  const [confirm, setConfirm] = useState<string>("");
   const [emailAddress, setEmailAddress] = useState<string>("");
   const [lastUpdated, setLastUpdated] = useState<string>("");
+  const [avatar, setAvatar] = useState<string>("");
 
   const { state } = useContext(AuthContext);
+  
+  const fileInput = createRef<HTMLInputElement>();
 
   useEffect(() => {
     getProfileData();
@@ -31,15 +34,47 @@ const Profile = () => {
     });
 
     if (response.ok) {
-      const { forename, surname, emailAddress, lastUpdated } =
+      const { forename, surname, emailAddress, lastUpdated, avatarFilename } =
         await response.json();
+
+        console.log(avatarFilename)
 
       setForename(forename);
       setSurname(surname);
       setEmailAddress(emailAddress);
+      setAvatar(avatarFilename);
       setLastUpdated(new Date(lastUpdated).toLocaleString());
     }
   };
+
+  const handleAvatarUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const formData = new FormData();
+    const files = e.target.files;
+
+    if(!files || !files.length) return;
+
+    const avatar = files[0];
+
+    formData.append('avatar', avatar);
+
+    const response = await request({
+      url: '/staff/avatar/upload',
+      type: 'POST',
+      headers: {
+        Authorization: `Bearer ${state.accessToken}`,
+      },
+      formData,
+      disableDefaultHeaders: true
+    });
+
+    if(response.ok) {
+      const { filename } = await response.json();
+
+      setAvatar(filename);
+
+      toast.success("Your profile picture has been updated");
+    }
+  }
 
   const handleProfileUpdate = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -76,6 +111,30 @@ const Profile = () => {
     // TODO handle error
   };
 
+  const deleteProfileAvatar = async () => {
+
+    const response = await request({
+      type: 'DELETE',
+      url: '/staff/avatar',
+      headers: {
+        Authorization: `Bearer ${state.accessToken}`
+      },
+      shouldRefresh: true
+    });
+
+    if(response.ok) {
+
+      const { lastUpdated } = await response.json();
+
+      setLastUpdated(new Date(lastUpdated).toLocaleString());
+      setAvatar("");
+
+      toast.success('Your profile picture has been removed');
+    }
+
+    // TODO handle error
+  }
+
   return (
     <Template
       header="View and modify your profile details"
@@ -86,16 +145,18 @@ const Profile = () => {
         <h2 className="profile-page__badge__name">{forename} {surname}</h2>
         <div className="profile-page__badge__photo">
           <img
-            src="https://media.istockphoto.com/id/1346124946/photo/portrait-of-friendly-nurse-smiling-at-hospital.jpg?b=1&s=170667a&w=0&k=20&c=rDzH0QDk5frP7T_MB2Gf3Ga71s9xLlvRS-KalrVtgbs="
-            alt=""
+            src={avatar ? `http://localhost:5000/uploads/${avatar}` : placeholderAvatar}
+            crossOrigin="anonymous"
+            alt="profile avatar"
           />
-          <button className="profile-page__badge__photo__remove">
+          <button className="profile-page__badge__photo__remove" onClick={() => deleteProfileAvatar()}>
             <MdDeleteForever />
           </button>
         </div>
-        <button className="profile-page__badge__upload">
+        <button className="profile-page__badge__upload" onClick={() => fileInput.current?.click()}>
           Upload a new photo
         </button>
+        <input type="file" ref={fileInput} style={{ display: 'none' }} accept="image/jpeg, image/jpg, image/png" onChange={handleAvatarUpload} />
         <span className="profile-page__badge__last-update">
           Last Updated: <span>{lastUpdated}</span>
         </span>
