@@ -1,21 +1,25 @@
-import React, { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { MdNotificationsNone, MdOutlineArrowDropDown } from "react-icons/md";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import placeholderAvatar from "../../assets/images/avatar.svg";
+import { AuthContext } from "../../context/AuthContext";
+import errorHandler from "../../helpers/errorHandler";
+import request, { Sse } from "../../helpers/request";
+import { INotification } from "../../types";
+import { Modal } from "../Modal";
+import SettingsModal from "../SettingsModal";
 import Textbox from "../Textbox";
 import "./index.scss";
-import { Modal } from "../Modal";
-import { INotification } from "../../types";
-import request, { Sse } from "../../helpers/request";
-import errorHandler from "../../helpers/errorHandler";
-import { AuthContext } from "../../context/AuthContext";
-import SettingsModal from "../SettingsModal";
-import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
 
 export const Topbar = () => {
   const [notifyCount, setNotifyCount] = useState<number>(12);
   const [notifyVisible, setNotifyVisible] = useState<boolean>(false);
   const [profileVisible, setProfileVisible] = useState<boolean>(false);
   const [notifications, setNotifications] = useState<INotification[]>([]);
+  const [firstname, setFirstname] = useState<string>("");
+  const [surname, setSurname] = useState<string>("");
+  const [avatar, setAvatar] = useState<string>("");
 
   const { state, dispatch } = useContext(AuthContext);
 
@@ -24,6 +28,7 @@ export const Topbar = () => {
   let eventSource;
 
   useEffect(() => {
+    getProfileDetails();
     getNotifications();
   }, []);
 
@@ -59,6 +64,26 @@ export const Topbar = () => {
       eventSource.close();
     };
   }, [notifications]);
+
+  const getProfileDetails = async () => {
+
+    const response = await request({
+      url: '/auth/profile',
+      headers: {
+        Authorization: `Bearer ${state.accessToken}`
+      }
+    });
+
+    if(response.ok) {
+
+      const { forename, surname, avatarFilename } = await response.json();
+
+      setFirstname(forename);
+      setSurname(surname);
+      setAvatar(avatarFilename);
+    }
+
+  }
 
   const handleLogout = () => {
     toast.success("Signing out, see you next time");
@@ -147,10 +172,11 @@ export const Topbar = () => {
           onClick={() => setProfileVisible(!profileVisible)}
         >
           <img
-            src="https://cdn-prod.medicalnewstoday.com/content/images/articles/147/147142/nursing-is-a-varied-and-respected-profession.jpg"
+            src={avatar ? `http://localhost:5000/uploads/${avatar}` : placeholderAvatar}
+            crossOrigin="anonymous"
             alt=""
           />
-          <span className="topbar__actions__profile__name">Sue Brazell</span>
+          <span className="topbar__actions__profile__name">{firstname} {surname}</span>
           <MdOutlineArrowDropDown />
         </div>
         <SettingsModal visible={profileVisible} onLogout={handleLogout} />
