@@ -55,7 +55,7 @@ const Template: FC<TemplateProps> = ({
   
 
   return (
-    <main className={classNames("template", className)}>
+    <main className="template">
       <Navigation />
       <Topbar />
       <h1 className="template__header">
@@ -65,6 +65,7 @@ const Template: FC<TemplateProps> = ({
       <div
         className={classNames(
           "template__main",
+          className,
           layout === "grid" ? "template__main--grid" : null
         )}
       >

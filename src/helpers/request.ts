@@ -10,6 +10,8 @@ export interface RequestData {
     shouldRefresh?: boolean;
     url: string;
     data?: object;
+    formData?: FormData;
+    disableDefaultHeaders?: boolean;
     headers?: {
         [key: string]: string;
     }
@@ -59,14 +61,31 @@ const request = async (requestData: RequestData): Promise<Response> => {
     let response;
 
     try {
+
+        let body: any;
+
+        if(requestData.data)
+            body = JSON.stringify(requestData.data);
+
+        if(requestData.formData) 
+            body = requestData.formData;
+
+        const headers: HeadersInit = {
+            'content-type': 'application/json',    
+        };
+
+        if(requestData.disableDefaultHeaders)
+            delete headers['content-type'];
+
         response = await fetch(`${apiUrl}${requestData.url}`, {
             method: requestData.type ?? 'GET',
-            body: requestData.data ? JSON.stringify(requestData.data) : null,
+            body,
             headers: {
-                'content-type': 'application/json',
+                ...headers,
                 ...requestData.headers
             }
         });
+
     } catch (error) {
         errorHandler();
 
