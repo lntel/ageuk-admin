@@ -105,7 +105,7 @@ const GpCreate: FC<GpCreateProps> = ({
           }
         });
 
-        onClose();
+        handleClose();
 
       }
     }

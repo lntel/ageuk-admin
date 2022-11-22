@@ -2,12 +2,11 @@ import { ColumnDef } from "@tanstack/react-table";
 import { FC, useContext, useEffect, useState } from "react";
 import { MdAddCircle, MdModeEdit, MdPersonRemove } from "react-icons/md";
 import { toast } from "react-toastify";
-import { createContext } from "vm";
 import StaffCreate from "../../components/StaffCreate";
 import { TableData, TableDataAction } from "../../components/TableData";
 import { AuthContext } from "../../context/AuthContext";
 import { CreateContext } from "../../context/CreateContext";
-import { MultiModalContext, MultiModalContextType, MultiModalProvider } from "../../context/MultiModalContext";
+import { MultiModalProvider } from "../../context/MultiModalContext";
 import { PermissionTypeEnum } from "../../enums/permissions";
 import request from "../../helpers/request";
 import { IStaff } from "../../types";
@@ -150,7 +149,7 @@ const Staff = () => {
   const handleCreation = () => {
     getStaff();
 
-    setCreateVisible(!createVisible)
+    handleClose();
   }
 
   const handleClose = () => {
