@@ -1,7 +1,4 @@
 import React, { FC, useContext, useEffect, useState } from "react";
-import CanvasDraw from "react-canvas-draw";
-import { MdAddCircle, MdRemoveCircle } from "react-icons/md";
-import ReactModal from "react-modal";
 import { toast } from "react-toastify";
 import ReactTooltip from "react-tooltip";
 import { AuthContext } from "../../context/AuthContext";
@@ -10,7 +7,6 @@ import { RoleContext } from "../../context/RoleContext";
 import { PermissionTypeEnum } from "../../enums/permissions";
 import request from "../../helpers/request";
 import Checkbox from "../Checkbox";
-import Dropdown, { IDropdownOption } from "../Dropdown";
 import Form from "../Form";
 import MultiModal from "../MultiModal";
 import Textbox from "../Textbox";
@@ -132,6 +128,8 @@ const RoleCreate: FC<RoleCreateProps> = ({ visible, onClose, onCreated }) => {
 
       if(response.ok) {
         onCreated();
+
+        handleClose();
 
         toast.success("Access role has been updated");
       }
