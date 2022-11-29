@@ -7,6 +7,7 @@ import { IRole } from "../../types";
 import Dropdown from "../Dropdown";
 import Form from "../Form";
 import Textbox from "../Textbox";
+import defaultAvatar from "../../assets/images/avatar.svg"
 
 export interface GeneralDataProps {
   onSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
@@ -14,10 +15,13 @@ export interface GeneralDataProps {
 
 const GeneralData: FC<GeneralDataProps> = ({ onSubmit }) => {
   const [forename, setForename] = useState<string>("");
+  const [workPhone, setWorkPhone] = useState<string>("");
+  const [personalPhone, setPersonalPhone] = useState<string>("");
   const [surname, setSurname] = useState<string>("");
   const [dob, setDob] = useState<string>("");
   const [emailAddress, setEmailAddress] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const [avatarFilename, setAvatarFilename] = useState<string>("");
   const [selectedRole, setSelectedRole] = useState<IRole>();
   const [roles, setRoles] = useState<IRole[]>([]);
 
@@ -32,6 +36,9 @@ const GeneralData: FC<GeneralDataProps> = ({ onSubmit }) => {
       setDob(state.selected.dob)
       setEmailAddress(state.selected.emailAddress)
       setSelectedRole(state.selected.role);
+      setPersonalPhone(state.selected.personalPhone);
+      setWorkPhone(state.selected.workPhone);
+      setAvatarFilename(state.selected.avatarFilename);
     }
 
     getRoles();
@@ -50,12 +57,14 @@ const GeneralData: FC<GeneralDataProps> = ({ onSubmit }) => {
           dob,
           emailAddress,
           password,
-          roleId: selectedRole?.id
+          roleId: selectedRole?.id,
+          personalPhone: personalPhone,
+          workPhone: workPhone,
         }
       }
     });
     
-  }, [forename, surname, dob, emailAddress, password, selectedRole])
+  }, [forename, surname, dob, emailAddress, password, selectedRole, personalPhone, workPhone])
   
   const getRoles = async () => {
     const response = await request({
@@ -114,7 +123,8 @@ const GeneralData: FC<GeneralDataProps> = ({ onSubmit }) => {
   };
 
   return (
-    <Form onSubmit={handleSumbit} autoComplete="off">
+    <Form onSubmit={handleSumbit} autoComplete="off" className="staff-component__general__form">
+      <div className="staff-component__general__form__avatar"><img src={avatarFilename ? `http://localhost:5000/uploads/${avatarFilename}` : defaultAvatar} alt="" crossOrigin="anonymous" /></div>
       <Textbox
         type="text"
         placeholder="First Name"
@@ -150,6 +160,21 @@ const GeneralData: FC<GeneralDataProps> = ({ onSubmit }) => {
         className="staff-component__input"
         onChange={(e) => setPassword(e.target.value)}
         value={password}
+      />
+      <Textbox
+        data-tip="This is not required"
+        type="phone"
+        placeholder="Work Phone Number"
+        className="staff-component__input"
+        onChange={(e) => setWorkPhone(e.target.value)}
+        value={workPhone}
+      />
+      <Textbox
+        type="phone"
+        placeholder="Personal Phone Number"
+        className="staff-component__input"
+        onChange={(e) => setPersonalPhone(e.target.value)}
+        value={personalPhone}
       />
       <Dropdown
         options={[
