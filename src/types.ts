@@ -28,6 +28,7 @@ export interface IStaff {
     dob: Date;
     emailAddress: string;
     role: IRole;
+    avatarFilename?: string;
     // addressLine: string;
     // postcode: string;
 }
