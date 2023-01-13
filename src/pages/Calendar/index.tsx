@@ -4,11 +4,12 @@ import Template from '../../components/Template';
 import './calendar.scss';
 import './index.scss';
 import MultiModal from '../../components/MultiModal';
-import CreateEvent from './CreateEvent';
+import ManageEvent from './ManageEvent';
 import ReactTooltip from 'react-tooltip';
 
 const Calendar = () => {
     
+    const [editEvent, setEditEvent] = useState<any>();
     const [date, setDate] = useState<Date>(new Date());
     const [visible, setVisible] = useState<boolean>(false);
     const [selectedEvent, setSelectedEvent] = useState<any>();
@@ -73,6 +74,10 @@ const Calendar = () => {
         getEvents();
     }, [date]);
     
+    const onModalClose = () => {
+        setVisible(false);
+        setEditEvent(undefined);
+    }
 
     const getEvents = async () => {
 
@@ -90,13 +95,13 @@ const Calendar = () => {
 
   return (
     <Template className="calendar" header="Staff Calendar">
-        <MultiModal visible={visible} pages={[
+        <MultiModal visible={visible || editEvent} pages={[
             {
-                header: 'Create a new event',
-                component: <CreateEvent />,
+                header: !editEvent ? 'Create a new event' : 'Update an event',
+                component: <ManageEvent />,
                 className: 'calendar__create'
             }
-        ]} onClose={() => setVisible(false)} />
+        ]} onClose={onModalClose} />
         <div className="calendar__events">
             <div className="calendar__events__topbar">
                 <h1 className="calendar__events__title">
@@ -107,7 +112,7 @@ const Calendar = () => {
                 </button>
             </div>
             { Boolean(events.length) && events.filter(e => datesAreOnSameDay(e.date, date)).map(event => 
-            <div className="calendar__event" key={event.id}>
+            <div className="calendar__event" key={event.id} onClick={() => setEditEvent(event)}>
                 <time className="calendar__event__date">
                     { new Date(event.date).toDateString() }
                 </time>
