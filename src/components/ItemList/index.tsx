@@ -5,7 +5,7 @@ import "./index.scss"
 export interface ItemListProps {
   children: any;
   items: string[];
-  listTitle: string;
+  listTitle?: string;
   itemName?: string;
   selectedItem: string;
   onItemAdded: () => void;

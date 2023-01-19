@@ -21,6 +21,12 @@ export interface Patient {
     gpFullname: string;
 }
 
+export interface CalendarEvent {
+    date: Date;
+    patient: Patient;
+    staff: IStaff[];
+}
+
 export interface IStaff {
     id: string;
     forename: string;

@@ -17,6 +17,7 @@ import Roles from "./pages/Roles";
 import { RoleProvider } from "./context/RoleContext";
 import { CreateProvider } from "./context/CreateContext";
 import Profile from "./pages/Profile";
+import Calendar from "./pages/Calendar";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
@@ -40,6 +41,7 @@ root.render(
                 <Route path="/surgeries" element={<Surgeries />} />
                 <Route path="/roles" element={<Roles />} />
                 <Route path="/profile" element={<Profile />} />
+                <Route path="/calendar" element={<Calendar />} />
               {/* <Route path='/calendar' element={<Dates />} /> */}
             </Routes>
           </BrowserRouter>
