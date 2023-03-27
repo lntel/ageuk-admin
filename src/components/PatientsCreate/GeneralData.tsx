@@ -34,6 +34,20 @@ const GeneralData: FC<GeneralDataProps> = ({}) => {
       });
     }
 
+    if(state.mode === 'UPDATE') {
+      dispatch({
+        type: "SET_DATA",
+        state: {
+          ...state,
+          data: {
+            ...state.selected,
+            contacts: state.selected.additionalContacts || [],
+            gpId: state.selected.generalPractioner.id
+          }
+        }
+      });
+    }
+
     console.log(state);
 
     getGpSurgeries();
@@ -164,7 +178,7 @@ const GeneralData: FC<GeneralDataProps> = ({}) => {
           data-tip="Date of start of care provision"
           value={
             state.data.startDate
-              ? state.data.startDate.toISOString().split("T")[0]
+              ? new Date(state.data.startDate).toISOString().split("T")[0]
               : ""
           }
           onChange={(e) =>
@@ -295,7 +309,7 @@ const GeneralData: FC<GeneralDataProps> = ({}) => {
           className="patient-component__input"
           data-tip="Please enter the patients DOB<br /> (You may also type the date in here)"
           value={
-            state.data.dob ? state.data.dob.toISOString().split("T")[0] : ""
+            state.data.dob ? new Date(state.data.dob).toISOString().split("T")[0] : ""
           }
           onChange={(e) =>
             dispatch({

@@ -9,6 +9,7 @@ import request from "../../helpers/request";
 import { toast } from "react-toastify";
 import { MultiModalProvider } from "../../context/MultiModalContext";
 import { AuthContext } from "../../context/AuthContext";
+import { CreateContext } from "../../context/CreateContext";
 
 export interface PatientActionsProps {
   onPatientCreate: () => void;
@@ -30,7 +31,9 @@ const Patients = () => {
   const [rowSelection, setSelectedRow] = useState<RowSelectionState>({});
   const [createVisible, setCreateVisible] = useState<boolean>(false);
 
-  const { state } = useContext(AuthContext);
+  const { state, dispatch } = useContext(CreateContext);
+
+  const { state: authState } = useContext(AuthContext);
 
   useEffect(() => {
     getPatients();
@@ -40,7 +43,7 @@ const Patients = () => {
     const response = await request({
       url: "/patients",
       headers: {
-        Authorization: `Bearer ${state.accessToken}`
+        Authorization: `Bearer ${authState.accessToken}`
       }
     });
 
@@ -272,7 +275,17 @@ const Patients = () => {
     }
   };
 
-  const handleEdit = () => {};
+  const handleEdit = () => {
+    setCreateVisible(!createVisible);
+
+    dispatch({
+      type: "SET_MODE",
+      state: {
+        ...state,
+        mode: "UPDATE"
+      }
+    })
+  };
 
   const actions: TableDataAction[] = [
     {
@@ -299,7 +312,13 @@ const Patients = () => {
         data={patients}
         actions={actions}
         entityName="Patients"
-        onRowSelected={(r) => setSelectedRow(r)}
+        onRowSelected={(r) => dispatch({
+          type: "SET_SELECTED",
+          state: {
+            ...state,
+            selected: r
+          }
+        })}
         className="patient-component"
       />
       <PatientsCreate
