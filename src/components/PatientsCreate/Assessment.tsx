@@ -130,7 +130,7 @@ const Assessment: FC<AssessmentProps> = () => {
           // https://stackoverflow.com/questions/12346381/set-date-in-input-type-date
           value={
             data.syringeDriverSetupDate
-              ? data.syringeDriverSetupDate.toISOString().split("T")[0]
+              ? new Date(data.syringeDriverSetupDate).toISOString().split("T")[0]
               : ""
           }
           onChange={(e) =>
