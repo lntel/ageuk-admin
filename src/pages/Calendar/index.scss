@@ -39,6 +39,7 @@
         border-radius: .4em;
         box-shadow: 0 2px 6px #00000033;
         overflow: auto;
+        margin: 1em 0 0 0;
 
         &::-webkit-scrollbar {
             width: 7px;
@@ -79,6 +80,36 @@
         border: 1px solid transparent;
         margin: 1em 0 0 0;
         transition: border .3s ease-in-out;
+
+        &__card {
+            text-transform: uppercase;
+            font-size: .7em;
+            font-weight: 500;
+            padding: .3em;
+            border-radius: .2em;
+            width: fit-content;
+            margin: 0 0 1em 0;
+
+            &--incomplete {
+                background: #e75555;
+                color: #fff;
+            }
+            
+            &--in-transit {
+                background: #5f91fd;
+                color: #fff;
+            }
+            
+            &--in-progress {
+                background: #ffe600;
+                color: #222;
+            }
+            
+            &--complete {                
+                background: #73fd96;
+                color: #222;
+            }
+        }
 
         &:hover {
             border: 1px solid #23A2D1;

@@ -8,6 +8,7 @@ import request from "../../helpers/request";
 import ManageEvent from "./ManageEvent";
 import "./calendar.scss";
 import "./index.scss";
+import classNames from "classnames";
 
 const Calendar = () => {
   const [editEvent, setEditEvent] = useState<any>();
@@ -60,6 +61,16 @@ const Calendar = () => {
     new Date(first).getMonth() === new Date(second).getMonth() &&
     new Date(first).getDate() === new Date(second).getDate();
 
+  const getCallStatus = (e: any) => {
+
+    console.log()
+
+    if(Boolean(e.startTravelTime) && !Boolean(e.endTravelTime)) return "In-Transit";
+    if((Boolean(e.startTime) || Boolean(e.endTravelTime)) && !Boolean(e.endTime)) return "In-Progress";
+    if(Boolean(e.startTravelTime) && Boolean(e.endTravelTime) && Boolean(e.startTime) && Boolean(e.endTime)) return "Complete";
+    return "Incomplete";
+  }
+
   return (
     <Template className="calendar" header="Staff Calendar">
       <MultiModal
@@ -110,6 +121,7 @@ const Calendar = () => {
                 <h1 className="calendar__event__title">
                   {event.patient.firstName} {event.patient.surname}
                 </h1>
+                <p className={classNames(`calendar__event__card calendar__event__card--${getCallStatus(event)?.toLocaleLowerCase()}`)}>{getCallStatus(event)}</p>
                 <div className="calendar__event__avatars">
                   {Boolean(event.staff.length) &&
                     event.staff.map((staff: any) => (
