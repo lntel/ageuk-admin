@@ -81,6 +81,10 @@ const Calendar = () => {
             component: (
               <ManageEvent
                 id={editEvent && editEvent.id}
+                startTime={editEvent && editEvent.startTime}
+                endTime={editEvent && editEvent.endTime}
+                startTravelTime={editEvent && editEvent.startTravelTime}
+                endTravelTime={editEvent && editEvent.endTravelTime}
                 date={date}
                 defaultPatient={editEvent && editEvent?.patient.id}
                 defaultStaff={

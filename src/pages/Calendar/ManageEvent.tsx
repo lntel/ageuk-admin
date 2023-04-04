@@ -15,10 +15,16 @@ export type ManageEventProps = {
   defaultStaff?: number[];
   onCreated: () => void;
   onDeleted: () => void;
+  startTime: Date;
+  startTravelTime: Date;
+  endTime: Date;
+  endTravelTime: Date;
 } 
 
-const ManageEvent: FC<ManageEventProps> = ({ date, id, defaultTime, defaultStaff, defaultPatient, onCreated, onDeleted }) => {
+const ManageEvent: FC<ManageEventProps> = ({ date, id, defaultTime, defaultStaff, defaultPatient, onCreated, onDeleted, startTime, startTravelTime, endTime, endTravelTime }) => {
   const [time, setTime] = useState<string>(defaultTime || '');
+  const [callTime, setCallTime] = useState<string>('');
+  const [travelTime, setTravelTime] = useState<string>('');
   const [selectedPatient, setSelectedPatient] = useState<any>(defaultPatient || '');
   const [staffList, setStaffList] = useState<number[]>(defaultStaff || []);
   const [patients, setPatients] = useState<any[]>([]);
@@ -31,7 +37,21 @@ const ManageEvent: FC<ManageEventProps> = ({ date, id, defaultTime, defaultStaff
   useEffect(() => {
     getStaff();
     getPatients();
+
+    if(defaultTime) {
+      setCallTime(compareDates(new Date(startTime), new Date(endTime)));
+      setTravelTime(compareDates(new Date(startTravelTime), new Date(endTravelTime)));
+    }
+
   }, [])
+
+  const compareDates = (a: Date, b: Date) => {
+    const ms = Math.abs(a.getTime() - b.getTime());
+    const hours = Math.floor(ms / (1000 * 60 * 60));
+    const minutes = Math.floor((ms / (1000 * 60)) % 60);
+
+    return `${hours} hours and ${minutes} minutes`;
+  }
 
     const removeStaff = () => {
 
@@ -182,6 +202,28 @@ const ManageEvent: FC<ManageEventProps> = ({ date, id, defaultTime, defaultStaff
         value={time}
         onChange={(v) => setTime(v.target.value)}
       />
+      {Boolean(defaultTime) && (
+        <>
+        <Textbox
+        type="text"
+        disabled={true}
+        className="calendar__create__date"
+        data-tip="This is how long was spent travelling to the call"
+        label="Travel Time"
+        value={travelTime}
+        onChange={(v) => setTravelTime(v.target.value)}
+      />
+        <Textbox
+        type="text"
+        disabled={true}
+        className="calendar__create__date"
+        data-tip="This is how long was spent in the call"
+        label="Time Spent in Call"
+        value={callTime}
+        onChange={(v) => setCallTime(v.target.value)}
+      />
+        </>
+      )}
       <Dropdown
         className="calendar__create__patient"
         options={[...patients.map(patient => ({
