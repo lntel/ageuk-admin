@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import ReactCalendar from "react-calendar";
 import { toast } from "react-toastify";
 import placeholderAvatar from "../../assets/images/avatar.svg";
@@ -9,6 +9,7 @@ import ManageEvent from "./ManageEvent";
 import "./calendar.scss";
 import "./index.scss";
 import classNames from "classnames";
+import { AuthContext } from "../../context/AuthContext";
 
 const Calendar = () => {
   const [editEvent, setEditEvent] = useState<any>();
@@ -16,6 +17,8 @@ const Calendar = () => {
   const [visible, setVisible] = useState<boolean>(false);
   const [selectedEvent, setSelectedEvent] = useState<any>();
   const [events, setEvents] = useState<any[]>([]);
+
+  const { state } = useContext(AuthContext);
 
   useEffect(() => {
     getEvents();
@@ -30,6 +33,10 @@ const Calendar = () => {
     const response = await request({
       url: "/call",
       type: "GET",
+      headers: {
+        Authorization: `Bearer ${state.accessToken}`
+      },
+      shouldRefresh: true
     });
 
     if (!response.ok) {
