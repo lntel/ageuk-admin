@@ -1,10 +1,11 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useContext, useEffect, useMemo, useState } from 'react'
 import Template from '../../components/Template'
 import { AxisOptions, Chart } from 'react-charts';
 import './index.scss'
 import request from '../../helpers/request';
 import { toast } from 'react-toastify';
 import groupBy from '../../helpers/groupBy'
+import { AuthContext } from '../../context/AuthContext';
 
 type DailyCalls = {
   date: Date;
@@ -17,6 +18,8 @@ type Series = {
 }
 
 const Dashboard = () => {
+
+  const { state: authState } = useContext(AuthContext);
 
   const [events, setEvents] = useState<Series[]>([{
     label: 'test',
@@ -39,6 +42,9 @@ const Dashboard = () => {
     const response = await request({
       url: "/call",
       type: "GET",
+      headers: {
+        Authorization: `Bearer ${authState.accessToken}`
+      }
     });
 
     if (!response.ok) {
