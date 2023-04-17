@@ -19,11 +19,11 @@ const Navigation: FC = () => {
 
   useEffect(() => {
     console.log(authState)
-}, [])
-
-const hasPermission = (permission: PermissionTypeEnum) => {
-    return authState.permissions && authState.permissions.indexOf(permission) >= 0;
-}
+  }, [])
+  
+  const hasPermission = (permission: PermissionTypeEnum) => {
+      return authState.permissions && authState.permissions.indexOf(permission) >= 0;
+  }
   
 
   return (

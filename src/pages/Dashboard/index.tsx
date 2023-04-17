@@ -92,7 +92,7 @@ const Dashboard = () => {
   return (
     <Template header="Dashboard" className="dashboard-container">
 
-      { events ? (
+      {/* { events ? (
         <Chart 
         options={{
           data: events,
@@ -100,7 +100,7 @@ const Dashboard = () => {
           secondaryAxes,
         }}
         />
-      ) : null }
+      ) : null } */}
     </Template>
   )
 }

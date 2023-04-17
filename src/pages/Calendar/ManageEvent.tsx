@@ -6,6 +6,7 @@ import ItemList from "../../components/ItemList";
 import request from "../../helpers/request";
 import { toast } from "react-toastify";
 import { AuthContext } from "../../context/AuthContext";
+import { PermissionTypeEnum } from "../../enums/permissions";
 
 export type ManageEventProps = {
   date: Date;
@@ -33,6 +34,10 @@ const ManageEvent: FC<ManageEventProps> = ({ date, id, defaultTime, defaultStaff
   const [selectedDropdown, setSelectedDropdown] = useState<string>("");
 
   const { state } = useContext(AuthContext);
+
+  const hasPermission = (permission: PermissionTypeEnum) => {
+      return state.permissions && state.permissions.indexOf(permission) >= 0;
+  }
 
   useEffect(() => {
     getStaff();
@@ -200,6 +205,7 @@ const ManageEvent: FC<ManageEventProps> = ({ date, id, defaultTime, defaultStaff
         data-tip="Please select a time for the call"
         label="Call Time"
         value={time}
+        disabled={!hasPermission(PermissionTypeEnum.MANAGE_STAFF)}
         onChange={(v) => setTime(v.target.value)}
       />
       {Boolean(defaultTime) && (
@@ -235,38 +241,42 @@ const ManageEvent: FC<ManageEventProps> = ({ date, id, defaultTime, defaultStaff
         placeholder="Select a patient"
         data-tip="Please select a patient"
       />
-      <ItemList
-        items={staff.filter(s => staffList.indexOf(s.id) >= 0).map(staff => {
-          return `${staff.forename} ${staff.surname}`
-        })}
-        selectedItem={selectedStaff}
-        onItemAdded={addStaff}
-        onItemRemoved={removeStaff}
-        onItemSelected={setSelectedStaff}
-        itemName="staff"
-      >
-        <Dropdown
-        className="calendar__create__staff"
-        options={[...staff.map(s => {
-          return {
-            key: `${s.forename} ${s.surname}`,
-            value: s.id
-          }
-        })]}
-        selected={selectedDropdown}
-        onSelect={setSelectedDropdown}
-        placeholder="Select a staff member"
-        data-tip="Please select a staff member for this call"
-      />
-      </ItemList>
-      <button className="calendar__create__submit" onClick={handleSubmission}>
-        {`${!defaultTime ? 'Create' : 'Update'} Event`}
-      </button>
-      {Boolean(defaultTime) && (
-        <button className="calendar__create__delete" onClick={handleDeletion}>
-          Delete Event
+      {hasPermission(PermissionTypeEnum.MANAGE_STAFF) ? (
+        <>
+        <ItemList
+          items={staff.filter(s => staffList.indexOf(s.id) >= 0).map(staff => {
+            return `${staff.forename} ${staff.surname}`
+          })}
+          selectedItem={selectedStaff}
+          onItemAdded={addStaff}
+          onItemRemoved={removeStaff}
+          onItemSelected={setSelectedStaff}
+          itemName="staff"
+        >
+          <Dropdown
+          className="calendar__create__staff"
+          options={[...staff.map(s => {
+            return {
+              key: `${s.forename} ${s.surname}`,
+              value: s.id
+            }
+          })]}
+          selected={selectedDropdown}
+          onSelect={setSelectedDropdown}
+          placeholder="Select a staff member"
+          data-tip="Please select a staff member for this call"
+        />
+        </ItemList>
+        <button className="calendar__create__submit" onClick={handleSubmission}>
+          {`${!defaultTime ? 'Create' : 'Update'} Event`}
         </button>
-      )}
+        {Boolean(defaultTime) && (
+          <button className="calendar__create__delete" onClick={handleDeletion}>
+            Delete Event
+          </button>
+        )}
+        </>
+      ) : null}
       <ReactTooltip />
     </>
   );
